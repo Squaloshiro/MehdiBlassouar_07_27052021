@@ -165,7 +165,7 @@ module.exports = {
                 res.status(500).json({ "error": "ce message existe pas" });
             });
     },
-    modifyComment: function(req,res){
+    modifyMessage: function(req,res){
         const token = req.headers.authorization.split(' ')[1];
         const decodedToken = jwt.verify(token, process.env.TOKEN,);
         const userId = decodedToken.userId;
@@ -175,41 +175,69 @@ module.exports = {
         let title = req.body.title
         asyncLib.waterfall([
             function (done) {
-                models.User.findOne({
-                    where:{id : userId}
-                }).then(function(userFound){
-
-                    done(null,userFound);
+                models.Message.findByPk(
+                    req.params.id 
+                ).then(function(messageFound){
+                    done(null,messageFound);
                 })
                 .catch(function (err){
+                    
                     return res.status(500).json({ 'error': 'impossible de vérif utilisateur' })
                 });
                 
             },
-            function (userFound,done) {
+            function (messageFound,done) {
+                if(messageFound){
+                    models.User.findOne({
+                        where:{id : userId}
+                    }).then(function(userFound){
+    
+                        done(null,messageFound,userFound);
+                    })
+                    .catch(function (err){
+                        
+                        return res.status(500).json({ 'error': 'impossible de vérif utilisateur2' })
+                    });
+                }else{
+                    return res.status(500).json({ 'error': 'impossible de vérif utilisateur2' })
+                }
+                
+                
+            },
+            function (messageFound,userFound, done) {
                 models.Message.findOne({
-                    attributes:['id','title', 'content'],
-                    where:{UserId : userId}
-                }).then(function(messageFound){
+                    attributes:['title', 'content'],
+                    where:{
+                        id:req.params.id ,
+                        UserId : userId}
+                }).then(function(message){
 
                     done(null,messageFound,userFound);
                 })
                 .catch(function (err){
-                    return res.status(500).json({ 'error': 'impossible de vérif utilisateur' })
+                    console.log('------------------------------------');
+                    console.log(err);
+                    console.log('------------------------------------');
+                    return res.status(500).json({ 'error': 'impossible de vérif utilisateur3' })
                 });
                 
             },
             function (messageFound,userFound, done) {
-                if (messageFound) {
+               if (messageFound) {
+                   if(messageFound.UserId === userFound.id ){
                     messageFound.update({
-                        content: (content ? content : commentFound.content)
-                        title: (title ? title : commentFound.title)
+                        content: (content ? content : messageFound.content),
+                        title: (title ? title : messageFound.title)
                     }).then(function (newMessage) {
                         done(newMessage);
                     }).catch(function (err) {
                         res.status(500).json({ 'error': 'impossible de modifier' });
                     });
-                } else {
+                   }else{
+                    res.status(500).json({ 'error': 'cette pub' });
+                   }
+                
+               } else {
                     res.status(404).json({ 'error': 'utilisateur non trouvé' });
                 }
             },
