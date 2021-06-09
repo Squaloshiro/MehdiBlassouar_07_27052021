@@ -28,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     attachment: DataTypes.STRING,
     likes: DataTypes.TINYINT,
     dislikes: DataTypes.TINYINT,
+    comments: DataTypes.TINYINT,
   }, {
     sequelize,
     modelName: 'Message',

@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const fs = require('fs');
 
 module.exports = {
-    createMessageImage: function(req,res){
+    createMessageImage: function (req, res) {
         const token = req.headers.authorization.split(' ')[1];
         const decodedToken = jwt.verify(token, process.env.TOKEN,);
         const userId = decodedToken.userId;
@@ -47,7 +47,7 @@ module.exports = {
                         likes: 0,
                         dislikes: 0,
                         UserId: userFound.id,
-                        attachment:`${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+                        attachment: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
                     })
                         .then(function (newMessage) {
                             done(newMessage);
@@ -108,6 +108,7 @@ module.exports = {
                         content: content,
                         likes: 0,
                         dislikes: 0,
+                        comments: 0,
                         UserId: userFound.id
                     })
                         .then(function (newMessage) {
@@ -155,17 +156,53 @@ module.exports = {
             res.status(500).json({ "error": "invalid fields" });
         });
     },
+    listMessagesUser: function (req, res) {
+        const token = req.headers.authorization.split(' ')[1];
+        const decodedToken = jwt.verify(token, process.env.TOKEN,);
+        const userId = decodedToken.userId;
+        var fields = req.query.fields;
+        var limit = parseInt(req.query.limit);
+        var offset = parseInt(req.query.offset);
+        var order = req.query.order;
+        const ITEMS_LIMIT = 50;
+        if (limit > ITEMS_LIMIT) {
+            limit = ITEMS_LIMIT;
+        }
 
-    getOneMessage: function  (req, res, next){
+        models.Message.findAll({
+            where: { UserId: userId },
+            order: [(order != null) ? order.split(':') : ['createdAt', 'DESC']],
+            attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
+            limit: (!isNaN(limit)) ? limit : null,
+            offset: (!isNaN(offset)) ? offset : null,
+            include: [{
+                model: models.User,
+                attributes: ['username']
+            }]
+        }).then(function (messages) {
+            if (messages) {
+                res.status(200).json(messages);
+            } else {
+                res.status(404).json({ "error": "no messages found" });
+            }
+        }).catch(function (err) {
+            console.log(err);
+            res.status(500).json({ "error": "invalid fields" });
+        });
 
-        models.Message.findByPk(req.params.id )
-            .then(function (messages){ res.status(200).json(messages)})
+
+    },
+
+    getOneMessage: function (req, res, next) {
+
+        models.Message.findByPk(req.params.id)
+            .then(function (messages) { res.status(200).json(messages) })
             .catch(err => {
                 console.log(err);
                 res.status(500).json({ "error": "ce message existe pas" });
             });
     },
-    modifyMessage: function(req,res){
+    modifyMessage: function (req, res) {
         const token = req.headers.authorization.split(' ')[1];
         const decodedToken = jwt.verify(token, process.env.TOKEN,);
         const userId = decodedToken.userId;
@@ -176,72 +213,73 @@ module.exports = {
         asyncLib.waterfall([
             function (done) {
                 models.Message.findByPk(
-                    req.params.id 
-                ).then(function(messageFound){
-                    done(null,messageFound);
+                    req.params.id
+                ).then(function (messageFound) {
+                    done(null, messageFound);
                 })
-                .catch(function (err){
-                    
-                    return res.status(500).json({ 'error': 'impossible de vérif utilisateur' })
-                });
-                
-            },
-            function (messageFound,done) {
-                if(messageFound){
-                    models.User.findOne({
-                        where:{id : userId}
-                    }).then(function(userFound){
-    
-                        done(null,messageFound,userFound);
-                    })
-                    .catch(function (err){
-                        
-                        return res.status(500).json({ 'error': 'impossible de vérif utilisateur2' })
+                    .catch(function (err) {
+
+                        return res.status(500).json({ 'error': 'impossible de vérif utilisateur' })
                     });
-                }else{
+
+            },
+            function (messageFound, done) {
+                if (messageFound) {
+                    models.User.findOne({
+                        where: { id: userId }
+                    }).then(function (userFound) {
+
+                        done(null, messageFound, userFound);
+                    })
+                        .catch(function (err) {
+
+                            return res.status(500).json({ 'error': 'impossible de vérif utilisateur2' })
+                        });
+                } else {
                     return res.status(500).json({ 'error': 'impossible de vérif utilisateur2' })
                 }
-                
-                
-            },
-            function (messageFound,userFound, done) {
-                models.Message.findOne({
-                    attributes:['title', 'content'],
-                    where:{
-                        id:req.params.id ,
-                        UserId : userId}
-                }).then(function(message){
 
-                    done(null,messageFound,userFound);
-                })
-                .catch(function (err){
-                    console.log('------------------------------------');
-                    console.log(err);
-                    console.log('------------------------------------');
-                    return res.status(500).json({ 'error': 'impossible de vérif utilisateur3' })
-                });
-                
+
             },
-            function (messageFound,userFound, done) {
-               if (messageFound) {
-                   if(messageFound.UserId === userFound.id ){
-                    messageFound.update({
-                        content: (content ? content : messageFound.content),
-                        title: (title ? title : messageFound.title)
-                    }).then(function (newMessage) {
-                        done(newMessage);
-                    }).catch(function (err) {
-                        res.status(500).json({ 'error': 'impossible de modifier' });
+            function (messageFound, userFound, done) {
+                models.Message.findOne({
+                    attributes: ['title', 'content'],
+                    where: {
+                        id: req.params.id,
+                        UserId: userId
+                    }
+                }).then(function (message) {
+
+                    done(null, messageFound, userFound);
+                })
+                    .catch(function (err) {
+                        console.log('------------------------------------');
+                        console.log(err);
+                        console.log('------------------------------------');
+                        return res.status(500).json({ 'error': 'impossible de vérif utilisateur3' })
                     });
-                   }else{
-                    res.status(500).json({ 'error': 'cette pub' });
-                   }
-                
-               } else {
+
+            },
+            function (messageFound, userFound, done) {
+                if (messageFound) {
+                    if (messageFound.UserId === userFound.id) {
+                        messageFound.update({
+                            content: (content ? content : messageFound.content),
+                            title: (title ? title : messageFound.title)
+                        }).then(function (newMessage) {
+                            done(newMessage);
+                        }).catch(function (err) {
+                            res.status(500).json({ 'error': 'impossible de modifier' });
+                        });
+                    } else {
+                        res.status(500).json({ 'error': 'cette pub' });
+                    }
+
+                } else {
                     res.status(404).json({ 'error': 'utilisateur non trouvé' });
                 }
             },
-        ],function (newMessage) {
+        ], function (newMessage) {
             if (newMessage) {
                 return res.status(201).json(newMessage);
             } else {
@@ -249,5 +287,126 @@ module.exports = {
             }
         })
     },
-    
-}
+    deleteOneMessage: function (req, res) {
+        //Params
+        const token = req.headers.authorization.split(' ')[1];
+        const decodedToken = jwt.verify(token, process.env.TOKEN,);
+        const userId = decodedToken.userId;
+        var messageId = req.params.id
+        
+        asyncLib.waterfall([
+
+            function (done) {
+
+                models.Comment.findAll({
+                    where: { messageId  },
+                    attributes : ['id']
+                }).then(function (commentsFound) {
+                    let commentIds = [];
+                    
+                    commentsFound.map(({id}) =>{
+                        commentIds.push(id);
+                    })
+                    done(null, commentIds);
+                }).catch(function (err) {
+                    res.status(500).json({ 'error': 'impossible de modifier 1' });
+                });
+            },
+            function (commentIds, done) {
+                
+                    models.Commentlike.destroy({
+                        where: { commentId: commentIds  }
+                    }).then(function (commentsLikeFound) {
+                        done(null);
+                    }).catch(function (err) {
+                        res.status(500).json({ 'error': 'impossible de modifier 2' });
+                    });
+            },
+            function (done) {
+
+                models.Comment.destroy({
+                    where: { messageId: messageId }
+                })
+                    .then(() => {
+                        models.Like.destroy({
+                            where: { messageId: messageId }
+                        })
+                        done(null);
+                    })
+                    .catch(err => {
+
+                        return res.status(500).json({ 'error': 'Pas possible de supprimer les commentaires ou les likes' });
+                    })
+                },
+                function (done) {
+                    models.Message.findOne({
+                        where: { id :messageId }
+                    }).then(function (messageFound) {
+                        done(null, messageFound);
+                    }).catch(function (err) {
+
+                        res.status(500).json({ 'error': 'impossible de modifier111111' });
+                    });
+                },
+               function ( messageFound,done) {
+                   console.log('------------------------------------');
+                   console.log(userId);
+                   console.log('------------------------------------');
+                if(messageFound.UserId === userId){
+                    if(messageFound.attachment === null){
+                        messageFound.destroy({
+                            where: { id :messageId }
+                        }).then(function (destroyMessageFound) {
+                            return res.status(201).json(destroyMessageFound);
+                        }).catch(function (err) {
+                            res.status(500).json({ 'error': 'impossible de modifier 2' });
+                        });
+                    }else{
+                        const filename = models.Message.attachment.split('/images/')[1];
+                        fs.unlink(`images/${filename}`, () => {
+                            models.Message.destroy({
+                                where: { id: messageId }
+                            })
+                        }).then(function (destroyMessageFoundImg) {
+                            return res.status(201).json(destroyMessageFoundImg);
+                        }).catch(function (err) {
+                            res.status(500).json({ 'error': 'impossible de modifier 2' });
+                        });
+                           
+                        
+                    }
+                }else
+                return res.status(500).json({ 'error': 'cette publication ne vous apartien pas' });
+                }
+            ])
+        },
+    }
+                    /*.then(commentsFound => {
+
+                        models.Message.destroy({
+                            where: { id: messageId }
+                        })
+                        return res.status(201).json(commentsFound)
+                    })
+                    .catch(err => {
+                        return res.status(500).json({ 'error': 'Pas possible de supprimer le message' });
+                    })
+                    .then(commentsFoundImg => {
+                        const filename = models.Message.attachment.split('/images/')[1];
+                        fs.unlink(`images/${filename}`, () => {
+                            models.Message.destroy({
+                                where: { id: messageId }
+                            })
+                        })
+                        models.Message.destroy({
+                            where: { id: messageId }
+                        })
+                        return res.status(201).json(commentsFoundImg)
+                    })
+                    .catch(err => {
+                        return res.status(500).json({ 'error': 'Pas possible de supprimer le message' });
+                    });
+            }
+        ]),
+    },*/
+

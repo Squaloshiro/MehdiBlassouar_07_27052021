@@ -1,6 +1,5 @@
 // Imports
 var models = require('../models');
-
 const jwt = require('jsonwebtoken');
 var asyncLib = require('async');
 
@@ -18,16 +17,16 @@ module.exports = {
 
 
         // Params
-        var messageId = parseInt(req.params.messageId);
+        var commentId = parseInt(req.params.commentId);
 
-        if (messageId <= 0) {
+        if (commentId <= 0) {
             return res.status(400).json({ 'error': 'invalid parameters' });
         }
 
         asyncLib.waterfall([
             function (done) {
-                models.Message.findOne({
-                    where: { id: messageId }
+                models.Comment.findOne({
+                    where: { id: commentId }
                 })
                     .then(function (messageFound) {
                         done(null, messageFound);
@@ -54,16 +53,19 @@ module.exports = {
             function (messageFound, userFound, done) {
 
                 if (userFound) {
-                    models.Like.findOne({
+                    models.Commentlike.findOne({
                         where: {
                             userId: userId,
-                            messageId: messageId,
+                            commentId: commentId,
                         }
                     })
                         .then(function (userAlreadyLikedFound) {
                             done(null, messageFound, userFound, userAlreadyLikedFound);
                         })
                         .catch(function (err) {
+                            console.log('------------------------------------');
+                            console.log(err);
+                            console.log('------------------------------------');
                             return res.status(500).json({ 'error': 'unable to verify is user already liked' });
                         });
                 } else {
@@ -74,7 +76,7 @@ module.exports = {
                 /*if (!userAlreadyLikedFound) {
                     messageFound.addUser(userFound, { userLike: true })*/
                     if (!userAlreadyLikedFound) {
-                        models.Like.create({ userLike: true, userDislike: false, messageId, userId }),
+                        models.Commentlike.create({ userLike: true, userDislike: false, commentId, userId }),
                         messageFound.update({
                             likes: messageFound.likes + 1,
                          })
@@ -139,16 +141,16 @@ module.exports = {
         const userId = decodedToken.userId;
 
         // Params
-        var messageId = parseInt(req.params.messageId);
+        var commentId = parseInt(req.params.commentId);
 
-        if (messageId <= 0) {
+        if (commentId <= 0) {
             return res.status(400).json({ 'error': 'invalid parameters' });
         }
 
         asyncLib.waterfall([
             function (done) {
-                models.Message.findOne({
-                    where: { id: messageId }
+                models.Comment.findOne({
+                    where: { id: commentId }
                 })
                     .then(function (messageFound) {
                         done(null, messageFound);
@@ -174,10 +176,10 @@ module.exports = {
             },
             function (messageFound, userFound, done) {
                 if (userFound) {
-                    models.Like.findOne({
+                    models.Commentlike.findOne({
                         where: {
                             userId: userId,
-                            messageId: messageId,
+                            commentId: commentId,
                         }
                     })
                         .then(function (userAlreadyLikedFound) {
@@ -194,7 +196,7 @@ module.exports = {
 
                 
                 if (!userAlreadyLikedFound) {
-                    models.Like.create({ userLike: false, userDislike: true, messageId, userId }),
+                    models.Commentlike.create({ userLike: false, userDislike: true, commentId, userId }),
                     messageFound.update({
                         dislikes: messageFound.dislikes + 1,
                      })

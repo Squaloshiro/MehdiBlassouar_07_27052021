@@ -160,6 +160,305 @@ module.exports = {
             res.status(500).json({ 'error': "impossible de récuperer l'utilisateur" })
         });
     },
+    deleteUserProfile: function (req, res) {
+        // Getting auth header
+        const token = req.headers.authorization.split(' ')[1];
+        const decodedToken = jwt.verify(token, process.env.TOKEN,);
+        const userId = decodedToken.userId;
+        // Params
+
+        asyncLib.waterfall([
+            function (done) {
+                models.User.findOne({
+                    where: { id: userId }
+                })
+                    .then(function (userFound) {
+                        done(null, userFound);
+                    })
+                    .catch(function (err) {
+                        return res.status(500).json({ 'error': 'unable to verify user' });
+                    });
+            },
+            function (userFound,done) {
+                models.Message.findAll({
+                    attributes : ['id','attachment','likes','dislikes','comments']
+                })
+                    .then(function (allMessageFound) {
+
+                        let messageIdTab = [];
+                        let messageAttachmentTab = [];
+                        let messageCommentsTab = [];
+                        let messageLikesTab = [];
+                        let messageDislikesTab = [];
+                       
+                        allMessageFound.forEach((element) =>{
+                            console.log('---------------element---------------------');
+                            console.log(element);
+                            console.log('------------------------------------');
+                            messageIdTab.push(element.id)
+                            messageAttachmentTab.push(element.attachment)
+                            messageCommentsTab.push(element.comments, {include: [{
+                                model: models.Comment,
+                                where: userId, id : messageIdTab
+                            }]})
+                            messageLikesTab.push(element.likes)
+                            messageDislikesTab.push(element.dislikes);
+                        })
+                        
+                        console.log('-------------messageCommentsTab-----------------------');
+                        console.log(messageCommentsTab[1].include);
+                        console.log('------------------------------------');
+                        
+                        done(null, userFound,allMessageFound,messageIdTab,messageAttachmentTab,messageCommentsTab,messageLikesTab,messageDislikesTab);
+                    })
+                    .catch(function (err) {
+                        console.log('---------------1---------------------');
+                        console.log(err);
+                        console.log('------------------------------------');
+                        return res.status(500).json({ 'error': 'unable to verify user' });
+                    });
+            },
+            function (userFound,allMessageFound,messageIdTab,messageAttachmentTab,messageCommentsTab,messageLikesTab,messageDislikesTab,done) {
+                
+                models.Like.findAll({
+                    where: { userId, userDislike : true },
+                    
+                    attributes : ['messageId']
+                })
+                    .then(function (allLikeFoundDislike) {
+                        console.log('-------------allLikeFoundDislike-----------------------');
+                        console.log(allLikeFoundDislike);
+                        console.log('------------------------------------');
+                        done(null,userFound,allMessageFound,messageIdTab,messageAttachmentTab,messageCommentsTab,messageLikesTab,messageDislikesTab, allLikeFoundDislike);
+                    })
+                    .catch(function (err) {
+                        console.log('---------------err5---------------------');
+                        console.log(err);
+                        console.log('------------------------------------');
+                        return res.status(500).json({ 'error': 'unable to verify user' });
+                    });
+                
+            },
+            function (userFound,allMessageFound,messageIdTab,messageAttachmentTab,messageCommentsTab,messageLikesTab,messageDislikesTab,allLikeFoundDislike,done) {
+                
+                
+                    models.Like.findAll({
+                        where: { userId, userLike : true },
+                        
+                        attributes : ['messageId']
+                    })
+                        .then(function (allLikeFoundLike) {
+                            console.log('-------------allLikeFoundLike-----------------------');
+                            console.log(allLikeFoundLike);
+                            console.log('------------------------------------');
+                            done(null,userFound,allMessageFound,messageIdTab,messageAttachmentTab,messageCommentsTab,messageLikesTab,messageDislikesTab, allLikeFoundDislike,allLikeFoundLike);
+                        })
+                        .catch(function (err) {
+                            console.log('----------err6--------------------------');
+                            console.log(err);
+                            console.log('------------------------------------');
+                            return res.status(500).json({ 'error': 'unable to verify user' });
+                        });
+            },
+            function (userFound,allMessageFound,messageIdTab,messageAttachmentTab,messageCommentsTab,messageLikesTab,messageDislikesTab,allLikeFoundDislike,allLikeFoundLike,done) {
+                models.Comment.findAll({
+                    where: { userId: userId, messageId :messageIdTab  },
+                    attributes : ['id','messageId']
+                })
+                    .then(function (allCommentFound) {
+
+
+                        let messageToDelete = Object.values(
+                            allCommentFound.reduce((a, { messageId }) => {
+                            let key = `${messageId}`;
+                            a[key] = a[key] || { messageId, count: 0 };
+                            a[key].count++;
+                            return a;
+                            }, {})
+                            );
+
+                        const abc =  JSON.parse(JSON.stringify(allCommentFound)).sort((a,b) =>
+                            (a.messageId < b.messageId)? 1:((b.messageId < a.messageId)?-1 : 0
+
+                        ))
+                        const userMessageComment = abc.map(item => item.messageId).filter((elt,i,a)=>a.indexOf(elt)=== i).sort((a,b)=>a-b)
+
+
+                        let commentIds = [];
+                        let commentMessageId = [];
+                    
+                        allCommentFound.forEach((element) =>{
+                        commentIds.push(element.id);
+                        commentMessageId.push(element.messageId);
+                    })
+                        done(null,userFound,allMessageFound,messageIdTab,messageAttachmentTab,messageCommentsTab,messageLikesTab,messageDislikesTab, allLikeFoundDislike,allLikeFoundLike,commentIds,messageToDelete,userMessageComment);
+                    })
+                    .catch(function (err) {
+                        console.log('------------------3------------------');
+                        console.log(err);
+                        console.log('------------------------------------');
+                        return res.status(500).json({ 'error': 'unable to verify user' });
+                    });
+            },
+            function (userFound,allMessageFound,messageIdTab,messageAttachmentTab,messageCommentsTab,messageLikesTab,messageDislikesTab,allLikeFoundDislike,allLikeFoundLike,commentIds,messageToDelete,userMessageComment,done) {
+                models.Commentlike.findAll({
+                    where: { userId: userId , userLike : true },
+                    attributes : ['commentId']
+                })
+                    .then(function (allCommentLikeFoundLike) {
+
+                        done(null,userFound,allMessageFound,messageIdTab,messageAttachmentTab,messageCommentsTab,messageLikesTab,messageDislikesTab, allLikeFoundDislike,allLikeFoundLike,commentIds,allCommentLikeFoundLike,messageToDelete,userMessageComment);
+                    })
+                    .catch(function (err) {
+                        console.log('---------------------4---------------');
+                        console.log(err);
+                        console.log('------------------------------------');
+                        return res.status(500).json({ 'error': 'unable to verify user' });
+                    });
+            },
+            function (userFound,allMessageFound,messageIdTab,messageAttachmentTab,messageCommentsTab,messageLikesTab,messageDislikesTab,allLikeFoundDislike,allLikeFoundLike,commentIds,allCommentLikeFoundLike,messageToDelete,userMessageComment,done) {
+                models.Commentlike.findAll({
+                    where: { userId: userId , userDislike : true },
+                    attributes : ['commentId']
+                })
+                    .then(function (allCommentLikeFoundDislike) {
+
+                        done(null,userFound,allMessageFound,messageIdTab,messageAttachmentTab,messageCommentsTab,messageLikesTab,messageDislikesTab, allLikeFoundDislike,allLikeFoundLike,commentIds,allCommentLikeFoundLike,allCommentLikeFoundDislike,messageToDelete,userMessageComment);
+                    })
+                    .catch(function (err) {
+                        console.log('---------------------7---------------');
+                        console.log(err);
+                        console.log('------------------------------------');
+                        return res.status(500).json({ 'error': 'unable to verify user' });
+                    });
+            },
+            function (userFound,allMessageFound,messageIdTab,messageAttachmentTab,messageCommentsTab,messageLikesTab,messageDislikesTab,allLikeFoundDislike,allLikeFoundLike,commentIds,allCommentLikeFoundLike,allCommentLikeFoundDislike,messageToDelete,userMessageComment,done) {
+
+                        
+                        models.Like.destroy({
+                            where : {userId}
+                        }).then((result) =>{
+                            let likeMessageIdTabDislike = [];
+
+                            allLikeFoundDislike.forEach((element) =>{
+                                likeMessageIdTabDislike.push(element.messageId);
+                            });
+    
+                            models.Message.decrement({dislikes :1},{
+                                where : {id : likeMessageIdTabDislike},
+                            })
+
+                        }).then((result) => {
+                            let likeMessageIdTabLike = [];
+
+                        allLikeFoundLike.forEach((element) =>{
+                            likeMessageIdTabLike.push(element.messageId);
+                        });
+
+                        models.Message.decrement({likes :1},{
+                            where : {id : likeMessageIdTabLike},
+                        })
+                        }).then(function () {
+                            done(null,userFound,allMessageFound,messageIdTab,messageAttachmentTab,messageCommentsTab,messageLikesTab,messageDislikesTab,commentIds,allCommentLikeFoundLike,allCommentLikeFoundDislike,messageToDelete,userMessageComment);
+                        }).catch(err => {
+                            return res.status(500).json({ 'error': 'Pas possible de supprimer le message' });
+                        });
+            },
+            
+            
+            /*function (userFound,allMessageFound,messageIdTab,messageAttachmentTab,messageCommentsTab,messageLikesTab,messageDislikesTab,commentIds,allCommentLikeFoundLike,allCommentLikeFoundDislike,messageToDelete,userMessageComment,done) {
+
+                models.Commentlike.destroy({
+                    where : {userId}
+                }).then((result) =>{
+                    let commentLikeMessageIdTablike = [];
+
+                    allCommentLikeFoundLike.forEach((element) =>{
+                        commentLikeMessageIdTablike.push(element.commentId);
+                    });
+
+                    models.Comment.decrement({likes :1},{
+                        where : {id : commentLikeMessageIdTablike},
+                    })
+
+                }).then((result) => {
+                    let commentLikeMessageIdTabDislike = [];
+
+                    allCommentLikeFoundDislike.forEach((element) =>{
+                    commentLikeMessageIdTabDislike.push(element.commentId);
+                });
+
+                models.Comment.decrement({dislikes : 1},{
+                    where : {id : commentLikeMessageIdTabDislike},
+                })
+                }).then(function () {
+                    done(null,userFound,allMessageFound,messageIdTab,messageAttachmentTab,messageCommentsTab,messageLikesTab,messageDislikesTab,commentIds,messageToDelete,userMessageComment);
+                }).catch(err => {
+                    return res.status(500).json({ 'error': 'Pas possible de supprimer le message' });
+                });
+            },*/
+          function (userFound,allMessageFound,messageIdTab,messageAttachmentTab,messageLikesTab,messageCommentsTab,messageDislikesTab,commentIds,allCommentLikeFoundLike,allCommentLikeFoundDislike,messageToDelete,userMessageComment,done) {
+
+
+            /*models.Comment.destroy({
+                where : {userId}
+            }).then((result) =>{*/
+                models.Message.findAll({
+                    where : {id : userMessageComment}
+                })
+            .then(result=>{
+                    const finalTab = [];
+                    const objectsEqual = (o1, o2) => {
+                                        Object.keys(o1).map((elt, p) => {
+                    if (o1[p].messageId === o2[p]?.id) {
+                    o2[p].comments = o2[p].comments - o1[p].count;
+                    finalTab.push(o2[p]);
+                    }
+                    });
+                    };
+                    console.log('--------------gdsgd----------------------');
+                    console.log(messageToDelete);
+                    console.log('------------------------------------');
+                    console.log('----------gdfgfsdfd--------------------------');
+                    console.log(result);
+                    console.log('------------------------------------');
+                    objectsEqual(messageToDelete, result);
+
+                    userMessageComment.map((elt,i)=>{
+                        models.Message.update({comments : finalTab[i].comments},{
+                            where : {id : elt},
+                        })
+                    })
+                  
+                }).then(result=>{
+                    models.Comment.destroy({
+                        where : {userId}
+                    })
+                })
+                /*models.Comment.destroy({
+                        where : {userId}
+                    }).then((result) =>{
+                            models.Message.decrement({comments : 1 },{
+                                where : {id : commentIds},
+                            })
+                        
+                    }).then(function () {
+                        done(null,userFound,allMessageFound,messageIdTab,messageAttachmentTab,messageCommentsTab,messageLikesTab,messageDislikesTab,commentIds,allCommentLikeFoundLike,allCommentLikeFoundDislike);
+                       res.send('test')
+                    })*/
+                },
+            
+            function (userFound,allMessageFound,messageIdTab,messageAttachmentTab,messageCommentsTab,messageLikesTab,messageDislikesTab,commentIds,allCommentLikeFoundLike,done) {
+
+            },
+            function (userFound,allMessageFound,messageIdTab,messageAttachmentTab,messageCommentsTab,messageLikesTab,messageDislikesTab,commentIds,allCommentLikeFoundLike,done) {
+
+            },
+            
+                  
+        ])
+
+    },
     updateUserProfile: function (req, res) {
         const token = req.headers.authorization.split(' ')[1];
         const decodedToken = jwt.verify(token, process.env.TOKEN,);

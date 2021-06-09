@@ -23,9 +23,11 @@ module.exports = {
         }
       },
       userLike: {
+        allowNull: false,
         type: Sequelize.BOOLEAN
       },
       userDislike: {
+        allowNull: false,
         type: Sequelize.BOOLEAN
       },
       createdAt: {

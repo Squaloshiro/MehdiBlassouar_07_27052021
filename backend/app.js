@@ -10,6 +10,7 @@ const app = express(); // utilisation de expresse pour le site
 const userRoutes = require('./routes/userRoute')
 const messageRoute = require('./routes/messageRoute')
 const likesRoute = require('./routes/likesRoute')
+const commentLikesRoute = require('./routes/commentLikeRoute')
 const commentRoute = require('./routes/commentRoute')
 
 
@@ -27,6 +28,7 @@ app.use(helmet());// mise en place du X-XSS-Protection afin d'activer le filtre 
 app.use('/', userRoutes)
 app.use('/', messageRoute)
 app.use('/', likesRoute)
+app.use('/', commentLikesRoute)
 app.use('/', commentRoute)
 app.use('/images', express.static(path.join(__dirname, 'images')))
 app.use('*', (req, res) => { res.json({ error: 404 }) })
