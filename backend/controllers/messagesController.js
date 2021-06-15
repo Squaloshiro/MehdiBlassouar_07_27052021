@@ -199,7 +199,7 @@ module.exports = {
             .then(function (messages) { res.status(200).json(messages) })
             .catch(err => {
                 console.log(err);
-                res.status(500).json({ "error": "ce message existe pas" });
+                res.status(500).json({ "error": "this message does not exist" });
             });
     },
     modifyMessage: function (req, res) {
@@ -219,7 +219,7 @@ module.exports = {
                 })
                     .catch(function (err) {
 
-                        return res.status(500).json({ 'error': 'impossible de vérif utilisateur' })
+                        return res.status(500).json({ 'error': 'unable to verify message' })
                     });
 
             },
@@ -233,13 +233,11 @@ module.exports = {
                     })
                         .catch(function (err) {
 
-                            return res.status(500).json({ 'error': 'impossible de vérif utilisateur2' })
+                            return res.status(500).json({ 'error': 'unable to verify user' })
                         });
                 } else {
-                    return res.status(500).json({ 'error': 'impossible de vérif utilisateur2' })
+                    return res.status(500).json({ 'error': 'message does not exist' })
                 }
-
-
             },
             function (messageFound, userFound, done) {
                 models.Message.findOne({
@@ -249,16 +247,11 @@ module.exports = {
                         UserId: userId
                     }
                 }).then(function (message) {
-
                     done(null, messageFound, userFound);
                 })
                     .catch(function (err) {
-                        console.log('------------------------------------');
-                        console.log(err);
-                        console.log('------------------------------------');
-                        return res.status(500).json({ 'error': 'impossible de vérif utilisateur3' })
+                        return res.status(500).json({ 'error': 'unable to find message' })
                     });
-
             },
             function (messageFound, userFound, done) {
                 if (messageFound) {
@@ -269,21 +262,21 @@ module.exports = {
                         }).then(function (newMessage) {
                             done(newMessage);
                         }).catch(function (err) {
-                            res.status(500).json({ 'error': 'impossible de modifier' });
+                            res.status(500).json({ 'error': 'unable to update message' });
                         });
                     } else {
-                        res.status(500).json({ 'error': 'cette pub' });
+                        res.status(500).json({ 'error': 'this publication does not belong to you' });
                     }
 
                 } else {
-                    res.status(404).json({ 'error': 'utilisateur non trouvé' });
+                    res.status(404).json({ 'error': 'message not found' });
                 }
             },
         ], function (newMessage) {
             if (newMessage) {
                 return res.status(201).json(newMessage);
             } else {
-                return res.status(500).json({ 'error': 'impossibe de modifier ce commentaire' });
+                return res.status(500).json({ 'error': 'unable to update this message' });
             }
         })
     },
@@ -293,34 +286,34 @@ module.exports = {
         const decodedToken = jwt.verify(token, process.env.TOKEN,);
         const userId = decodedToken.userId;
         var messageId = req.params.id
-        
+
         asyncLib.waterfall([
 
             function (done) {
 
                 models.Comment.findAll({
-                    where: { messageId  },
-                    attributes : ['id']
+                    where: { messageId },
+                    attributes: ['id']
                 }).then(function (commentsFound) {
                     let commentIds = [];
-                    
-                    commentsFound.map(({id}) =>{
+
+                    commentsFound.map(({ id }) => {
                         commentIds.push(id);
                     })
                     done(null, commentIds);
                 }).catch(function (err) {
-                    res.status(500).json({ 'error': 'impossible de modifier 1' });
+                    res.status(500).json({ 'error': 'unable to verify comment' });
                 });
             },
             function (commentIds, done) {
-                
-                    models.Commentlike.destroy({
-                        where: { commentId: commentIds  }
-                    }).then(function (commentsLikeFound) {
-                        done(null);
-                    }).catch(function (err) {
-                        res.status(500).json({ 'error': 'impossible de modifier 2' });
-                    });
+
+                models.Commentlike.destroy({
+                    where: { commentId: commentIds }
+                }).then(function () {
+                    done(null);
+                }).catch(function (err) {
+                    res.status(500).json({ 'error': 'unable to delet comment likes' });
+                });
             },
             function (done) {
 
@@ -335,34 +328,32 @@ module.exports = {
                     })
                     .catch(err => {
 
-                        return res.status(500).json({ 'error': 'Pas possible de supprimer les commentaires ou les likes' });
+                        return res.status(500).json({ 'error': 'unable to delete comment or like' });
                     })
-                },
-                function (done) {
-                    models.Message.findOne({
-                        where: { id :messageId }
-                    }).then(function (messageFound) {
-                        done(null, messageFound);
-                    }).catch(function (err) {
+            },
+            function (done) {
+                models.Message.findOne({
+                    where: { id: messageId }
+                }).then(function (messageFound) {
+                    done(null, messageFound);
+                }).catch(function (err) {
 
-                        res.status(500).json({ 'error': 'impossible de modifier111111' });
-                    });
-                },
-               function ( messageFound,done) {
-                   console.log('------------------------------------');
-                   console.log(userId);
-                   console.log('------------------------------------');
-                if(messageFound.UserId === userId){
-                    if(messageFound.attachment === null){
+                    res.status(500).json({ 'error': 'unable to verify message' });
+                });
+            },
+            function (messageFound, done) {
+
+                if (messageFound.UserId === userId) {
+                    if (messageFound.attachment === null) {
                         messageFound.destroy({
-                            where: { id :messageId }
+                            where: { id: messageId }
                         }).then(function (destroyMessageFound) {
                             return res.status(201).json(destroyMessageFound);
                         }).catch(function (err) {
-                            res.status(500).json({ 'error': 'impossible de modifier 2' });
+                            res.status(500).json({ 'error': 'unable to delete message' });
                         });
-                    }else{
-                        const filename = models.Message.attachment.split('/images/')[1];
+                    } else {
+                        const filename = messageFound.attachment.split('/images/')[1];
                         fs.unlink(`images/${filename}`, () => {
                             models.Message.destroy({
                                 where: { id: messageId }
@@ -370,43 +361,15 @@ module.exports = {
                         }).then(function (destroyMessageFoundImg) {
                             return res.status(201).json(destroyMessageFoundImg);
                         }).catch(function (err) {
-                            res.status(500).json({ 'error': 'impossible de modifier 2' });
+                            res.status(500).json({ 'error': 'unable to delete message' });
                         });
-                           
-                        
-                    }
-                }else
-                return res.status(500).json({ 'error': 'cette publication ne vous apartien pas' });
-                }
-            ])
-        },
-    }
-                    /*.then(commentsFound => {
 
-                        models.Message.destroy({
-                            where: { id: messageId }
-                        })
-                        return res.status(201).json(commentsFound)
-                    })
-                    .catch(err => {
-                        return res.status(500).json({ 'error': 'Pas possible de supprimer le message' });
-                    })
-                    .then(commentsFoundImg => {
-                        const filename = models.Message.attachment.split('/images/')[1];
-                        fs.unlink(`images/${filename}`, () => {
-                            models.Message.destroy({
-                                where: { id: messageId }
-                            })
-                        })
-                        models.Message.destroy({
-                            where: { id: messageId }
-                        })
-                        return res.status(201).json(commentsFoundImg)
-                    })
-                    .catch(err => {
-                        return res.status(500).json({ 'error': 'Pas possible de supprimer le message' });
-                    });
+
+                    }
+                } else
+                    return res.status(500).json({ 'error': 'this publication does not belong to you' });
             }
-        ]),
-    },*/
+        ])
+    },
+}
 

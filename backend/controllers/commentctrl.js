@@ -14,11 +14,8 @@ module.exports = {
         // Params
 
         var content = req.body.content;
-       /* var messageId = parseInt(req.params.messageId);
-        if (messageId <= 0) {
-            return res.status(400).json({ 'error': 'invalid parameters' });
-        }*/
-        var messageId = req.body.messageId
+        var messageId = parseInt(req.params.messageId);
+
 
         asyncLib.waterfall([
             function (done) {
@@ -26,7 +23,7 @@ module.exports = {
                     where: { id: userId }
                 })
                     .then(function (userFound) {
-                    
+
                         done(null, userFound);
                     })
                     .catch(function (err) {
@@ -45,20 +42,14 @@ module.exports = {
                             done(null, messageFound, userFound);
                         })
                         .catch(function (err) {
-                            console.log('------------------------------------');
-                            console.log(err);
-                            console.log('------------------------------------');
-                            return res.status(500).json({ 'error': 'unable to verify user2' });
+                            return res.status(500).json({ 'error': 'unable to verify message' });
                         });
                 } else {
                     return res.status(404).json({ 'error': 'user not exist' });
                 }
             },
             function (messageFound, userFound, done) {
-
-
                 if (messageFound) {
-
                     models.Comment.create({
                         content: content,
                         likes: 0,
@@ -66,12 +57,12 @@ module.exports = {
                         UserId: userFound.id,
                         MessageId: messageFound.id
                     }),
-                    messageFound.update({
-                        comments: messageFound.comments + 1,
-                     })
-                        .then(function (newComment) {
-                            done(newComment);
-                        });
+                        messageFound.update({
+                            comments: messageFound.comments + 1,
+                        })
+                            .then(function (newComment) {
+                                done(newComment);
+                            });
                 } else {
                     res.status(404).json({ 'error': 'user not found' });
                 }
@@ -84,7 +75,7 @@ module.exports = {
             }
         });
     },
-    listComments: function(req,res){
+    listComments: function (req, res) {
         var fields = req.query.fields;
         var limit = parseInt(req.query.limit);
         var offset = parseInt(req.query.offset);
@@ -114,7 +105,7 @@ module.exports = {
             res.status(500).json({ "error": "invalid fields" });
         });
     },
-    listCommentsUser: function(req,res){
+    listCommentsUser: function (req, res) {
         const token = req.headers.authorization.split(' ')[1];
         const decodedToken = jwt.verify(token, process.env.TOKEN,);
         const userId = decodedToken.userId;
@@ -148,15 +139,64 @@ module.exports = {
             res.status(500).json({ "error": "invalid fields" });
         });
     },
-    getOneComment: function(req,res){
-        models.Comment.findByPk(req.params.id )
-            .then(function (messages){ res.status(200).json(messages)})
+    listCommentsMessage: function (req, res) {
+        var messageId = parseInt(req.params.messageId);
+        var fields = req.query.fields;
+        var limit = parseInt(req.query.limit);
+        var offset = parseInt(req.query.offset);
+        var order = req.query.order;
+        const ITEMS_LIMIT = 50;
+        if (limit > ITEMS_LIMIT) {
+            limit = ITEMS_LIMIT;
+        }
+        asyncLib.waterfall([
+            function (done) {
+                models.Message.findOne({
+                    where: { id: messageId }
+                }).then((messageFound) => {
+                    done(null, messageFound)
+                }).catch((err) => {
+                    return res.status(404).json({ "error": "no messages found" });
+                })
+
+            },
+            function (messageFound, done) {
+
+                models.Comment.findAll({
+                    where: { messageId: messageFound.id },
+                    order: [(order != null) ? order.split(':') : ['createdAt', 'ASC']],
+                    attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
+                    limit: (!isNaN(limit)) ? limit : null,
+                    offset: (!isNaN(offset)) ? offset : null,
+                    include: [{
+                        model: models.User,
+                        attributes: ['username']
+                    }]
+                }).then(function (messages) {
+                    if (messages) {
+                        res.status(200).json(messages);
+                    } else {
+                        res.status(404).json({ "error": "no messages found" });
+                    }
+                }).catch(function (err) {
+                    console.log(err);
+                    res.status(500).json({ "error": "invalid fields" });
+                });
+
+
+            },
+        ])
+
+    },
+    getOneComment: function (req, res) {
+        models.Comment.findByPk(req.params.id)
+            .then(function (messages) { res.status(200).json(messages) })
             .catch(err => {
                 console.log(err);
-                res.status(500).json({ "error": "ce commentaire existe pas" });
+                res.status(500).json({ "error": "this comment does not exist" });
             });
     },
-    modifyComment: function(req,res){
+    modifyComment: function (req, res) {
         const token = req.headers.authorization.split(' ')[1];
         const decodedToken = jwt.verify(token, process.env.TOKEN,);
         const userId = decodedToken.userId;
@@ -167,92 +207,85 @@ module.exports = {
         asyncLib.waterfall([
             function (done) {
                 models.Comment.findByPk(
-                    req.params.id 
-                ).then(function(messageFound){
-                    done(null,messageFound);
+                    req.params.id
+                ).then(function (messageFound) {
+                    done(null, messageFound);
                 })
-                .catch(function (err){
-                    
-                    return res.status(500).json({ 'error': 'impossible de vérif utilisateur' })
-                });
-                
+                    .catch(function (err) {
+
+                        return res.status(500).json({ 'error': 'unable to verify comment' })
+                    });
+
             },
-            function (messageFound,done) {
-                if(messageFound){
+            function (messageFound, done) {
+                if (messageFound) {
                     models.User.findOne({
-                        where:{id : userId}
-                    }).then(function(userFound){
-    
-                        done(null,messageFound,userFound);
+                        where: { id: userId }
+                    }).then(function (userFound) {
+                        done(null, messageFound, userFound);
                     })
-                    .catch(function (err){
-                        
-                        return res.status(500).json({ 'error': 'impossible de vérif utilisateur2' })
-                    });
-                }else{
-                    return res.status(500).json({ 'error': 'impossible de vérif utilisateur2' })
+                        .catch(function (err) {
+                            return res.status(500).json({ 'error': 'unableto verify user' })
+                        });
+                } else {
+                    return res.status(500).json({ 'error': 'this message does not exist' })
                 }
-                
-                
             },
-            function (messageFound,userFound, done) {
+            function (messageFound, userFound, done) {
                 models.Comment.findOne({
-                    attributes:[ 'content'],
-                    where:{
-                        id:req.params.id ,
-                        UserId : userId}
-                }).then(function(message){
+                    attributes: ['content'],
+                    where: {
+                        id: req.params.id,
+                        UserId: userId
+                    }
+                }).then(function () {
 
-                    done(null,messageFound,userFound);
+                    done(null, messageFound, userFound);
                 })
-                .catch(function (err){
+                    .catch(function (err) {
 
-                    return res.status(500).json({ 'error': 'impossible de vérif utilisateur3' })
-                });
-                
-            },
-            function (messageFound,userFound, done) {
-               if (messageFound) {
-                   if(messageFound.UserId === userFound.id ){
-                    messageFound.update({
-                        content: (content ? content : messageFound.content)
-                       
-                    }).then(function (newMessage) {
-                        done(newMessage);
-                    }).catch(function (err) {
-                        res.status(500).json({ 'error': 'impossible de modifier' });
+                        return res.status(500).json({ 'error': 'unable to verify this message' })
                     });
-                   }else{
-                    res.status(500).json({ 'error': 'ce commentaire ne vous appartien pas' });
-                   }
-                
-               } else {
-                    res.status(404).json({ 'error': 'utilisateur non trouvé' });
+
+            },
+            function (messageFound, userFound, done) {
+                if (messageFound) {
+                    if (messageFound.UserId === userFound.id) {
+                        messageFound.update({
+                            content: (content ? content : messageFound.content)
+
+                        }).then(function (newMessage) {
+                            done(newMessage);
+                        }).catch(function (err) {
+                            res.status(500).json({ 'error': 'unable to update' });
+                        });
+                    } else {
+                        res.status(500).json({ 'error': 'this comment does not belong to you' });
+                    }
+
+                } else {
+                    res.status(404).json({ 'error': 'this comment not found' });
                 }
             },
-        ],function (newMessage) {
+        ], function (newMessage) {
             if (newMessage) {
                 return res.status(201).json(newMessage);
             } else {
-                return res.status(500).json({ 'error': 'impossibe de modifier ce commentaire' });
+                return res.status(500).json({ 'error': 'unable to update this comment' });
             }
         })
     },
     deleteOneComment: function (req, res) {
-       // var messageId = req.params.id
+        // var messageId = req.params.id
         const token = req.headers.authorization.split(' ')[1];
         const decodedToken = jwt.verify(token, process.env.TOKEN,);
         const userId = decodedToken.userId;
 
         // Params
 
-        var comments = req.body.comments;
-       /* var messageId = parseInt(req.params.messageId);
-        if (messageId <= 0) {
-            return res.status(400).json({ 'error': 'invalid parameters' });
-        }*/
-        var messageId = parseInt(req.params.messageId);
-        var commentId = parseInt(req.params.id);
+
+        let messageId = parseInt(req.params.messageId);
+        let commentId = parseInt(req.params.id);
 
         if (messageId <= 0) {
             return res.status(400).json({ 'error': 'invalid parameters' });
@@ -272,79 +305,65 @@ module.exports = {
             },
             function (messageFound, done) {
                 models.Comment.findOne({
-                    where: { id: commentId}}
-                ).then(function(commentFound){
-
-                    done(null,messageFound,commentFound);
+                    where: { id: commentId }
+                }
+                ).then(function (commentFound) {
+                    done(null, messageFound, commentFound);
                 })
-                .catch(function (err){
-                    console.log('------------------------------------');
-                    console.log(err);
-                    console.log('------------------------------------');
-                    return res.status(500).json({ 'error': 'impossible de vérif utilisateur' })
-                });
+                    .catch(function (err) {
+                        return res.status(500).json({ 'error': 'unable to verify comment' })
+                    });
             },
-            function (messageFound,commentFound, done) {
-             
-                
-                    models.User.findOne({
-                        where: { id: userId }
-                    })
-                        .then(function (userFound) {
-                            done(null,messageFound,commentFound, userFound);
-                        })
-                        .catch(function (err) {
-
-                            return res.status(500).json({ 'error': 'unable to verify user' });
-                        });
-               
-            },
-            
-            function (messageFound,commentFound, userFound, done) {
-                if(commentFound){
-                models.Comment.findOne({
-                    where: {
-                        userId: userId,
-                        messageId: messageId,
-                    }
+            function (messageFound, commentFound, done) {
+                models.User.findOne({
+                    where: { id: userId }
                 })
-                    .then(function (commentFound) {
-                        done(null,messageFound,commentFound, userFound);
+                    .then(function (userFound) {
+                        done(null, messageFound, commentFound, userFound);
                     })
                     .catch(function (err) {
-                        return res.status(500).json({ 'error': 'unable to verify is user already liked' });
+                        return res.status(500).json({ 'error': 'unable to verify user' });
                     });
-                }else{
-                    return res.status(500).json({ 'error': 'Pas possible de supprimer le message' })
+            },
+            function (messageFound, commentFound, userFound, done) {
+                if (commentFound) {
+                    models.Comment.findOne({
+                        where: {
+                            userId: userId,
+                            messageId: messageId,
+                        }
+                    })
+                        .then(function (commentFound) {
+                            done(null, messageFound, commentFound, userFound);
+                        })
+                        .catch(function (err) {
+                            return res.status(500).json({ 'error': 'unable to verify comment and user' });
+                        });
+                } else {
+                    return res.status(500).json({ 'error': 'this comment does not exist' })
                 }
             },
             function (messageFound, userFound, commentFound, done) {
-                if(commentFound){
+                if (commentFound) {
                     models.Comment.destroy({
-                        where: {  id: commentId }
+                        where: { id: commentId }
                     })
                         .then(commentFound => {
                             messageFound.update({
                                 comments: messageFound.comments - 1,
-                             }),
-                            models.Commentlike.destroy({
-                                where: { commentId: messageId }
-                            })
-                            
+                            }),
+                                models.Commentlike.destroy({
+                                    where: { commentId: messageId }
+                                })
                             return res.status(201).json(commentFound)
                         })
                         .catch(err => {
-    
-                            return res.status(500).json({ 'error': 'Pas possible de supprimer le message' })
+                            return res.status(500).json({ 'error': 'unable to delet this comment' })
                         })
-                }else{
-                    return res.status(500).json({ 'error': 'Pas possible de supprimer le message' })
+                } else {
+                    return res.status(500).json({ 'error': 'comment not found' })
                 }
-               
             }
-
-
-
         ])
     }
 
