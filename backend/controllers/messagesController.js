@@ -15,10 +15,14 @@ module.exports = {
         const ITEMS_LIMIT = 50;
 
         // Params
-        var title = req.body.title;
-        var content = req.body.content;
+        
+        const formMessage = JSON.parse(req.body.message);
+        const {title , content} = formMessage
+      
 
-
+        console.log('-------------123-----------------------');
+        console.log(req.body);
+        console.log('------------------------------------');
         if (title == null || content == null && attachment == null) {
             return res.status(400).json({ 'error': 'missing parameters' });
         }
@@ -35,6 +39,9 @@ module.exports = {
                         done(null, userFound);
                     })
                     .catch(function (err) {
+                        console.log('-----------------err-------------------');
+                        console.log(err);
+                        console.log('------------------------------------');
                         return res.status(500).json({ 'error': 'unable to verify user' });
                     });
             },
@@ -44,6 +51,7 @@ module.exports = {
                     models.Message.create({
                         title: title,
                         content: content,
+                        comments:0,
                         likes: 0,
                         dislikes: 0,
                         UserId: userFound.id,

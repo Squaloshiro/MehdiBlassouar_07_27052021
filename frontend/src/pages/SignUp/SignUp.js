@@ -2,14 +2,14 @@ import Input from '../../componants/Input/Input';
 import Button from '../../componants/Button/Button';
 import { useState } from 'react';
 import api from '../../config/api';
-
+import { useHistory } from 'react-router';
 
 const SignUp = () => {
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [username, setUsername] = useState("")
-
+    const history = useHistory()
 
     const onChangeEmail = (e) => {
         setEmail(e.target.value)
@@ -29,6 +29,7 @@ const SignUp = () => {
                 email, password, username
             })
             sessionStorage.setItem('groupomaniaToken', response.data.token)
+            history.push("/")
         } catch (error) {
             console.log('------------------------------------');
             console.log(error);

@@ -1,7 +1,7 @@
 import MaterialButton from '@material-ui/core/Button';
 
-const Button = ({ title, onClick }) => {
-    return <MaterialButton onClick={onClick} variant="contained" color="primary">
+const Button = ({ type='submit',title, onClick }) => {
+    return <MaterialButton type={type} onClick={onClick} variant="contained" color="primary">
         {title}
     </MaterialButton>
 }

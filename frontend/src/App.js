@@ -9,6 +9,7 @@ import Footer from "./componants/Footer/Footer";
 import SignIn from "./pages/SignIn/SignIn";
 import SignUp from './pages/SignUp/SignUp';
 import LandingPage from './pages/LandingPage/LandingPage';
+import MessageImage from './pages/PostMessage/PostMessage';
 
 const App = () => {
   return <Router>
@@ -17,6 +18,11 @@ const App = () => {
       <Route exact path="/">
 
         <LandingPage />
+
+      </Route>
+      <Route exact path="/post-message">
+
+        <MessageImage />
 
       </Route>
 
