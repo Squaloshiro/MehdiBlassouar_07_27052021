@@ -7,6 +7,8 @@ const asyncLib = require('async');
 const fs = require('fs');
 
 
+
+
 const email_regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 const password_regex = /^(?=.*\d).{4,8}$/;
 
@@ -424,11 +426,16 @@ module.exports = {
                         return attachment !== null
                     });
                     if (resultAttachment.length) {
+                        const dynamiquePath = __dirname.split('controllers').shift();
                         const files = resultAttachment.map(message => message.attachment)
                         const deleteFiles = (files, callback) => {
                             let i = files.length;
                             files.forEach((filepath) => {
-                                fs.unlink(filepath, (err) => {
+
+                                let fileName = filepath.split('http://localhost:4000/').pop()
+                                fileName = dynamiquePath + fileName
+
+                                fs.unlink(fileName, (err) => {
                                     i--;
                                     if (err) {
                                         callback(err); return;

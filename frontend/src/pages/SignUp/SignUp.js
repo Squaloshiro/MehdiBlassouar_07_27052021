@@ -3,8 +3,9 @@ import Button from '../../componants/Button/Button';
 import { useState } from 'react';
 import api from '../../config/api';
 import { useHistory } from 'react-router';
+import "./signup.scss";
 
-const SignUp = () => {
+const SignUp = ({ setIsLoggedin }) => {
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -29,18 +30,17 @@ const SignUp = () => {
                 email, password, username
             })
             sessionStorage.setItem('groupomaniaToken', response.data.token)
+            setIsLoggedin(true)
             history.push("/")
         } catch (error) {
-            console.log('------------------------------------');
-            console.log(error);
-            console.log('------------------------------------');
+
         }
     }
 
-    return <div>
+    return <div >
 
         <Input onChange={onChangeEmail} value={email} label="Email" type="email" />
-        <Input onChange={onChangePassword} value={password} label="password" type="password" />
+        <Input onChange={onChangePassword} value={password} label="Password" type="password" />
         <Input onChange={onChangeUsername} value={username} label="Username" />
         <Button onClick={onSignUp} title="Valider" />
     </div>

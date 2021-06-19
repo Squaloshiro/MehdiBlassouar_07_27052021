@@ -15,14 +15,12 @@ module.exports = {
         const ITEMS_LIMIT = 50;
 
         // Params
-        
-        const formMessage = JSON.parse(req.body.message);
-        const {title , content} = formMessage
-      
 
-        console.log('-------------123-----------------------');
-        console.log(req.body);
-        console.log('------------------------------------');
+        const formMessage = JSON.parse(req.body.message);
+        const { title, content } = formMessage
+
+
+
         if (title == null || content == null && attachment == null) {
             return res.status(400).json({ 'error': 'missing parameters' });
         }
@@ -37,11 +35,10 @@ module.exports = {
                 })
                     .then(function (userFound) {
                         done(null, userFound);
+
                     })
                     .catch(function (err) {
-                        console.log('-----------------err-------------------');
-                        console.log(err);
-                        console.log('------------------------------------');
+
                         return res.status(500).json({ 'error': 'unable to verify user' });
                     });
             },
@@ -51,7 +48,7 @@ module.exports = {
                     models.Message.create({
                         title: title,
                         content: content,
-                        comments:0,
+                        comments: 0,
                         likes: 0,
                         dislikes: 0,
                         UserId: userFound.id,
@@ -59,6 +56,7 @@ module.exports = {
                     })
                         .then(function (newMessage) {
                             done(newMessage);
+
                         });
                 } else {
                     res.status(404).json({ 'error': 'user not found' });
@@ -139,6 +137,7 @@ module.exports = {
         var limit = parseInt(req.query.limit);
         var offset = parseInt(req.query.offset);
         var order = req.query.order;
+
         const ITEMS_LIMIT = 50;
         if (limit > ITEMS_LIMIT) {
             limit = ITEMS_LIMIT;

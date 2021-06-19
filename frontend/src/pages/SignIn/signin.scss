@@ -1,0 +1,23 @@
+.lmj-main{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30em;
+}
+
+
+
+.lmj-flex{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.element-marge{
+    margin-top:1em ;
+}
+
+.element-size{
+    width: 20em;
+}
