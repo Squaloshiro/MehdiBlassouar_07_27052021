@@ -1,4 +1,4 @@
-import Input from '../../componants/Input/Input';
+
 import Button from '../../componants/Button/Button';
 import { useState, useEffect } from 'react';
 import api from '../../config/api';
@@ -44,30 +44,42 @@ const LandingPage = () => {
 
 
     return <div className="flex-position">
+
         <Button onClick={() => history.push('/post-message')} title='go post mess' />
 
         {messages && messages.map((element) => {
-            console.log('------------------------------------');
-            console.log(element);
-            console.log('------------------------------------');
+
             return <div key={element.id} className='card-position'>
-                <div className='user-position'>
-                    <div className='avatar-position'>mon avatar</div>
-                    <div className='username-position'>
-                        <div>{element.User.username}</div>
-                        <div>{element.createdAt}</div>
+                <div className="f-card">
+                    <div className="header">
+                        <div className="options"><i className="fa fa-chevron-down"></i></div>
+                        <img className="co-logo" src="http://placehold.it/40x40" />
+                        <div className="co-name"><a href="#">{element.User.username}</a></div>
+                        <div className="time"><a href="#">{element.createdAt}</a> · <i className="fa fa-globe"></i></div>
+                    </div>
+                    <div className="content">
+                        <p>{element.title} </p>
+                    </div>
+
+                    <div className="reference">
+                        <img className="reference-thumb" src={element.attachment} />
+                        <div className="reference-content">
+
+                            <div className="reference-subtitle">{element.content}</div>
+                            <div className="reference-font">Groupomania</div>
+                        </div>
+                    </div>
+                    <div className="social">
+                        <div className="social-content"></div>
+                        <div className="social-buttons">
+                            <span><i className="fa fa-thumbs-up"></i>Like</span>
+                            <span><i className="fa fa-thumbs-up"></i>Dislike</span>
+                            <span><i className="fa fa-comment"></i>Comment</span>
+                        </div>
                     </div>
                 </div>
-
-                <div className='img-position'>
-                    <img className='img-size' src={element.attachment}
-                        alt="publication image user" />
-                </div>
-                <div className='title-position'>{element.title} </div>
-                <div className="content-position">
-                    <div className='text-position' >{element.content} </div>
-                </div>
             </div>
+
         })}
     </div>
 }

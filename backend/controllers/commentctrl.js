@@ -334,14 +334,48 @@ module.exports = {
                         }
                     })
                         .then(function (commentFound) {
+
                             done(null, messageFound, commentFound, userFound);
                         })
                         .catch(function (err) {
+
                             return res.status(500).json({ 'error': 'unable to verify comment and user' });
                         });
                 } else {
                     return res.status(500).json({ 'error': 'this comment does not exist' })
                 }
+            },
+            function (messageFound, userFound, commentFound, done) {
+
+                models.Commentlike.findAll({
+                    where: { commentId },
+                    attributes: ['id']
+                }).then(function (commentlikefound) {
+
+                    let commentLikeIds = [];
+
+                    commentlikefound.map(({ id }) => {
+                        commentLikeIds.push(id);
+                    })
+
+                    done(null, messageFound, userFound, commentFound, commentLikeIds);
+                }).catch(function (err) {
+
+                    res.status(500).json({ 'error': 'unable to delet comment likes' });
+                });
+
+            },
+            function (messageFound, userFound, commentFound, commentLikeIds, done) {
+
+                models.Commentlike.destroy({
+                    where: { id: commentLikeIds }
+                }).then(function () {
+                    done(null, messageFound, userFound, commentFound,);
+                }).catch(function (err) {
+
+                    res.status(500).json({ 'error': 'unable to delet comment likes' });
+                });
+
             },
             function (messageFound, userFound, commentFound, done) {
                 if (commentFound) {
@@ -351,13 +385,12 @@ module.exports = {
                         .then(commentFound => {
                             messageFound.update({
                                 comments: messageFound.comments - 1,
-                            }),
-                                models.Commentlike.destroy({
-                                    where: { commentId: messageId }
-                                })
+                            })
+
                             return res.status(201).json(commentFound)
                         })
                         .catch(err => {
+
                             return res.status(500).json({ 'error': 'unable to delet this comment' })
                         })
                 } else {

@@ -3,6 +3,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+  Redirect
 } from "react-router-dom";
 import Header from "./componants/Header/Header";
 import Footer from "./componants/Footer/Footer";
@@ -19,39 +20,37 @@ import api from './config/api';
 
 const App = () => {
 
+
   const [isLoggedin, setIsLoggedin] = useState(false)
   const [checkLogin, setCheckLogin] = useState(false)
+
+
 
   useEffect(() => {
     const token = JSON.parse(JSON.stringify(sessionStorage.getItem('groupomaniaToken')));
 
-    console.log('---------------isLoggedin---------------------');
-    console.log(isLoggedin, token);
-    console.log('------------------------------------');
+
     if (!isLoggedin && token) {
       const getUser = async () => {
         try {
-          const response = await api({
+          await api({
             url: '/users/me',
             method: 'get',
             headers: { Authorization: `Bearer ${token}` }
           })
           setIsLoggedin(true)
           setCheckLogin(true)
-          console.log('-----------------response-------------------');
-          console.log(response);
-          console.log('------------------------------------');
+
         } catch (error) {
           setCheckLogin(true)
-          console.log('------------error------------------------');
-          console.log(error);
-          console.log('------------------------------------');
         }
       }
       getUser()
 
     } else {
       setCheckLogin(true)
+
+
     }
   }, [isLoggedin])
 
@@ -70,13 +69,18 @@ const App = () => {
       }
 
 
-      <Route path="/connexion">
+      <Route path="/connexion" render={() => (
+        isLoggedin ? (<Redirect to="/" />) : (<SignIn setIsLoggedin={setIsLoggedin} isLoggedin={isLoggedin} />)
+      )}>
 
-        <SignIn setIsLoggedin={setIsLoggedin} />
+
       </Route>
-      <Route path="/inscription">
-        <SignUp />
+
+      <Route path="/inscription" render={() => (
+        isLoggedin ? (<Redirect to="/" />) : (<SignUp setIsLoggedin={setIsLoggedin} isLoggedin={isLoggedin} />)
+      )}>
       </Route>
+
     </Switch>
     <Footer />
   </Router>

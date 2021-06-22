@@ -5,7 +5,8 @@ import api from '../../config/api';
 import { useHistory } from 'react-router';
 import "./signup.scss";
 
-const SignUp = ({ setIsLoggedin }) => {
+
+const SignUp = ({ isLoggedin, setIsLoggedin }) => {
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -25,6 +26,8 @@ const SignUp = ({ setIsLoggedin }) => {
     }
 
     const onSignUp = async () => {
+
+
         try {
             const response = await api.post('/users/register', {
                 email, password, username
@@ -32,17 +35,35 @@ const SignUp = ({ setIsLoggedin }) => {
             sessionStorage.setItem('groupomaniaToken', response.data.token)
             setIsLoggedin(true)
             history.push("/")
+
         } catch (error) {
 
         }
+
+
     }
 
-    return <div >
 
-        <Input onChange={onChangeEmail} value={email} label="Email" type="email" />
-        <Input onChange={onChangePassword} value={password} label="Password" type="password" />
-        <Input onChange={onChangeUsername} value={username} label="Username" />
-        <Button onClick={onSignUp} title="Valider" />
+
+    return <div className='lmj-main'>
+        <div className="lmj-flex">
+            <div className='element-size'>
+                <Input onChange={onChangeEmail} value={email} label="Email" type="email" />
+            </div>
+            <div className='element-marge  element-size'>
+                <Input onChange={onChangePassword} value={password} label="Password" type="password" />
+            </div>
+            <div className='element-marge  element-size'>
+                <Input onChange={onChangeUsername} value={username} label="Username" />
+            </div>
+            <div className='element-marge'>
+                <Button onClick={onSignUp} title="Valider" />
+            </div>
+        </div>
+
     </div>
+
 }
+
+
 export default SignUp

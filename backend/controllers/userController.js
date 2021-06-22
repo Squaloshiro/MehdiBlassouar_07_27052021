@@ -364,6 +364,7 @@ module.exports = {
                         }).then(() => {
                             done(null, userFound, userMessageComment, messageToDelete);
                         }).catch(err => {
+
                             return res.status(500).json({ 'error': 'unable to delet comments' });
                         });
                     })
