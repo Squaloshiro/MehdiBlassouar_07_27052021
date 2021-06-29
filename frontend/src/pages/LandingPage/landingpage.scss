@@ -1,19 +1,20 @@
+
 .flex-position{
-    border:  solid;
+   
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 100%;
-
-
+    width: 100%;
+    margin-top: 1em;
     
 }
 
 .card-position{
-    border: 1px solid;
+   
     width: 50%;
+    margin-top: 1em;
     margin-bottom: 1em;
-    border-radius: 1em;
+
 }
 
 .user-position{
@@ -45,10 +46,7 @@
 }
 
 
-.flex-position{
-    border: 1px black solid;
-    margin: 1em;
-}
+
 
 .img-position{
     display:block;
@@ -85,17 +83,17 @@
             box-sizing: border-box;
 }
 
-body {
-  background-color:#e9ebee;
-}
+//body {
+ // background-color:#e9ebee;
+//}
 
 .f-card {
   background-color:white;
-  /*height:400px;*/
-  width:502px;
+
+  width:100%;
   border: 1px solid #d0d1d5;
   border-radius:3px;
-  margin: auto;
+  //margin: auto;
   margin-bottom:10px;
   padding: 12px; 
   
@@ -165,20 +163,23 @@ body {
 }
 
 .reference {
-  width:476px;
+  width:100%;
+ 
 }
 .reference-thumb {
   display:block;
-  width:476px;
-  height:249px;
+  width:100%;
+  height: 25em;
+  object-fit: cover;
 }
 
 .reference-content {
   border: 2px solid black;
   border: 2px solid rgba(0, 0, 0, .1);
-  border-top: 0;
+  
   padding: 10px 12px 10px 12px;
 }
+
 
 .reference:hover .reference-content {
   border-color: black; /* Fallback */
@@ -197,7 +198,8 @@ body {
 .reference-subtitle {
   font-family: Helvetica;
   font-size:12px;
-  line-height: 16px; 
+  line-height: 16px;
+  overflow-wrap: break-word 
 }
 
 .reference-font {
@@ -222,6 +224,9 @@ body {
   
   border-top:1px solid #e5e5e5;
   padding-top:4px;
+  display: flex;
+  flex-direction: row;
+
   
 }
 
@@ -239,3 +244,4 @@ body {
 .social-buttons span i {
   padding-right:4px;
 }
+

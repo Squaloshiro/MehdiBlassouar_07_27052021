@@ -22,10 +22,12 @@ const MessageImage = () => {
     }
 
     const onChangeTitle = (e) => {
+        console.log(e.target.title)
         setTitle(e.target.value)
     }
 
     const onChangeContent = (e) => {
+        console.log(e.target.content)
         setContent(e.target.value)
     }
 
@@ -40,16 +42,30 @@ const MessageImage = () => {
         formData.append("image", file);
         formData.append("message", json)
         try {
-            const token = JSON.parse(JSON.stringify(sessionStorage.getItem('groupomaniaToken')));
-            await api({
+            if (file) {
+                const token = JSON.parse(JSON.stringify(sessionStorage.getItem('groupomaniaToken')));
+                await api({
 
-                method: 'post',
-                url: '/messages/newimg/',
-                data: formData,
-                headers: { Authorization: `Bearer ${token}`, Accept: "application/json", 'Content-Type': "multipart/from-data" }
-            })
+                    method: 'post',
+                    url: '/messages/newimg/',
+                    data: formData,
+                    headers: { Authorization: `Bearer ${token}`, Accept: "application/json", 'Content-Type': "multipart/from-data" }
+                })
+                history.push("/")
+            } else {
+                const token = JSON.parse(JSON.stringify(sessionStorage.getItem('groupomaniaToken')));
+                await api({
 
-            history.push("/")
+                    method: 'post',
+                    url: '/messages/new/',
+                    data: obj,
+                    headers: { Authorization: `Bearer ${token}`, Accept: "application/json" }
+                })
+                history.push("/")
+            }
+
+
+
         } catch (error) {
             console.log('------------------------------------');
             console.log(error);

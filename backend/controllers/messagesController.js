@@ -342,9 +342,14 @@ module.exports = {
                 models.Message.findOne({
                     where: { id: messageId }
                 }).then(function (messageFound) {
+                    console.log('------------------------------------');
+                    console.log(messageFound);
+                    console.log('------------------------------------');
                     done(null, messageFound);
                 }).catch(function (err) {
-
+                    console.log('-------------------err-----------------');
+                    console.log(err);
+                    console.log('------------------------------------');
                     res.status(500).json({ 'error': 'unable to verify message' });
                 });
             },
@@ -364,12 +369,15 @@ module.exports = {
                         fs.unlink(`images/${filename}`, () => {
                             models.Message.destroy({
                                 where: { id: messageId }
-                            })
-                        }).then(function (destroyMessageFoundImg) {
-                            return res.status(201).json(destroyMessageFoundImg);
-                        }).catch(function (err) {
-                            res.status(500).json({ 'error': 'unable to delete message' });
-                        });
+                            }).then(function (destroyMessageFoundImg) {
+                                console.log('-----------destroyMessageFoundImg-------------------------');
+                                console.log(destroyMessageFoundImg);
+                                console.log('------------------------------------');
+                                return res.status(201).json(destroyMessageFoundImg);
+                            }).catch(function (err) {
+                                res.status(500).json({ 'error': 'unable to delete message' });
+                            });
+                        })
 
 
                     }
