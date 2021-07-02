@@ -2,36 +2,13 @@
 
 import api from '../../config/api';
 import { useHistory } from 'react-router-dom';
-import { useState } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
 
-const MessageLike = ({ messageId, like, dislike }) => {
+const MessageLike = ({ modifyLike, messageId, like, dislike }) => {
     const history = useHistory()
-    const [userLike, setUserLike] = useState()
-    const [userDislike, setUserDislike] = useState()
 
-
-    const viewLike = () => {
-        if (userLike === undefined) {
-
-            return like
-        } else {
-
-            return userLike
-        }
-    }
-
-    const viewDislike = () => {
-        if (userDislike === undefined) {
-
-            return dislike
-        } else {
-
-            return userDislike
-        }
-    }
 
 
     const onSubmitLikeMessage = async (e) => {
@@ -43,8 +20,19 @@ const MessageLike = ({ messageId, like, dislike }) => {
                 url: '/messages/' + messageId + '/vote/like',
                 headers: { Authorization: `Bearer ${token}`, Accept: "application/json", 'Content-Type': "multipart/from-data" }
             })
-            setUserLike(response.data.likes)
-            setUserDislike(response.data.dislikes)
+            if (response.data === 'like ajoutée') {
+                like = like + 1
+            } else if (response.data === 'like ajoutée, dislike retirée') {
+                like = like + 1
+                dislike = dislike - 1
+            } else if (response.data === 'like retirée') {
+
+                like = like - 1
+
+
+            }
+            modifyLike({ messageId, like, dislike })
+
             history.push("/")
         } catch (error) {
             console.log('---------------123---------------------');
@@ -63,8 +51,18 @@ const MessageLike = ({ messageId, like, dislike }) => {
                 headers: { Authorization: `Bearer ${token}`, Accept: "application/json", 'Content-Type': "multipart/from-data" }
             })
 
-            setUserDislike(response.data.dislikes)
-            setUserLike(response.data.likes)
+            if (response.data === 'dislike ajoutée') {
+                dislike = dislike + 1
+
+            } else if (response.data === 'dislike ajoutée, like retirée') {
+                dislike = dislike + 1
+                like = like - 1
+            } else if (response.data === 'dislike retirée') {
+                dislike = dislike - 1
+
+            }
+            modifyLike({ messageId, dislike, like })
+
             history.push("/")
         } catch (error) {
             console.log('---------------123---------------------');
@@ -77,8 +75,8 @@ const MessageLike = ({ messageId, like, dislike }) => {
 
 
 
-    return <div><span ><FontAwesomeIcon icon={['far', 'thumbs-up']} onClick={onSubmitLikeMessage} />{viewLike()}</span>
-        <span ><FontAwesomeIcon icon={['far', 'thumbs-down']} onClick={onSubmitDislikeMessage} />{viewDislike()}</span></div>
+    return <div><span ><FontAwesomeIcon icon={['far', 'thumbs-up']} onClick={onSubmitLikeMessage} />{like}</span>
+        <span ><FontAwesomeIcon icon={['far', 'thumbs-down']} onClick={onSubmitDislikeMessage} />{dislike}</span></div>
 
 
 

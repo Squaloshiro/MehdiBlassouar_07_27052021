@@ -15,8 +15,7 @@ import "./componants/Header/header.scss";
 import PrivateRoute from './pages/PrivateRoute/PrivateRoute';
 import api from './config/api';
 import './assets/fontawesome';
-import MessageLike from "./componants/MessageLike/MessageLike";
-import MessageDestroy from "./componants/DestroyMsg/DestroyMsg";
+
 
 
 
@@ -65,10 +64,7 @@ const App = () => {
 
       {checkLogin && <PrivateRoute exact path='/' componant={LandingPage} isLoggedin={isLoggedin} />
       }
-      {checkLogin && <PrivateRoute exact path='/like-message/:id/' componant={MessageLike} isLoggedin={isLoggedin} />
-      }
-      {checkLogin && <PrivateRoute exact path='/drop-message/:id/' componant={MessageDestroy} isLoggedin={isLoggedin} />
-      }
+
       {checkLogin && <PrivateRoute exact path='/post-message' componant={MessageImage} isLoggedin={isLoggedin} />
       }
 

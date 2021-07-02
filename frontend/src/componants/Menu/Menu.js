@@ -4,14 +4,14 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import MessageDestroy from '../DestroyMsg/DestroyMsg';
+import CustomizedDialogs from '../MessageUpdat/MessageUpdat';
 
 
 
-
-export default function LongMenu({ messageId }) {
+export default function LongMenu({ viewUpdateMessage, element, messageId, deleteOneMessage }) {
     const options = [
-        'Modifier',
-        <MessageDestroy messageId={messageId} />,
+        <CustomizedDialogs viewUpdateMessage={viewUpdateMessage} element={element} />,
+        <MessageDestroy deleteOneMessage={deleteOneMessage} messageId={messageId} />,
 
     ];
 

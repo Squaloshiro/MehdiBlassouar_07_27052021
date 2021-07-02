@@ -6,9 +6,11 @@ import { useHistory } from 'react-router';
 import FormData from 'form-data'
 import TextArea from '../../componants/TextArea/InputTextArea';
 
+import "./postmessage.scss"
 
 
-const MessageImage = () => {
+const MessageImage = ({ postMessage }) => {
+
     const history = useHistory()
 
     const [file, setFile] = useState('')
@@ -44,28 +46,27 @@ const MessageImage = () => {
         try {
             if (file) {
                 const token = JSON.parse(JSON.stringify(sessionStorage.getItem('groupomaniaToken')));
-                await api({
-
+                const response = await api({
                     method: 'post',
                     url: '/messages/newimg/',
                     data: formData,
                     headers: { Authorization: `Bearer ${token}`, Accept: "application/json", 'Content-Type': "multipart/from-data" }
                 })
+
+
+                postMessage(response.data)
                 history.push("/")
             } else {
                 const token = JSON.parse(JSON.stringify(sessionStorage.getItem('groupomaniaToken')));
-                await api({
-
+                const response = await api({
                     method: 'post',
                     url: '/messages/new/',
                     data: obj,
                     headers: { Authorization: `Bearer ${token}`, Accept: "application/json" }
                 })
+                postMessage(response.data)
                 history.push("/")
             }
-
-
-
         } catch (error) {
             console.log('------------------------------------');
             console.log(error);
@@ -73,11 +74,20 @@ const MessageImage = () => {
         }
     }
 
-    return <div>
+
+    return <div className='post-cadre'><div className='post'>
         <Input onChange={onChangeTitle} label='Titre' value={title} />
-        <TextArea onChange={onChangeContent} placeholder='Text' value={content} />
-        <Input type="file" onChange={handleOnUploadFile} label='Image' />
-        <Button onClick={onSubmitMessageImg} title='Envoyer' />
-    </div>
+        <TextArea id="outlined-multiline-static"
+            label="Text"
+            rows={4}
+            variant="outlined"
+            onChange={onChangeContent}
+            placeholder='Text'
+            value={content} />
+        <div className='file-button'>
+            <Input type="file" onChange={handleOnUploadFile} label='Image' />
+            <Button size="small" onClick={onSubmitMessageImg} title='Envoyer' />
+        </div>
+    </div></div>
 }
 export default MessageImage

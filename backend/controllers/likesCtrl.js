@@ -80,7 +80,7 @@ module.exports = {
                         })
                             .then(function (alreadyLikeFound) {
                                 done(null, messageFound, userFound);
-                                return res.status(201).json(messageFound);
+                                return res.status(201).json('like ajoutée'/*messageFound*/);
                             })
                             .catch(function (err) {
                                 return res.status(500).json({ 'error': 'unable to set user reaction' });
@@ -94,7 +94,7 @@ module.exports = {
                         })
                             .then(function () {
                                 done(null, messageFound, userFound);
-                                return res.status(201).json(messageFound);
+                                return res.status(201).json('like ajoutée'/*messageFound*/);
                             }).catch(function (err) {
                                 return res.status(500).json({ 'error': 'cannot update user reaction' });
                             });
@@ -108,7 +108,7 @@ module.exports = {
                         })
                             .then(function () {
                                 done(null, messageFound, userFound);
-                                return res.status(201).json(messageFound);
+                                return res.status(201).json('like ajoutée, dislike retirée'/*messageFound*/);
                             }).catch(function (err) {
                                 return res.status(500).json({ 'error': 'cannot update user reaction' });
                             });
@@ -120,7 +120,7 @@ module.exports = {
                         })
                             .then(function () {
                                 done(null, messageFound, userFound);
-                                return res.status(201).json(messageFound);
+                                return res.status(201).json('like retirée'/*messageFound*/);
                             }).catch(function (err) {
                                 return res.status(500).json({ 'error': 'cannot update user reaction' });
                             });
@@ -200,7 +200,7 @@ module.exports = {
                         })
                             .then(function (alreadyLikeFound) {
                                 done(null, messageFound, userFound);
-                                res.status(201).json(messageFound);
+                                res.status(201).json('dislike ajoutée'/*messageFound*/);
                             })
                             .catch(function (err) {
                                 return res.status(500).json({ 'error': 'unable to set user reaction' });
@@ -214,7 +214,7 @@ module.exports = {
                         })
                             .then(function () {
                                 done(null, messageFound, userFound);
-                                res.status(201).json(messageFound);
+                                res.status(201).json('dislike ajoutée'/*messageFound*/);
                             }).catch(function (err) {
                                 res.status(500).json({ 'error': 'cannot update user reaction' });
                             });
@@ -228,7 +228,7 @@ module.exports = {
                         })
                             .then(function () {
                                 done(null, messageFound, userFound);
-                                res.status(201).json(messageFound);
+                                res.status(201).json('dislike ajoutée, like retirée'/*messageFound*/);
                             }).catch(function (err) {
                                 res.status(500).json({ 'error': 'cannot update user reaction' });
                             });
@@ -240,7 +240,7 @@ module.exports = {
                         })
                             .then(function () {
                                 done(null, messageFound, userFound);
-                                res.status(201).json(messageFound);
+                                res.status(201).json('dislike retirée'/*messageFound*/);
                             }).catch(function (err) {
                                 res.status(500).json({ 'error': 'cannot update user reaction' });
                             });

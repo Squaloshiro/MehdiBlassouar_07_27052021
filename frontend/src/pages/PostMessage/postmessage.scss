@@ -1,0 +1,37 @@
+.post-cadre{
+    width: 50%;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+.post{
+    display: flex;
+    flex-direction: column;
+    background-color:white;
+
+    width:100%;
+    border: 1px solid #d0d1d5;
+    border-radius:3px;
+    //margin: auto;
+    margin-bottom:10px;
+    padding: 12px; 
+    
+    box-shadow: 0 0 5px rgba(0, 0, 0, .30); /* Not original, just a test */
+}
+
+.file-button{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.size-button{
+    width: 50em;
+    height: 5em;
+}

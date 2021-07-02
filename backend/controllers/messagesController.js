@@ -55,6 +55,7 @@ module.exports = {
                         attachment: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
                     })
                         .then(function (newMessage) {
+
                             done(newMessage);
 
                         });
@@ -62,9 +63,26 @@ module.exports = {
                     res.status(404).json({ 'error': 'user not found' });
                 }
             },
+
         ], function (newMessage) {
             if (newMessage) {
-                return res.status(201).json(newMessage);
+                var fields = req.query.fields;
+                var limit = parseInt(req.query.limit);
+                var offset = parseInt(req.query.offset);
+                var order = req.query.order;
+                models.Message.findAll({
+                    order: [(order != null) ? order.split(':') : ['createdAt', 'DESC']],
+                    attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
+                    limit: (!isNaN(limit)) ? limit : null,
+                    offset: (!isNaN(offset)) ? offset : null,
+                    include: [{
+                        model: models.User,
+                        attributes: ['username']
+                    }]
+                }).then(function (allMessageFound) {
+                    return res.status(201).json(allMessageFound)
+                })
+
             } else {
                 return res.status(500).json({ 'error': 'cannot post message' });
             }
@@ -126,7 +144,22 @@ module.exports = {
             },
         ], function (newMessage) {
             if (newMessage) {
-                return res.status(201).json(newMessage);
+                var fields = req.query.fields;
+                var limit = parseInt(req.query.limit);
+                var offset = parseInt(req.query.offset);
+                var order = req.query.order;
+                models.Message.findAll({
+                    order: [(order != null) ? order.split(':') : ['createdAt', 'DESC']],
+                    attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
+                    limit: (!isNaN(limit)) ? limit : null,
+                    offset: (!isNaN(offset)) ? offset : null,
+                    include: [{
+                        model: models.User,
+                        attributes: ['username']
+                    }]
+                }).then(function (allMessageFound) {
+                    return res.status(201).json(allMessageFound)
+                })
             } else {
                 return res.status(500).json({ 'error': 'cannot post message' });
             }
@@ -214,7 +247,6 @@ module.exports = {
         const decodedToken = jwt.verify(token, process.env.TOKEN,);
         const userId = decodedToken.userId;
 
-
         let content = req.body.content
         let title = req.body.title
         asyncLib.waterfall([
@@ -262,11 +294,17 @@ module.exports = {
             },
             function (messageFound, userFound, done) {
                 if (messageFound) {
+                    console.log('-----------messageFound-------------------------');
+                    console.log(messageFound);
+                    console.log('------------------------------------');
                     if (messageFound.UserId === userFound.id) {
                         messageFound.update({
                             content: (content ? content : messageFound.content),
                             title: (title ? title : messageFound.title)
                         }).then(function (newMessage) {
+                            console.log('--------------test2----------------------');
+                            console.log(newMessage);
+                            console.log('------------------------------------');
                             done(newMessage);
                         }).catch(function (err) {
                             res.status(500).json({ 'error': 'unable to update message' });
@@ -281,11 +319,26 @@ module.exports = {
             },
         ], function (newMessage) {
             if (newMessage) {
-                return res.status(201).json(newMessage);
+                var fields = req.query.fields;
+                var limit = parseInt(req.query.limit);
+                var offset = parseInt(req.query.offset);
+                var order = req.query.order;
+                models.Message.findAll({
+                    order: [(order != null) ? order.split(':') : ['createdAt', 'DESC']],
+                    attributes: (fields !== '*' && fields != null) ? fields.split(',') : null,
+                    limit: (!isNaN(limit)) ? limit : null,
+                    offset: (!isNaN(offset)) ? offset : null,
+                    include: [{
+                        model: models.User,
+                        attributes: ['username']
+                    }]
+                }).then(function (allMessageFound) {
+                    return res.status(201).json(allMessageFound)
+                })
             } else {
-                return res.status(500).json({ 'error': 'unable to update this message' });
+                return res.status(500).json({ 'error': 'cannot post message' });
             }
-        })
+        });
     },
     deleteOneMessage: function (req, res) {
         //Params
