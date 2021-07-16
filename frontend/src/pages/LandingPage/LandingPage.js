@@ -1,117 +1,198 @@
-
-
-import { useState, useEffect } from 'react';
-import api from '../../config/api';
-import { useHistory } from 'react-router';
-import "./landingpage.scss"
-import LongMenu from '../../componants/Menu/Menu';
+import { useState, useEffect } from "react";
+import api from "../../config/api";
+import { useHistory } from "react-router";
+import "./landingpage.scss";
+import LongMenu from "../../componants/Menu/LongMenu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import MessageLike from '../../componants/MessageLike/MessageLike';
+import MessageLike from "../../componants/MessageLike/MessageLike";
+import AccordionComment from "../../componants/AccordionComment/AccordionComment";
+import MessageImage from "../PostMessage/PostMessage";
+import ProfilUser from "../ProfilUser/ProfiUser";
+import DestroyComment from "../../componants/DestroyComment/DestroyComment";
+import CommentLike from "../../componants/CommentLike/Commentlike";
+const LandingPage = ({ myUserId, avatar }) => {
+  const history = useHistory();
+  const [messages, setMessages] = useState([]);
 
-import MessageImage from '../PostMessage/PostMessage';
+  useEffect(() => {
+    if (sessionStorage.getItem("groupomaniaToken")) {
+      const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
 
-const LandingPage = () => {
-
-    const history = useHistory()
-    const [messages, setMessages] = useState([])
-
-    useEffect(() => {
-        if (sessionStorage.getItem('groupomaniaToken')) {
-            const token = JSON.parse(JSON.stringify(sessionStorage.getItem('groupomaniaToken')));
-
-            const getMessageApi = async () => {
-                try {
-                    const response = await api({
-
-                        method: 'get',
-                        url: '/messages',
-                        headers: { Authorization: `Bearer ${token}` }
-                    })
-                    setMessages(response.data)
-                } catch (error) {
-
-                    history.push("/connexion")
-                }
-            }
-
-            getMessageApi()
-        } else {
-            history.push("/connexion")
+      const getMessageApi = async () => {
+        try {
+          const response = await api({
+            method: "get",
+            url: "/messages",
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setMessages(response.data);
+        } catch (error) {
+          //rajouter un button en cas d'echec de chargement des messages
         }
-    }, [history])
+      };
 
-
-    const deleteOneMessage = (messageId) => {
-
-        const idToRemove = messageId
-        const filteredMessages = messages.filter((item) => item.id !== idToRemove);
-        setMessages(filteredMessages)
+      getMessageApi();
+    } else {
+      history.push("/connexion");
     }
+  }, [history]);
 
-    const modifyLike = ({ messageId, like, dislike }) => {
-        const newMessage = messages.filter((element) => {
-            if (element.id === messageId) {
-                element.likes = like
-                element.dislikes = dislike
-            }
-            return element
-        })
-        setMessages(newMessage)
+  const deleteOneComment = async (test) => {
+    //const idToRemove = commentId
+    const filteredMessages = messages.map((element) => {
+      const test = element.Comments;
+      // test.filter((item) => item.id !== idToRemove);
+      test.splice(0, 1);
+    });
+    const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
+    try {
+      const response = await api({
+        method: "get",
+        url: "/messages",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setMessages(response.data);
+    } catch (error) {
+      //rajouter un button en cas d'echec de chargement des messages
     }
+  };
 
-    const postMessage = (newMessages) => {
+  const deleteOneMessage = (messageId) => {
+    const idToRemove = messageId;
+    const filteredMessages = messages.filter((item) => item.id !== idToRemove);
+    setMessages(filteredMessages);
+  };
 
-        setMessages(newMessages)
+  const modifyCommentLike = ({ commentsId, like, dislike }) => {
+    const newMessage = messages.filter((element) => {
+      element.Comments.map((newElement) => {
+        if (newElement.id === commentsId) {
+          newElement.likes = like;
+          newElement.dislikes = dislike;
+        }
+        return newElement;
+      });
+      return element;
+    });
+    setMessages(newMessage);
+  };
 
+  const redirectToUserProfil = (id) => {
+    if (id === myUserId) {
+      history.push("/profil");
+    } else {
+      history.push({ pathname: "/users/profils", state: { id } });
     }
+  };
 
-    const viewUpdateMessage = (updateMessages) => {
-        setMessages(updateMessages)
-    }
+  const modifyLike = ({ messageId, like, dislike }) => {
+    const newMessage = messages.filter((element) => {
+      if (element.id === messageId) {
+        element.likes = like;
+        element.dislikes = dislike;
+      }
+      return element;
+    });
+    setMessages(newMessage);
+  };
 
-    return <div className="flex-position">
-        <MessageImage postMessage={postMessage} />
+  const modifyComment = ({ messageId, newComments }) => {
+    const newMessageComment = messages.filter((element) => {
+      if (element.id === messageId) {
+        element.comments = newComments;
+      }
+      return element;
+    });
+    setMessages(newMessageComment);
+  };
 
-        {messages && messages.map((element) => {
+  const postMessage = (newMessages) => {
+    setMessages(newMessages);
+  };
 
-            return <div key={element.id} className='card-position'>
-                <div className="f-card">
-                    <div className="header">
-                        <div className="options"><LongMenu element={element} viewUpdateMessage={viewUpdateMessage} deleteOneMessage={deleteOneMessage} messageId={element.id} /></div>
-                        <img className="co-logo" alt="img" src="http://placehold.it/40x40" />
-                        <div className="co-name"><a href="#">{element.User.username}</a></div>
-                        <div className="time"><p>{element.createdAt}</p>  · <FontAwesomeIcon icon={['fas', 'globe']} /> </div>
-                    </div>
-                    <div className="content">
-                        <p>{element.title} </p>
-                    </div>
-                    {element.attachment ?
-                        <div className="reference">
-                            <img alt="img" className="reference-thumb" src={element.attachment} />
-                            <div className="reference-content">
-                                <div className="reference-subtitle">{element.content}</div>
-                                <div className="reference-font">Groupomania</div>
-                            </div>
-                        </div>
-                        :
-                        <div className="reference">
-                            <div className="reference-content">
-                                <div className="reference-subtitle">{element.content}</div>
-                                <div className="reference-font">Groupomania</div>
-                            </div>
-                        </div>
-                    }
-                    <div className="social">
-                        <div className="social-content"></div>
-                        <div className="social-buttons">
-                            <span><MessageLike modifyLike={modifyLike} messageId={element.id} like={element.likes} dislike={element.dislikes} /></span>
-                            <span><FontAwesomeIcon icon={['far', 'comment']} />{element.comments}</span>
-                        </div>
-                    </div>
+  const viewUpdateMessage = (updateMessages) => {
+    setMessages(updateMessages);
+  };
+
+  return (
+    <div className="flex-position">
+      <MessageImage postMessage={postMessage} />
+
+      {messages &&
+        messages.map((element) => {
+          return (
+            <div key={element.id} className="card-position">
+              <div className="f-card">
+                <div className="header">
+                  <div className="options">
+                    {element.UserId === myUserId ? (
+                      <LongMenu
+                        element={element}
+                        viewUpdateMessage={viewUpdateMessage}
+                        deleteOneMessage={deleteOneMessage}
+                        messageId={element.id}
+                      />
+                    ) : (
+                      <> </>
+                    )}
+                  </div>
+                  <img className="co-logo" alt="img" src={element.User.avatar} />
+                  <div className="co-name">
+                    <div onClick={() => redirectToUserProfil(element.UserId)}>{element.User.username}</div>
+                  </div>
+                  <div className="time">
+                    <div>{element.createdAt}</div> · <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
+                  </div>
                 </div>
-            </div>
+                <div className="content">
+                  <div>{element.title} </div>
+                </div>
+                {element.attachment ? (
+                  <div className="reference">
+                    <img alt="img" className="reference-thumb" src={element.attachment} />
+                    <div className="reference-content">
+                      <div className="reference-subtitle">{element.content}</div>
+                      <div className="reference-font">Groupomania</div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="reference">
+                    <div className="reference-content">
+                      <div className="reference-subtitle">{element.content}</div>
+                      <div className="reference-font">Groupomania</div>
+                    </div>
+                  </div>
+                )}
 
+                <AccordionComment
+                  myUserId={myUserId}
+                  modifyComment={modifyComment}
+                  newComments={element.comments}
+                  deleteOneComment={deleteOneComment}
+                  messageId={element.id}
+                />
+                <div className="social">
+                  <div className="social-content"></div>
+                  <div className="social-buttons">
+                    <span>
+                      <MessageLike
+                        modifyLike={modifyLike}
+                        messageId={element.id}
+                        like={element.likes}
+                        dislike={element.dislikes}
+                      />
+                    </span>
+                    <span>
+                      <FontAwesomeIcon icon={["far", "comment"]} />
+                      {element.comments}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
         })}
-    </div >
-}
-export default LandingPage
+    </div>
+  );
+};
+export default LandingPage;

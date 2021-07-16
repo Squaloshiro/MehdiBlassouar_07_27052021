@@ -1,92 +1,93 @@
 import React, { useState, useEffect } from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect
-} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import Header from "./componants/Header/Header";
 import Footer from "./componants/Footer/Footer";
 import SignIn from "./pages/SignIn/SignIn";
-import SignUp from './pages/SignUp/SignUp';
-import LandingPage from './pages/LandingPage/LandingPage';
-import MessageImage from './pages/PostMessage/PostMessage';
+import SignUp from "./pages/SignUp/SignUp";
+import LandingPage from "./pages/LandingPage/LandingPage";
+import MessageImage from "./pages/PostMessage/PostMessage";
 import "./componants/Header/header.scss";
-import PrivateRoute from './pages/PrivateRoute/PrivateRoute';
-import api from './config/api';
-import './assets/fontawesome';
-
-
-
-
+import PrivateRoute from "./pages/PrivateRoute/PrivateRoute";
+import api from "./config/api";
+import "./assets/fontawesome";
+import ProfilPage from "./pages/ProfilPage/ProfilPage";
+import ProfilUser from "./pages/ProfilUser/ProfiUser";
+import Avatar from "./pages/Avatars/Avatars";
 const App = () => {
-
-
-  const [isLoggedin, setIsLoggedin] = useState(false)
-  const [checkLogin, setCheckLogin] = useState(false)
-
-
+  const [isLoggedin, setIsLoggedin] = useState(false);
+  const [checkLogin, setCheckLogin] = useState(false);
+  const [myUserId, setMyUserId] = useState();
+  const [avatar, setAvatar] = useState();
 
   useEffect(() => {
-    const token = JSON.parse(JSON.stringify(sessionStorage.getItem('groupomaniaToken')));
-
+    const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
 
     if (!isLoggedin && token) {
       const getUser = async () => {
         try {
-          await api({
-            url: '/users/me',
-            method: 'get',
-            headers: { Authorization: `Bearer ${token}` }
-          })
-          setIsLoggedin(true)
-          setCheckLogin(true)
+          const response = await api({
+            url: "/users/me",
+            method: "get",
+            headers: { Authorization: `Bearer ${token}` },
+          });
 
+          setMyUserId(response.data.id);
+          setAvatar(response.data.avatar);
+          setIsLoggedin(true);
+          setCheckLogin(true);
         } catch (error) {
-          setCheckLogin(true)
+          setCheckLogin(true);
         }
-      }
-      getUser()
-
+      };
+      getUser();
     } else {
-      setCheckLogin(true)
-
-
+      setCheckLogin(true);
     }
-  }, [isLoggedin])
+  }, [isLoggedin]);
 
-  return <Router>
+  return (
+    <Router>
+      <Header isLoggedin={isLoggedin} setIsLoggedin={setIsLoggedin} />
 
-    <Header isLoggedin={isLoggedin} setIsLoggedin={setIsLoggedin} />
+      <Switch>
+        {checkLogin && (
+          <PrivateRoute
+            exact
+            path="/"
+            componant={LandingPage}
+            avatar={avatar}
+            myUserId={myUserId}
+            isLoggedin={isLoggedin}
+          />
+        )}
 
+        {checkLogin && <PrivateRoute exact path="/post-message" componant={MessageImage} isLoggedin={isLoggedin} />}
 
-    <Switch>
+        {checkLogin && <PrivateRoute exact path="/profil" componant={ProfilPage} isLoggedin={isLoggedin} />}
+        {checkLogin && <PrivateRoute exact path="/users/profils" componant={ProfilUser} isLoggedin={isLoggedin} />}
+        {checkLogin && <PrivateRoute exact path="/avatar" componant={Avatar} isLoggedin={isLoggedin} />}
 
-      {checkLogin && <PrivateRoute exact path='/' componant={LandingPage} isLoggedin={isLoggedin} />
-      }
+        <Route
+          path="/connexion"
+          render={() =>
+            isLoggedin ? (
+              <Redirect to="/" />
+            ) : (
+              <SignIn setIsLoggedin={setIsLoggedin} isLoggedin={isLoggedin} setMyUserId={setMyUserId} />
+            )
+          }
+        ></Route>
 
-      {checkLogin && <PrivateRoute exact path='/post-message' componant={MessageImage} isLoggedin={isLoggedin} />
-      }
+        <Route
+          path="/inscription"
+          render={() =>
+            isLoggedin ? <Redirect to="/" /> : <SignUp setIsLoggedin={setIsLoggedin} setMyUserId={setMyUserId} />
+          }
+        ></Route>
+      </Switch>
+      <Footer />
+    </Router>
+  );
+};
 
-
-      <Route path="/connexion" render={() => (
-        isLoggedin ? (<Redirect to="/" />) : (<SignIn setIsLoggedin={setIsLoggedin} isLoggedin={isLoggedin} />)
-      )}>
-
-
-      </Route>
-
-      <Route path="/inscription" render={() => (
-        isLoggedin ? (<Redirect to="/" />) : (<SignUp setIsLoggedin={setIsLoggedin} isLoggedin={isLoggedin} />)
-      )}>
-      </Route>
-
-    </Switch>
-    <Footer />
-  </Router>
-
-}
-
-export default App
-
-
+export default App;

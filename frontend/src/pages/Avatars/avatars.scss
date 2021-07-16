@@ -1,0 +1,22 @@
+.style {
+  display: flex;
+  flex-direction: row;
+  font-size: 14px;
+  color: #4a4747;
+  font-family: roboto;
+  line-height: 23px;
+  margin-bottom: 0px;
+  padding: 0px 15px 0px;
+  height: 400px;
+  overflow-y: scroll;
+  text-align: justify;
+}
+.test {
+  display: flex;
+  flex-wrap: wrap;
+}
+.new {
+  width: 100px;
+  height: 20px;
+  margin-top: 10px;
+}

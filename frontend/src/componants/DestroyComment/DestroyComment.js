@@ -1,0 +1,34 @@
+import api from "../../config/api";
+import { useHistory } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+const DestroyComment = ({ messageId, newComments, modifyComment, deleteOneComment, commentsId }) => {
+  const history = useHistory();
+
+  const commentDestroy = async () => {
+    try {
+      const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
+      const response = await api({
+        method: "delete",
+        url: "/comment/" + messageId + "/" + commentsId,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+          "Content-Type": "multipart/from-data",
+        },
+      });
+
+      deleteOneComment(commentsId);
+      newComments = newComments - 1;
+      modifyComment({ newComments, messageId });
+      // history.push("/");
+    } catch (error) {
+      console.log("---------------123---------------------");
+      console.log(error);
+      console.log("------------------------------------");
+    }
+  };
+
+  return <FontAwesomeIcon color="red" icon={["fas", "trash-alt"]} onClick={commentDestroy} />;
+};
+export default DestroyComment;

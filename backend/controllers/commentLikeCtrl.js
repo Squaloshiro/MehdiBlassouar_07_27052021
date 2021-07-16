@@ -77,7 +77,7 @@ module.exports = {
                         })
                             .then(function (alreadyLikeFound) {
                                 done(null, messageFound, userFound);
-                                return res.status(201).json('like ajouté');
+                                return res.status(201).json('like ajoutée');
                             })
                             .catch(function (err) {
                                 return res.status(500).json({ 'error': 'unable to set user reaction' });
@@ -91,7 +91,7 @@ module.exports = {
                         })
                             .then(function () {
                                 done(null, messageFound, userFound);
-                                return res.status(201).json('like ajouté');
+                                return res.status(201).json('like ajoutée');
                             }).catch(function (err) {
                                 return res.status(500).json({ 'error': 'cannot update user reaction' });
                             });
@@ -197,7 +197,7 @@ module.exports = {
                         })
                             .then(function (alreadyLikeFound) {
                                 done(null, messageFound, userFound);
-                                res.status(201).json('dislike ajouté');
+                                res.status(201).json('dislike ajoutée');
                             })
                             .catch(function (err) {
                                 return res.status(500).json({ 'error': 'unable to set user reaction' });
@@ -211,7 +211,7 @@ module.exports = {
                         })
                             .then(function () {
                                 done(null, messageFound, userFound);
-                                res.status(201).json('dislike ajouté');
+                                res.status(201).json('dislike ajoutée');
                             }).catch(function (err) {
                                 res.status(500).json({ 'error': 'cannot update user reaction' });
                             });
