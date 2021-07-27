@@ -1,31 +1,34 @@
 import api from "../../config/api";
 import { useHistory } from "react-router-dom";
+
 import Button from "../Button/Button";
 
-const MessageDestroy = ({ messageId, deleteOneMessage }) => {
+const DropAccount = ({ setIsLoggedin, userId }) => {
   const history = useHistory();
 
-  const destroyMessage = async () => {
+  const dropProfil = async () => {
     try {
       const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
       await api({
         method: "delete",
-        url: "/messages/" + messageId,
+        url: "/users/" + userId,
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: "application/json",
           "Content-Type": "multipart/from-data",
         },
       });
-      deleteOneMessage(messageId);
-      history.push("/");
-    } catch (error) {
-      console.log("---------------123---------------------");
-      console.log(error);
-      console.log("------------------------------------");
-    }
+      setIsLoggedin(false);
+      sessionStorage.removeItem("groupomaniaToken");
+      history.push("/connexion");
+    } catch (error) {}
   };
 
-  return <Button onClick={destroyMessage} title="Supprimer" />;
+  return (
+    <div>
+      <Button onClick={dropProfil} title="Supprimer" />
+    </div>
+  );
 };
-export default MessageDestroy;
+
+export default DropAccount;

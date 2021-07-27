@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import api from "../../config/api";
 import { useHistory, useLocation } from "react-router";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import MessageUser from "../MessageUser/MessageUser";
 
-const ProfilUser = () => {
+import MessageUser from "../MessageUser/MessageUser";
+import "./profiluser.scss";
+import Button from "../../componants/Button/Button";
+const ProfilUser = ({ myUserId, admin }) => {
   const location = useLocation();
   const history = useHistory();
   const [profil, setProfil] = useState({});
@@ -31,18 +32,47 @@ const ProfilUser = () => {
     } else {
       history.push("/");
     }
-  }, []);
+  }, [history, location.state.id]);
 
   return (
-    <div>
-      <div>
-        <div>
-          <div>{profil.username}</div>
-          <div>{profil.bio}</div>
+    <div className="flex-direction-2">
+      <div className="size-2">
+        <div className="size-profil-2">
+          <div className="bor-username-2">
+            <div>{profil.username}</div>
+          </div>
+          <div className="flex-elt-profil-2">
+            <div className="flex-picturs-2">
+              <div className="size-police-photo-2">Photo de profil</div>
+              <img alt="img" className="size-picturs-2" src={profil.avatar} />
+            </div>
+            <div className="size-elt-2">
+              <div className="email-2">
+                <div className="size-police-2">E-mail</div>
+                <div>{profil.email}</div>
+              </div>
+              <div>
+                <div className="size-police-2">Description</div>
+                {profil.bio ? (
+                  <div className="margin-bio-2">{profil.bio}</div>
+                ) : (
+                  <div className="margin-bio-2"> Description est vide</div>
+                )}
+                {admin === true ? (
+                  <div>
+                    <Button title="Donnée les droits" />
+                    <Button title="Suprimer le compte" />
+                  </div>
+                ) : (
+                  <></>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
-        <div>
-          <MessageUser id={location.state.id} />
-        </div>
+      </div>
+      <div className="flex-msg-2">
+        <MessageUser admin={admin} myUserId={myUserId} id={location.state.id} />
       </div>
     </div>
   );

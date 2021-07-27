@@ -1,14 +1,11 @@
 import api from "../../config/api";
-import { useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const DestroyComment = ({ messageId, newComments, modifyComment, deleteOneComment, commentsId }) => {
-  const history = useHistory();
-
   const commentDestroy = async () => {
     try {
       const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
-      const response = await api({
+      await api({
         method: "delete",
         url: "/comment/" + messageId + "/" + commentsId,
         headers: {

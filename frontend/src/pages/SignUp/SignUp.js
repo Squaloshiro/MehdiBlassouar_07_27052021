@@ -5,7 +5,7 @@ import api from "../../config/api";
 import { useHistory } from "react-router";
 import "./signup.scss";
 
-const SignUp = ({ setMyUserId, setIsLoggedin }) => {
+const SignUp = ({ setMyUserId, setIsLoggedin, setAdmin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
@@ -41,7 +41,7 @@ const SignUp = ({ setMyUserId, setIsLoggedin }) => {
           method: "get",
           headers: { Authorization: `Bearer ${token}` },
         });
-
+        setAdmin(response.data.isAdmin);
         setMyUserId(response.data.id);
       } catch (error) {}
       history.push("/");

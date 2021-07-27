@@ -2,11 +2,8 @@ import Input from "../../componants/Input/Input";
 import Button from "../../componants/Button/Button";
 import { useState } from "react";
 import api from "../../config/api";
-import { useHistory } from "react-router";
 
 const PostComment = ({ postComment, messageId, updatViewMessage, newComments, modifyComment }) => {
-  const history = useHistory();
-
   const [content, setContent] = useState("");
 
   const onChangeContent = (e) => {
@@ -29,6 +26,7 @@ const PostComment = ({ postComment, messageId, updatViewMessage, newComments, mo
 
       modifyComment({ newComments, messageId });
       postComment(response.data);
+      setContent("");
 
       // history.push("/");
     } catch (error) {

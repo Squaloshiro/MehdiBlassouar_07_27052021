@@ -109,7 +109,7 @@ module.exports = {
       include: [
         {
           model: models.User,
-          attributes: ["username"],
+          attributes: ["username", "avatar"],
         },
       ],
     })
@@ -336,15 +336,12 @@ module.exports = {
             done(null, messageFound, commentFound);
           })
           .catch(function (err) {
-            console.log("------------------------------------");
-            console.log(err);
-            console.log("------------------------------------");
             return res.status(500).json({ error: "unable to verify comment" });
           });
       },
       function (messageFound, commentFound, done) {
         models.User.findOne({
-          where: { id: userId },
+          where: { isAdmin: true },
         })
           .then(function (userFound) {
             done(null, messageFound, commentFound, userFound);
@@ -357,7 +354,7 @@ module.exports = {
         if (commentFound) {
           models.Comment.findOne({
             where: {
-              userId: userId,
+              id: commentId,
               messageId: messageId,
             },
           })
@@ -401,23 +398,36 @@ module.exports = {
           });
       },
       function (messageFound, commentFound, userFound, done) {
-        console.log("--------------commentFound----------------------");
-        console.log(commentFound);
-        console.log("------------------------------------");
         if (commentFound) {
-          models.Comment.destroy({
-            where: { id: commentId, userId: userId },
-          })
-            .then((commentFound) => {
-              messageFound.update({
-                comments: messageFound.comments - 1,
-              });
-
-              return res.status(201).json(commentFound);
+          if (userFound.isAdmin === true && userFound.id === userId) {
+            models.Comment.destroy({
+              where: { id: commentId },
             })
-            .catch((err) => {
-              return res.status(500).json({ error: "unable to delet this comment" });
-            });
+              .then((commentFound) => {
+                messageFound.update({
+                  comments: messageFound.comments - 1,
+                });
+
+                return res.status(201).json(commentFound);
+              })
+              .catch((err) => {
+                return res.status(500).json({ error: "unable to delet this comment" });
+              });
+          } else {
+            models.Comment.destroy({
+              where: { id: commentId, userId: userId },
+            })
+              .then((commentFound) => {
+                messageFound.update({
+                  comments: messageFound.comments - 1,
+                });
+
+                return res.status(201).json(commentFound);
+              })
+              .catch((err) => {
+                return res.status(500).json({ error: "unable to delet this comment" });
+              });
+          }
         } else {
           return res.status(500).json({ error: "comment not found" });
         }

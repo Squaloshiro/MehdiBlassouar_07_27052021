@@ -5,12 +5,11 @@ import "./landingpage.scss";
 import LongMenu from "../../componants/Menu/LongMenu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MessageLike from "../../componants/MessageLike/MessageLike";
-import AccordionComment from "../../componants/AccordionComment/AccordionComment";
 import MessageImage from "../PostMessage/PostMessage";
-import ProfilUser from "../ProfilUser/ProfiUser";
-import DestroyComment from "../../componants/DestroyComment/DestroyComment";
-import CommentLike from "../../componants/CommentLike/Commentlike";
-const LandingPage = ({ myUserId, avatar }) => {
+import Accordion from "../../componants/AccordionComment/Accordion";
+import Test from "../../componants/Menu/Menu";
+
+const LandingPage = ({ myUserId, admin }) => {
   const history = useHistory();
   const [messages, setMessages] = useState([]);
 
@@ -39,11 +38,11 @@ const LandingPage = ({ myUserId, avatar }) => {
 
   const deleteOneComment = async (test) => {
     //const idToRemove = commentId
-    const filteredMessages = messages.map((element) => {
+    /*const filteredMessages = messages.map((element) => {
       const test = element.Comments;
       // test.filter((item) => item.id !== idToRemove);
       test.splice(0, 1);
-    });
+    });*/
     const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
     try {
       const response = await api({
@@ -61,20 +60,6 @@ const LandingPage = ({ myUserId, avatar }) => {
     const idToRemove = messageId;
     const filteredMessages = messages.filter((item) => item.id !== idToRemove);
     setMessages(filteredMessages);
-  };
-
-  const modifyCommentLike = ({ commentsId, like, dislike }) => {
-    const newMessage = messages.filter((element) => {
-      element.Comments.map((newElement) => {
-        if (newElement.id === commentsId) {
-          newElement.likes = like;
-          newElement.dislikes = dislike;
-        }
-        return newElement;
-      });
-      return element;
-    });
-    setMessages(newMessage);
   };
 
   const redirectToUserProfil = (id) => {
@@ -125,8 +110,8 @@ const LandingPage = ({ myUserId, avatar }) => {
               <div className="f-card">
                 <div className="header">
                   <div className="options">
-                    {element.UserId === myUserId ? (
-                      <LongMenu
+                    {element.UserId === myUserId || admin === true ? (
+                      <Test
                         element={element}
                         viewUpdateMessage={viewUpdateMessage}
                         deleteOneMessage={deleteOneMessage}
@@ -164,13 +149,17 @@ const LandingPage = ({ myUserId, avatar }) => {
                   </div>
                 )}
 
-                <AccordionComment
-                  myUserId={myUserId}
-                  modifyComment={modifyComment}
-                  newComments={element.comments}
-                  deleteOneComment={deleteOneComment}
-                  messageId={element.id}
-                />
+                <div className="accordions">
+                  <Accordion
+                    myUserId={myUserId}
+                    modifyComment={modifyComment}
+                    newComments={element.comments}
+                    deleteOneComment={deleteOneComment}
+                    messageId={element.id}
+                    admin={admin}
+                    title="commentaire"
+                  />
+                </div>
                 <div className="social">
                   <div className="social-content"></div>
                   <div className="social-buttons">

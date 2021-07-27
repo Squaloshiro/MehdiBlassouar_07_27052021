@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import api from "../../config/api";
-import { useHistory } from "react-router";
+
 import LongMenu from "../../componants/Menu/LongMenu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import AccordionComment from "../../componants/AccordionComment/AccordionComment";
 import MessageLike from "../../componants/MessageLike/MessageLike";
+import Accordion from "../../componants/AccordionComment/Accordion";
 
-const MessageUser = ({ id }) => {
-  const history = useHistory();
+const MessageUser = ({ id, myUserId, admin }) => {
   const [messagesUser, setMessagesUser] = useState([]);
 
   useEffect(() => {
@@ -28,15 +27,15 @@ const MessageUser = ({ id }) => {
       }
     };
     getMessageUserApi();
-  }, []);
+  }, [id]);
 
   const deleteOneComment = async (test) => {
     //const idToRemove = commentId
-    const filteredMessages = messagesUser.map((element) => {
+    /* const filteredMessages = messagesUser.map((element) => {
       const test = element.Comments;
       // test.filter((item) => item.id !== idToRemove);
       test.splice(0, 1);
-    });
+    });*/
     const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
     try {
       const response = await api({
@@ -93,14 +92,18 @@ const MessageUser = ({ id }) => {
               <div className="f-card">
                 <div className="header">
                   <div className="options">
-                    <LongMenu
-                      element={element}
-                      viewUpdateMessage={viewUpdateMessage}
-                      deleteOneMessage={deleteOneMessage}
-                      messageId={element.id}
-                    />
+                    {element.UserId === myUserId || admin === true ? (
+                      <LongMenu
+                        element={element}
+                        viewUpdateMessage={viewUpdateMessage}
+                        deleteOneMessage={deleteOneMessage}
+                        messageId={element.id}
+                      />
+                    ) : (
+                      <> </>
+                    )}
                   </div>
-                  <img className="co-logo" alt="img" src="http://placehold.it/40x40" />
+                  <img className="co-logo" alt="img" src={element.User.avatar} />
                   <div className="co-name">
                     <div>{element.User.username}</div>
                   </div>
@@ -128,12 +131,17 @@ const MessageUser = ({ id }) => {
                   </div>
                 )}
 
-                <AccordionComment
-                  modifyComment={modifyComment}
-                  newComments={element.comments}
-                  deleteOneComment={deleteOneComment}
-                  messageId={element.id}
-                />
+                <div className="accordions">
+                  <Accordion
+                    myUserId={myUserId}
+                    modifyComment={modifyComment}
+                    newComments={element.comments}
+                    deleteOneComment={deleteOneComment}
+                    messageId={element.id}
+                    admin={admin}
+                    title="commentaire"
+                  />
+                </div>
                 <div className="social">
                   <div className="social-content"></div>
                   <div className="social-buttons">

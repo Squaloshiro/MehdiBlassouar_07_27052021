@@ -71,7 +71,7 @@ module.exports = {
             include: [
               {
                 model: models.User,
-                attributes: ["username"],
+                attributes: ["username", "avatar"],
               },
             ],
           }).then(function (allMessageFound) {
@@ -149,7 +149,7 @@ module.exports = {
             include: [
               {
                 model: models.User,
-                attributes: ["username"],
+                attributes: ["username", "avatar"],
               },
             ],
           }).then(function (allMessageFound) {
@@ -229,7 +229,7 @@ module.exports = {
       include: [
         {
           model: models.User,
-          attributes: ["username"],
+          attributes: ["username", "avatar"],
         },
       ],
     })
@@ -407,9 +407,6 @@ module.exports = {
           where: { id: messageId },
         })
           .then(function (messageFound) {
-            console.log("------------------------------------");
-            console.log(messageFound);
-            console.log("------------------------------------");
             done(null, messageFound);
           })
           .catch(function (err) {
@@ -420,7 +417,18 @@ module.exports = {
           });
       },
       function (messageFound, done) {
-        if (messageFound.UserId === userId) {
+        models.User.findOne({
+          where: { isAdmin: true },
+        })
+          .then(function (userAdminfound) {
+            done(null, messageFound, userAdminfound);
+          })
+          .catch(function (err) {
+            res.status(500).json({ error: "admin not found" });
+          });
+      },
+      function (messageFound, userAdminfound, done) {
+        if (messageFound.UserId === userId || (userAdminfound.isAdmin === true && userAdminfound.id === userId)) {
           if (messageFound.attachment === null) {
             messageFound
               .destroy({
@@ -439,9 +447,6 @@ module.exports = {
                 where: { id: messageId },
               })
                 .then(function (destroyMessageFoundImg) {
-                  console.log("-----------destroyMessageFoundImg-------------------------");
-                  console.log(destroyMessageFoundImg);
-                  console.log("------------------------------------");
                   return res.status(201).json(destroyMessageFoundImg);
                 })
                 .catch(function (err) {

@@ -12,10 +12,11 @@ import api from "./config/api";
 import "./assets/fontawesome";
 import ProfilPage from "./pages/ProfilPage/ProfilPage";
 import ProfilUser from "./pages/ProfilUser/ProfiUser";
-import Avatar from "./pages/Avatars/Avatars";
+
 const App = () => {
   const [isLoggedin, setIsLoggedin] = useState(false);
   const [checkLogin, setCheckLogin] = useState(false);
+  const [admin, setAdmin] = useState(false);
   const [myUserId, setMyUserId] = useState();
   const [avatar, setAvatar] = useState();
 
@@ -30,7 +31,7 @@ const App = () => {
             method: "get",
             headers: { Authorization: `Bearer ${token}` },
           });
-
+          setAdmin(response.data.isAdmin);
           setMyUserId(response.data.id);
           setAvatar(response.data.avatar);
           setIsLoggedin(true);
@@ -58,14 +59,34 @@ const App = () => {
             avatar={avatar}
             myUserId={myUserId}
             isLoggedin={isLoggedin}
+            admin={admin}
           />
         )}
 
         {checkLogin && <PrivateRoute exact path="/post-message" componant={MessageImage} isLoggedin={isLoggedin} />}
 
-        {checkLogin && <PrivateRoute exact path="/profil" componant={ProfilPage} isLoggedin={isLoggedin} />}
-        {checkLogin && <PrivateRoute exact path="/users/profils" componant={ProfilUser} isLoggedin={isLoggedin} />}
-        {checkLogin && <PrivateRoute exact path="/avatar" componant={Avatar} isLoggedin={isLoggedin} />}
+        {checkLogin && (
+          <PrivateRoute
+            exact
+            path="/profil"
+            admin={admin}
+            componant={ProfilPage}
+            isLoggedin={isLoggedin}
+            setIsLoggedin={setIsLoggedin}
+            myUserId={myUserId}
+          />
+        )}
+        {checkLogin && (
+          <PrivateRoute
+            exact
+            path="/users/profils"
+            componant={ProfilUser}
+            isLoggedin={isLoggedin}
+            admin={admin}
+            setIsLoggedin={setIsLoggedin}
+            myUserId={myUserId}
+          />
+        )}
 
         <Route
           path="/connexion"
@@ -73,7 +94,12 @@ const App = () => {
             isLoggedin ? (
               <Redirect to="/" />
             ) : (
-              <SignIn setIsLoggedin={setIsLoggedin} isLoggedin={isLoggedin} setMyUserId={setMyUserId} />
+              <SignIn
+                setAdmin={setAdmin}
+                setIsLoggedin={setIsLoggedin}
+                isLoggedin={isLoggedin}
+                setMyUserId={setMyUserId}
+              />
             )
           }
         ></Route>
@@ -81,7 +107,11 @@ const App = () => {
         <Route
           path="/inscription"
           render={() =>
-            isLoggedin ? <Redirect to="/" /> : <SignUp setIsLoggedin={setIsLoggedin} setMyUserId={setMyUserId} />
+            isLoggedin ? (
+              <Redirect to="/" />
+            ) : (
+              <SignUp setAdmin={setAdmin} setIsLoggedin={setIsLoggedin} setMyUserId={setMyUserId} />
+            )
           }
         ></Route>
       </Switch>

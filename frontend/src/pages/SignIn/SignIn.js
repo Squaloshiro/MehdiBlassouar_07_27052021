@@ -5,7 +5,7 @@ import api from "../../config/api";
 import { useHistory } from "react-router";
 import "./signin.scss";
 
-const SignIn = ({ setIsLoggedin, setMyUserId }) => {
+const SignIn = ({ setIsLoggedin, setMyUserId, setAdmin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const history = useHistory();
@@ -28,13 +28,14 @@ const SignIn = ({ setIsLoggedin, setMyUserId }) => {
       token = response.data.token;
       sessionStorage.setItem("groupomaniaToken", response.data.token);
       setIsLoggedin(true);
+
       try {
         const response = await api({
           url: "/users/me",
           method: "get",
           headers: { Authorization: `Bearer ${token}` },
         });
-
+        setAdmin(response.data.isAdmin);
         setMyUserId(response.data.id);
       } catch (error) {}
       history.push("/");

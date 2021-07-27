@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import api from "../../config/api";
-import { useHistory } from "react-router";
+
 import LongMenu from "../../componants/Menu/LongMenu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import AccordionComment from "../../componants/AccordionComment/AccordionComment";
 import MessageLike from "../../componants/MessageLike/MessageLike";
 import "./messageuser.scss";
-const MessageUserMe = ({ id, avatar }) => {
-  const history = useHistory();
+import Accordion from "../../componants/AccordionComment/Accordion";
+const MessageUserMe = ({ avatar, myUserId, admin }) => {
   const [messagesUser, setMessagesUser] = useState([]);
 
   useEffect(() => {
@@ -17,7 +16,7 @@ const MessageUserMe = ({ id, avatar }) => {
       try {
         const response = await api({
           method: "get",
-          url: "/messages/" + id,
+          url: "/messages/" + myUserId,
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -29,20 +28,20 @@ const MessageUserMe = ({ id, avatar }) => {
       }
     };
     getMessageUserApi();
-  }, []);
+  }, [myUserId]);
 
   const deleteOneComment = async (test) => {
     //const idToRemove = commentId
-    const filteredMessages = messagesUser.map((element) => {
+    /* const filteredMessages = messagesUser.map((element) => {
       const test = element.Comments;
       // test.filter((item) => item.id !== idToRemove);
       test.splice(0, 1);
-    });
+    });*/
     const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
     try {
       const response = await api({
         method: "get",
-        url: "/messages/" + id,
+        url: "/messages/" + myUserId,
         headers: { Authorization: `Bearer ${token}` },
       });
       setMessagesUser(response.data);
@@ -94,12 +93,16 @@ const MessageUserMe = ({ id, avatar }) => {
               <div className="f-card">
                 <div className="header">
                   <div className="options">
-                    <LongMenu
-                      element={element}
-                      viewUpdateMessage={viewUpdateMessage}
-                      deleteOneMessage={deleteOneMessage}
-                      messageId={element.id}
-                    />
+                    {element.UserId === myUserId || admin === true ? (
+                      <LongMenu
+                        element={element}
+                        viewUpdateMessage={viewUpdateMessage}
+                        deleteOneMessage={deleteOneMessage}
+                        messageId={element.id}
+                      />
+                    ) : (
+                      <> </>
+                    )}
                   </div>
                   <img className="co-logo" alt="img" src={avatar} />
                   <div className="co-name">
@@ -129,12 +132,17 @@ const MessageUserMe = ({ id, avatar }) => {
                   </div>
                 )}
 
-                <AccordionComment
-                  modifyComment={modifyComment}
-                  newComments={element.comments}
-                  deleteOneComment={deleteOneComment}
-                  messageId={element.id}
-                />
+                <div className="accordions">
+                  <Accordion
+                    myUserId={myUserId}
+                    modifyComment={modifyComment}
+                    newComments={element.comments}
+                    deleteOneComment={deleteOneComment}
+                    messageId={element.id}
+                    admin={admin}
+                    title="commentaire"
+                  />
+                </div>
                 <div className="social">
                   <div className="social-content"></div>
                   <div className="social-buttons">

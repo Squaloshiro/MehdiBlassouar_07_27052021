@@ -54,13 +54,18 @@ const ViewComment = ({ messageId, updatViewMessage }) => {
     setcomments(newComments);
   };
 
+  const redirectToUserProfil = (id) => {
+    if (id === myUserId) {
+      history.push("/profil");
+    } else {
+      history.push({ pathname: "/users/profils", state: { id } });
+    }
+  };
+
   return (
     <div className="flex-position">
       {comments &&
         comments.map((element) => {
-          console.log("-------------------6564-----------------");
-          console.log(element.User.avatar);
-          console.log("------------------------------------");
           return (
             <div key={element.id} className="card-position">
               <div className="f-card">
@@ -68,7 +73,7 @@ const ViewComment = ({ messageId, updatViewMessage }) => {
                   <div className="options"></div>
                   <img className="co-logo" alt="img" src={element.User.avatar} />
                   <div className="co-name">
-                    <a href="#">{element.User.username}</a>
+                    <div onClick={() => redirectToUserProfil(element.UserId)}>{element.User.username}</div>
                   </div>
                   <div className="time">
                     <div>{element.createdAt}</div> · <FontAwesomeIcon icon={["fas", "globe"]} />{" "}

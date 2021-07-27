@@ -16,7 +16,7 @@ const Header = ({ isLoggedin, setIsLoggedin }) => {
     } else {
       setprofilPageIsActif(false);
     }
-  });
+  }, [location.pathname]);
   const onLogout = () => {
     setIsLoggedin(false);
     sessionStorage.removeItem("groupomaniaToken");

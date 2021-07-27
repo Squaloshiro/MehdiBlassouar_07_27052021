@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import api from "../../config/api";
 import "./avatars.scss";
-import { useHistory } from "react-router";
+
 function importAll(r) {
   let images = {};
   r.keys().forEach((item, index) => {
@@ -24,8 +24,7 @@ const Card = ({ number, selectCardIndex }) => {
     />
   );
 };
-const Avatar = ({ onChangeAvatar }) => {
-  const history = useHistory();
+const Avatar = ({ onChangeAvatar, close }) => {
   const [avatar, setAvatars] = useState("");
 
   const [selectCardIndex, setSelectCardIndex] = useState(null);
@@ -48,8 +47,12 @@ const Avatar = ({ onChangeAvatar }) => {
         headers: { Authorization: `Bearer ${token}` },
       });
       onChangeAvatar(response.data);
-      history.push("#");
-    } catch (error) {}
+      close();
+    } catch (error) {
+      console.log("------------------------------------");
+      console.log(error);
+      console.log("------------------------------------");
+    }
   };
 
   return (
@@ -59,18 +62,17 @@ const Avatar = ({ onChangeAvatar }) => {
           {tab &&
             tab.map((element, i) => {
               return (
-                <div onClick={(e) => onSubmitAvatar(e, i)}>
+                <div key={i} onClick={(e) => onSubmitAvatar(e, i)}>
                   <Card selectCardIndex={selectCardIndex} number={element} />
                 </div>
               );
             })}
         </div>
       </div>
-      <a href="#">
-        <button onClick={onSubmit} className="new" type="button">
-          Envoyer
-        </button>
-      </a>
+
+      <button onClick={onSubmit} className="new" type="button">
+        Envoyer
+      </button>
     </div>
   );
 };

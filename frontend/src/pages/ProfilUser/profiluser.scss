@@ -1,0 +1,77 @@
+.flex-direction-2 {
+  width: 100%;
+}
+.size-2 {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: black 1px solid;
+}
+.size-profil-2 {
+  border: #d0d1d5 1px solid;
+  box-shadow: 0 0 5px rgb(0 0 0 / 30%);
+  margin-bottom: 2em;
+  margin-top: 2em;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.flex-msg-2 {
+  border: black 1px solid;
+  width: 100%;
+}
+
+.bor-username-2 {
+  border-bottom: #d0d1d5 1px solid;
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  font-size: 2em;
+  margin-top: 1em;
+}
+
+.flex-elt-profil-2 {
+  display: flex;
+  flex-direction: row;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  justify-content: space-evenly;
+  width: 90%;
+  border-bottom: #d0d1d5 1px solid;
+}
+.flex-picturs-2 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  width: 50%;
+}
+
+.size-picturs-2 {
+  width: 35%;
+  height: 16em;
+  border: gray 1px solid;
+
+  border-radius: 0.6em 0.6em 0.6em 0.6em;
+}
+
+.size-police-2 {
+  font-size: 1.5em;
+  margin-bottom: 0.5em;
+}
+.size-police-photo-2 {
+  font-size: 1.5em;
+}
+
+.email-2 {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.margin-bio-2 {
+  margin-bottom: 1em;
+}

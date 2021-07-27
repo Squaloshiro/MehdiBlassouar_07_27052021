@@ -1,6 +1,6 @@
 import React from "react";
 import { withStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
+import Button from "../Button/Button";
 import Dialog from "@material-ui/core/Dialog";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import MuiDialogContent from "@material-ui/core/DialogContent";
@@ -13,7 +13,7 @@ import "../../pages/LandingPage/landingpage.scss";
 import api from "../../config/api";
 import { useState } from "react";
 import Input from "../../componants/Input/Input";
-
+import { useRef } from "react";
 const styles = (theme) => ({
   root: {
     margin: 0,
@@ -56,10 +56,13 @@ const DialogActions = withStyles((theme) => ({
 }))(MuiDialogActions);
 
 export default function CustomizedDialogs({ viewUpdateMessage, element }) {
-  const [open, setOpen] = React.useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-
+  const [open, setOpen] = useState(false);
+  const userNameRef = useRef(null);
+  console.log("------------userNameRef------------------------");
+  console.log(userNameRef);
+  console.log("------------------------------------");
   const onChangeTitle = (e) => {
     setTitle(e.target.value);
   };
@@ -71,7 +74,7 @@ export default function CustomizedDialogs({ viewUpdateMessage, element }) {
   const handleClickOpen = () => {
     setOpen(true);
   };
-  const handleClose = async () => {
+  const handleClose = () => {
     setOpen(false);
   };
 
@@ -92,50 +95,47 @@ export default function CustomizedDialogs({ viewUpdateMessage, element }) {
 
   return (
     <div className="card-position" key={element.id}>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Modifier
-      </Button>
+      <Button color="primary" ref={userNameRef} onClick={handleClickOpen} title="Modifier" />
+
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
           Modifier votre publication
         </DialogTitle>
         <DialogContent dividers>
-          <Typography gutterBottom>
+          <div>
             <div>
-              <div>
-                <img className="co-logo" alt="img" src="http://placehold.it/40x40" />
-                <div className="co-name">
-                  <a href={"#"}>{element.User.username}</a>
-                </div>
-                <div className="time">
-                  <div>{element.createdAt}</div> · <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
-                </div>
+              <img className="co-logo" alt="img" src="http://placehold.it/40x40" />
+              <div className="co-name">
+                <div>{element.User.username}</div>
               </div>
-              <div className="content">
-                <Input onChange={onChangeTitle} value={title} label={element.title}></Input>
+              <div className="time">
+                <div>{element.createdAt}</div> · <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
               </div>
-              {element.attachment ? (
-                <div className="reference">
-                  <img alt="img" className="reference-thumb" src={element.attachment} />
-                  <div className="reference-content">
-                    <div className="reference-subtitle">
-                      <Input onChange={onChangeContent} value={content} label={element.title}></Input>
-                    </div>
-                    <div className="reference-font">Groupomania</div>
-                  </div>
-                </div>
-              ) : (
-                <div className="reference">
-                  <div className="reference-content">
-                    <div className="reference-subtitle">
-                      <Input onChange={onChangeContent} value={content} label={element.title}></Input>
-                    </div>
-                    <div className="reference-font">Groupomania</div>
-                  </div>
-                </div>
-              )}
             </div>
-          </Typography>
+            <div className="content">
+              <Input onChange={onChangeTitle} value={title} label={element.title}></Input>
+            </div>
+            {element.attachment ? (
+              <div className="reference">
+                <img alt="img" className="reference-thumb" src={element.attachment} />
+                <div className="reference-content">
+                  <div className="reference-subtitle">
+                    <Input onChange={onChangeContent} value={content} label={element.title}></Input>
+                  </div>
+                  <div className="reference-font">Groupomania</div>
+                </div>
+              </div>
+            ) : (
+              <div className="reference">
+                <div className="reference-content">
+                  <div className="reference-subtitle">
+                    <Input onChange={onChangeContent} value={content} label={element.title}></Input>
+                  </div>
+                  <div className="reference-font">Groupomania</div>
+                </div>
+              </div>
+            )}
+          </div>
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={updateMessage} color="primary">

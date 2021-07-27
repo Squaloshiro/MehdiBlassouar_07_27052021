@@ -1,10 +1,9 @@
 import api from "../../config/api";
-import { useHistory } from "react-router-dom";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect } from "react";
 
 const CommentLike = ({ modifyCommentLike, commentsId, like, dislike }) => {
-  const history = useHistory();
   const [isLike, setIsLike] = useState(["far", "thumbs-up"]);
   const [isDislike, setIsDislike] = useState(["far", "thumbs-down"]);
 
@@ -15,7 +14,7 @@ const CommentLike = ({ modifyCommentLike, commentsId, like, dislike }) => {
     if (dislike === 1) {
       setIsDislike(["fas", "thumbs-down"]);
     }
-  }, []);
+  }, [like, dislike]);
 
   const onSubmitLikeComment = async (e) => {
     e.preventDefault();

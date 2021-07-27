@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
 import api from "../../config/api";
-import { useHistory } from "react-router";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import MessageUserMe from "../MessageUser/MessageUserMe";
 import "./profilPage.scss";
 import Avatar from "../Avatars/Avatars";
-const ProfilPage = () => {
-  const history = useHistory();
+import UpdadePassword from "../../componants/UpdatPassword/UpdatePassword";
+import DropAccount from "../../componants/DropAccount/DropAccount";
+
+const ProfilPage = ({ setIsLoggedin, admin }) => {
   const [profil, setProfil] = useState({});
   const [bio, setBio] = useState("");
+  const [active, setActive] = useState(false);
 
   const onChangeAvatar = (newAvatar) => {
     setProfil(newAvatar);
@@ -16,6 +18,13 @@ const ProfilPage = () => {
 
   const onChangeBio = (e) => {
     setBio(e.target.value);
+  };
+
+  const openModal = () => {
+    setActive(true);
+  };
+  const closeModal = () => {
+    setActive(false);
   };
 
   useEffect(() => {
@@ -65,20 +74,21 @@ const ProfilPage = () => {
             <div className="flex-picturs">
               <div className="size-police-photo">Photo de profil</div>
               <img alt="img" className="size-picturs" src={profil.avatar} />
-              <a class="modal-show" href="#modal">
-                envoyer
-              </a>
-
-              <div class="modal" id="modal">
-                <div class="modal-content">
-                  <a class="modal-hide" href="#">
-                    ✕
-                  </a>
-                  <div className="styl">
-                    <Avatar onChangeAvatar={onChangeAvatar} />
+              <div className="modal-show" onClick={openModal}>
+                Select
+              </div>
+              {active && (
+                <div className="modal" id="modal">
+                  <div className="modal-content">
+                    <div className="modal-hide" onClick={closeModal}>
+                      ✕
+                    </div>
+                    <div className="styl">
+                      <Avatar close={closeModal} onChangeAvatar={onChangeAvatar} />
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
             <div className="size-elt">
               <div className="email">
@@ -101,9 +111,17 @@ const ProfilPage = () => {
               </div>
             </div>
           </div>
+          <div className="flex-drop-update">
+            <div>
+              <UpdadePassword />
+            </div>
+            <div>
+              <DropAccount userId={profil.id} setIsLoggedin={setIsLoggedin} />
+            </div>
+          </div>
         </div>
         <div className="flex-msg">
-          <MessageUserMe avatar={profil.avatar} id={profil.id} />
+          <MessageUserMe admin={admin} avatar={profil.avatar} myUserId={profil.id} />
         </div>
       </div>
     </div>
