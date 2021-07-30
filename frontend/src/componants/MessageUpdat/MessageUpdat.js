@@ -13,7 +13,7 @@ import "../../pages/LandingPage/landingpage.scss";
 import api from "../../config/api";
 import { useState } from "react";
 import Input from "../../componants/Input/Input";
-import { useRef } from "react";
+
 const styles = (theme) => ({
   root: {
     margin: 0,
@@ -59,10 +59,7 @@ export default function CustomizedDialogs({ viewUpdateMessage, element }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [open, setOpen] = useState(false);
-  const userNameRef = useRef(null);
-  console.log("------------userNameRef------------------------");
-  console.log(userNameRef);
-  console.log("------------------------------------");
+
   const onChangeTitle = (e) => {
     setTitle(e.target.value);
   };
@@ -89,13 +86,16 @@ export default function CustomizedDialogs({ viewUpdateMessage, element }) {
         data: obj,
         headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
       });
+      console.log("-----------------data-------------------");
+      console.log(response.data);
+      console.log("------------------------------------");
       viewUpdateMessage(response.data);
     } catch (error) {}
   };
 
   return (
-    <div className="card-position" key={element.id}>
-      <Button color="primary" ref={userNameRef} onClick={handleClickOpen} title="Modifier" />
+    <div key={element.id}>
+      <Button color="primary" onClick={handleClickOpen} title="Modifier" />
 
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
@@ -104,7 +104,7 @@ export default function CustomizedDialogs({ viewUpdateMessage, element }) {
         <DialogContent dividers>
           <div>
             <div>
-              <img className="co-logo" alt="img" src="http://placehold.it/40x40" />
+              <img className="co-logo" alt="img" src={element.User.avatar} />
               <div className="co-name">
                 <div>{element.User.username}</div>
               </div>
@@ -120,7 +120,7 @@ export default function CustomizedDialogs({ viewUpdateMessage, element }) {
                 <img alt="img" className="reference-thumb" src={element.attachment} />
                 <div className="reference-content">
                   <div className="reference-subtitle">
-                    <Input onChange={onChangeContent} value={content} label={element.title}></Input>
+                    <Input onChange={onChangeContent} value={title} label={element.title}></Input>
                   </div>
                   <div className="reference-font">Groupomania</div>
                 </div>
@@ -129,7 +129,7 @@ export default function CustomizedDialogs({ viewUpdateMessage, element }) {
               <div className="reference">
                 <div className="reference-content">
                   <div className="reference-subtitle">
-                    <Input onChange={onChangeContent} value={content} label={element.title}></Input>
+                    <Input onChange={onChangeContent} value={content} label={element.content}></Input>
                   </div>
                   <div className="reference-font">Groupomania</div>
                 </div>
@@ -138,9 +138,7 @@ export default function CustomizedDialogs({ viewUpdateMessage, element }) {
           </div>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={updateMessage} color="primary">
-            Modifier
-          </Button>
+          <Button autoFocus onClick={updateMessage} color="primary" title="Modifier" />
         </DialogActions>
       </Dialog>
     </div>

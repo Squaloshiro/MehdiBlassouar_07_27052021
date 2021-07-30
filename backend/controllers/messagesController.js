@@ -340,7 +340,7 @@ module.exports = {
             include: [
               {
                 model: models.User,
-                attributes: ["username"],
+                attributes: ["username", "avatar"],
               },
             ],
           }).then(function (allMessageFound) {

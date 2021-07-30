@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MessageLike from "../../componants/MessageLike/MessageLike";
 import MessageImage from "../PostMessage/PostMessage";
 import Accordion from "../../componants/AccordionComment/Accordion";
-import Test from "../../componants/Menu/Menu";
+import PostComment from "../../componants/PostComment/PostComment";
 
 const LandingPage = ({ myUserId, admin }) => {
   const history = useHistory();
@@ -111,7 +111,7 @@ const LandingPage = ({ myUserId, admin }) => {
                 <div className="header">
                   <div className="options">
                     {element.UserId === myUserId || admin === true ? (
-                      <Test
+                      <LongMenu
                         element={element}
                         viewUpdateMessage={viewUpdateMessage}
                         deleteOneMessage={deleteOneMessage}
