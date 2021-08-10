@@ -3,7 +3,7 @@ import Button from "../../componants/Button/Button";
 import { useState } from "react";
 import api from "../../config/api";
 
-const PostComment = ({ postComment, messageId, updatViewMessage, newComments, modifyComment }) => {
+const PostComment = ({ postComment, messageId, newComments, modifyComment }) => {
   const [content, setContent] = useState("");
 
   const onChangeContent = (e) => {

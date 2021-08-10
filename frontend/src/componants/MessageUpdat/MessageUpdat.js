@@ -55,7 +55,7 @@ const DialogActions = withStyles((theme) => ({
   },
 }))(MuiDialogActions);
 
-export default function CustomizedDialogs({ viewUpdateMessage, element }) {
+export default function CustomizedDialogs({ viewUpdateMessage, element, setPopUpIsOpen, onClick, openPopUp }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [open, setOpen] = useState(false);
@@ -70,9 +70,12 @@ export default function CustomizedDialogs({ viewUpdateMessage, element }) {
 
   const handleClickOpen = () => {
     setOpen(true);
+    openPopUp();
   };
   const handleClose = () => {
     setOpen(false);
+    setPopUpIsOpen(false);
+    onClick();
   };
 
   const updateMessage = async () => {
@@ -86,9 +89,7 @@ export default function CustomizedDialogs({ viewUpdateMessage, element }) {
         data: obj,
         headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
       });
-      console.log("-----------------data-------------------");
-      console.log(response.data);
-      console.log("------------------------------------");
+
       viewUpdateMessage(response.data);
     } catch (error) {}
   };
@@ -120,7 +121,7 @@ export default function CustomizedDialogs({ viewUpdateMessage, element }) {
                 <img alt="img" className="reference-thumb" src={element.attachment} />
                 <div className="reference-content">
                   <div className="reference-subtitle">
-                    <Input onChange={onChangeContent} value={title} label={element.title}></Input>
+                    <Input onChange={onChangeContent} value={content} label={element.title}></Input>
                   </div>
                   <div className="reference-font">Groupomania</div>
                 </div>

@@ -3,18 +3,20 @@ import { useState, useEffect } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const MessageLike = ({ modifyLike, messageId, like, dislike }) => {
+const MessageLike = ({ modifyLike, messageId, like, dislike, messageLikeByCurrentUser }) => {
   const [isLike, setIsLike] = useState(["far", "thumbs-up"]);
   const [isDislike, setIsDislike] = useState(["far", "thumbs-down"]);
 
   useEffect(() => {
-    if (like === 1) {
-      setIsLike(["fas", "thumbs-up"]);
+    if (messageLikeByCurrentUser?.length) {
+      if (messageLikeByCurrentUser[0].userLike) {
+        setIsLike(["fas", "thumbs-up"]);
+      } else if (messageLikeByCurrentUser[0].userDislike) {
+        setIsDislike(["fas", "thumbs-down"]);
+      }
     }
-    if (dislike === 1) {
-      setIsDislike(["fas", "thumbs-down"]);
-    }
-  }, [like, dislike]);
+  }, []);
+
   const onSubmitLikeMessage = async (e) => {
     e.preventDefault();
     try {

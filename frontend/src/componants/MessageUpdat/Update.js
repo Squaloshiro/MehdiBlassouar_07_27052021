@@ -7,10 +7,20 @@ import "../../componants/MessageUpdat/update.scss";
 import api from "../../config/api";
 import { useState } from "react";
 
-const Update = ({ viewUpdateMessage, element }) => {
+const Update = ({ viewUpdateMessage, setActive, element, setPopUpIsOpen, openPopUp, onClick }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+    openPopUp();
+  };
+  const handleClose = () => {
+    setOpen(false);
+    setPopUpIsOpen(false);
+    onClick();
+  };
 
   const onChangeTitle = (e) => {
     setTitle(e.target.value);
@@ -18,13 +28,6 @@ const Update = ({ viewUpdateMessage, element }) => {
 
   const onChangeContent = (e) => {
     setContent(e.target.value);
-  };
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
   };
 
   const updateMessage = async () => {
@@ -39,70 +42,48 @@ const Update = ({ viewUpdateMessage, element }) => {
         headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
       });
       viewUpdateMessage(response.data);
+      setActive(false);
     } catch (error) {}
   };
 
   return (
-    <div key={element.id}>
-      <Button color="primary" onClick={handleClickOpen} title="Modifier" />
-
-      {open && (
-        <div className="modal" id="modal">
-          <div className="modal-content">
-            <div className="modal-hide" onClick={handleClose}>
-              ✕
-            </div>
-            <div className="styl">
-              <div onClose={handleClose} className="test1000" aria-labelledby="customized-dialog-title" open={open}>
-                <div id="customized-dialog-title" onClose={handleClose}>
-                  Modifier votre publication
-                </div>
-                <div className="card-position">
-                  <div>
-                    <div>
-                      <img className="co-logo" alt="img" src="http://placehold.it/40x40" />
-                      <div className="co-name">
-                        <div>{element.User.username}</div>
-                      </div>
-                      <div className="time">
-                        <div>{element.createdAt}</div> · <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
-                      </div>
-                    </div>
-                    <div className="content">
-                      <Input onChange={onChangeTitle} value={title} label={element.title}></Input>
-                    </div>
-                    {element.attachment ? (
-                      <div className="reference">
-                        <img alt="img" className="reference-thumb" src={element.attachment} />
-                        <div className="reference-content">
-                          <div className="reference-subtitle">
-                            <Input onChange={onChangeContent} value={content} label={element.title}></Input>
-                          </div>
-                          <div className="reference-font">Groupomania</div>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="reference">
-                        <div className="reference-content">
-                          <div className="reference-subtitle">
-                            <Input onChange={onChangeContent} value={content} label={element.title}></Input>
-                          </div>
-                          <div className="reference-font">Groupomania</div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div>
-                  <Button onClick={updateMessage} color="primary">
-                    Modifier
-                  </Button>
-                </div>
-              </div>
-            </div>
+    <div className="new-position" key={element.id}>
+      <div onClose={handleClose}>
+        <div>
+          <img className="co-logo" alt="img" src={element.User.avatar} />
+          <div className="co-name">
+            <div>{element.User.username}</div>
+          </div>
+          <div className="time">
+            <div>{element.createdAt}</div> · <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
           </div>
         </div>
-      )}
+        <div className="content">
+          <Input onChange={onChangeTitle} value={title} label={element.title}></Input>
+        </div>
+        {element.attachment ? (
+          <div className="reference">
+            <img alt="img" className="reference-thumb" src={element.attachment} />
+            <div className="reference-content">
+              <div className="reference-subtitle">
+                <Input onChange={onChangeContent} value={content} label={element.title}></Input>
+              </div>
+              <div className="reference-font">Groupomania</div>
+            </div>
+          </div>
+        ) : (
+          <div className="reference">
+            <div className="reference-content">
+              <div className="reference-subtitle">
+                <Input onChange={onChangeContent} value={content} label={element.content}></Input>
+              </div>
+              <div className="reference-font">Groupomania</div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <Button autoFocus onClick={updateMessage} color="primary" title="Modifier" />
     </div>
   );
 };

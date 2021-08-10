@@ -8,10 +8,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PostComment from "../PostComment/PostComment";
 import CommentLike from "../CommentLike/Commentlike";
 
-const Accordion = ({ title, content, updatViewMessage, messageId, modifyComment, newComments, myUserId, admin }) => {
+const Accordion = ({ title, comments, setcomments, messageId, modifyComment, newComments, myUserId, admin }) => {
   const [active, setActive] = useState(false);
   const history = useHistory();
-  const [comments, setcomments] = useState([]);
+  //const [comments, setcomments] = useState([]);
 
   const deleteOneComment = (commentId) => {
     const idToRemove = commentId;
@@ -70,6 +70,7 @@ const Accordion = ({ title, content, updatViewMessage, messageId, modifyComment,
         <div className="flex-position">
           {comments &&
             comments.map((element) => {
+              const messageCommentLikeByCurrentUser = element?.CommentsLikes?.filter((elt) => myUserId === elt.userId);
               return (
                 <div key={element.id} className="card-position">
                   <div className="f-card">
@@ -91,6 +92,7 @@ const Accordion = ({ title, content, updatViewMessage, messageId, modifyComment,
                       <div className="social-buttons">
                         <span>
                           <CommentLike
+                            messageCommentLikeByCurrentUser={messageCommentLikeByCurrentUser}
                             modifyCommentLike={modifyCommentLike}
                             commentsId={element.id}
                             like={element.likes}
@@ -117,13 +119,6 @@ const Accordion = ({ title, content, updatViewMessage, messageId, modifyComment,
                 </div>
               );
             })}
-          <PostComment
-            modifyComment={modifyComment}
-            newComments={newComments}
-            updatViewMessage={updatViewMessage}
-            postComment={postComment}
-            messageId={messageId}
-          />
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 
 import Button from "../Button/Button";
 
-const DropAccount = ({ setIsLoggedin, userId }) => {
+const DropAccount = ({ setIsLoggedin, userId, admin }) => {
   const history = useHistory();
 
   const dropProfil = async () => {
@@ -18,9 +18,13 @@ const DropAccount = ({ setIsLoggedin, userId }) => {
           "Content-Type": "multipart/from-data",
         },
       });
-      setIsLoggedin(false);
-      sessionStorage.removeItem("groupomaniaToken");
-      history.push("/connexion");
+      if (admin) {
+        history.push("/");
+      } else {
+        setIsLoggedin(false);
+        sessionStorage.removeItem("groupomaniaToken");
+        history.push("/connexion");
+      }
     } catch (error) {}
   };
 

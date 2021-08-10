@@ -2,16 +2,21 @@ import { useState, useEffect } from "react";
 import api from "../../config/api";
 import { useHistory } from "react-router";
 import "./landingpage.scss";
-import LongMenu from "../../componants/Menu/LongMenu";
+import Menu from "../../componants/Menu/Menu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MessageLike from "../../componants/MessageLike/MessageLike";
 import MessageImage from "../PostMessage/PostMessage";
 import Accordion from "../../componants/AccordionComment/Accordion";
 import PostComment from "../../componants/PostComment/PostComment";
-
+import Modal from "../../componants/Modal/Modal";
+import Button from "../../componants/Button/Button";
 const LandingPage = ({ myUserId, admin }) => {
   const history = useHistory();
   const [messages, setMessages] = useState([]);
+  const [comments, setcomments] = useState([]);
+  const [active, setActive] = useState(false);
+  const [messageInModal, setMessageInModal] = useState(null);
+  const [popUpIsOpen, setPopUpIsOpen] = useState(false);
 
   useEffect(() => {
     if (sessionStorage.getItem("groupomaniaToken")) {
@@ -99,19 +104,56 @@ const LandingPage = ({ myUserId, admin }) => {
     setMessages(updateMessages);
   };
 
+  const postComment = (newComments) => {
+    setcomments(newComments);
+  };
+
+  const openMenu = () => {
+    setActive(true);
+  };
+  const closeMenu = (e) => {
+    setActive(false);
+  };
+
+  const openPopUp = () => {
+    if (!popUpIsOpen) {
+      setPopUpIsOpen(true);
+    }
+  };
+  const openModal = (message) => {
+    setMessageInModal(message);
+    setActive(true);
+  };
+
   return (
     <div className="flex-position">
       <MessageImage postMessage={postMessage} />
+      {active && messageInModal && (
+        <Modal
+          setActive={setActive}
+          active={active}
+          openPopUp={openPopUp}
+          setPopUpIsOpen={setPopUpIsOpen}
+          onClick={closeMenu}
+          viewUpdateMessage={viewUpdateMessage}
+          element={messageInModal}
+          messageId={messageInModal.id}
+        />
+      )}
 
       {messages &&
         messages.map((element) => {
+          const messageLikeByCurrentUser = element?.Likes?.filter((elt) => myUserId === elt.userId);
           return (
             <div key={element.id} className="card-position">
               <div className="f-card">
                 <div className="header">
                   <div className="options">
                     {element.UserId === myUserId || admin === true ? (
-                      <LongMenu
+                      <Menu
+                        openModal={openModal}
+                        setActive={setActive}
+                        active={active}
                         element={element}
                         viewUpdateMessage={viewUpdateMessage}
                         deleteOneMessage={deleteOneMessage}
@@ -151,6 +193,8 @@ const LandingPage = ({ myUserId, admin }) => {
 
                 <div className="accordions">
                   <Accordion
+                    comments={comments}
+                    setcomments={setcomments}
                     myUserId={myUserId}
                     modifyComment={modifyComment}
                     newComments={element.comments}
@@ -169,6 +213,7 @@ const LandingPage = ({ myUserId, admin }) => {
                         messageId={element.id}
                         like={element.likes}
                         dislike={element.dislikes}
+                        messageLikeByCurrentUser={messageLikeByCurrentUser}
                       />
                     </span>
                     <span>
@@ -178,6 +223,12 @@ const LandingPage = ({ myUserId, admin }) => {
                   </div>
                 </div>
               </div>
+              <PostComment
+                modifyComment={modifyComment}
+                newComments={element.comments}
+                postComment={postComment}
+                messageId={element.id}
+              />
             </div>
           );
         })}

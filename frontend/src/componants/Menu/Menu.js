@@ -5,40 +5,32 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CustomizedDialogs from "../MessageUpdat/MessageUpdat";
 import MessageDestroy from "../DestroyMsg/DestroyMsg";
 import { useRef, useEffect } from "react";
-const Menu = ({ viewUpdateMessage, element, messageId, deleteOneMessage }) => {
-  const [active, setActive] = useState(false);
-  const [clickedOutside, setClickedOutside] = useState(false);
+import Modal from "../../componants/Modal/Modal";
+import Button from "../Button/Button";
+const Menu = ({ viewUpdateMessage, element, messageId, deleteOneMessage, openModal }) => {
+  const [menuActive, setMenuActive] = useState(false);
+
+  const [popUpIsOpen, setPopUpIsOpen] = useState(false);
   const myRef = useRef();
-  console.log("-------------active----1-------------------");
-  console.log(active);
-  console.log("------------------------------------");
-  /*  const handleClickOutside = (e) => {
+
+  const handleClickOutside = (e) => {
     if (!myRef.current.contains(e.target)) {
-      setClickedOutside(true);
+      if (!popUpIsOpen) {
+        setMenuActive(false);
+      }
     }
   };
 
-  const handleClickInside = () => setClickedOutside(false);
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  });*/
   const openMenu = () => {
-    setActive(true);
+    setMenuActive(true);
   };
   const closeMenu = (e) => {
-    setActive(false);
-  };
-  const handleButtonClick = () => {
-    if (active === true) {
-      setActive(false);
-    }
+    setMenuActive(false);
   };
 
-  const handleClickOutside = (event) => {
-    if (!myRef.current.contains(event.target)) {
-      setActive(false);
+  const openPopUp = () => {
+    if (!popUpIsOpen) {
+      setPopUpIsOpen(true);
     }
   };
   useEffect(() => {
@@ -51,9 +43,9 @@ const Menu = ({ viewUpdateMessage, element, messageId, deleteOneMessage }) => {
       <div onClick={openMenu} className="flex-menu">
         <FontAwesomeIcon color="gray" icon={["fas", "ellipsis-v"]} />
       </div>
-      {active && (
+      {menuActive && (
         <div className="new-content">
-          <CustomizedDialogs onClick={closeMenu} viewUpdateMessage={viewUpdateMessage} element={element} />
+          <Button title="Modifier" onClick={(e) => openModal(element)} />
           <MessageDestroy deleteOneMessage={deleteOneMessage} messageId={messageId} />
         </div>
       )}

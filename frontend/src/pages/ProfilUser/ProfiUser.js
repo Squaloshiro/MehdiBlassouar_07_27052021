@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import api from "../../config/api";
 import { useHistory, useLocation } from "react-router";
-
+import DropAccount from "../../componants/DropAccount/DropAccount";
 import MessageUser from "../MessageUser/MessageUser";
 import "./profiluser.scss";
 import Button from "../../componants/Button/Button";
-const ProfilUser = ({ myUserId, admin }) => {
+import AdminUpdate from "../../componants/AdminUpdate/AdminUpdate";
+
+const ProfilUser = ({ myUserId, admin, setIsLoggedin }) => {
   const location = useLocation();
   const history = useHistory();
   const [profil, setProfil] = useState({});
@@ -60,8 +62,13 @@ const ProfilUser = ({ myUserId, admin }) => {
                 )}
                 {admin === true ? (
                   <div>
-                    <Button title="Donnée les droits" />
-                    <Button title="Suprimer le compte" />
+                    <AdminUpdate idUser={location.state.id} />
+                    <DropAccount
+                      admin={admin}
+                      setIsLoggedin={setIsLoggedin}
+                      userId={location.state.id}
+                      title="Suprimer le compte"
+                    />
                   </div>
                 ) : (
                   <></>

@@ -3,18 +3,19 @@ import api from "../../config/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect } from "react";
 
-const CommentLike = ({ modifyCommentLike, commentsId, like, dislike }) => {
+const CommentLike = ({ modifyCommentLike, commentsId, like, dislike, messageCommentLikeByCurrentUser }) => {
   const [isLike, setIsLike] = useState(["far", "thumbs-up"]);
   const [isDislike, setIsDislike] = useState(["far", "thumbs-down"]);
 
   useEffect(() => {
-    if (like === 1) {
-      setIsLike(["fas", "thumbs-up"]);
+    if (messageCommentLikeByCurrentUser?.length) {
+      if (messageCommentLikeByCurrentUser[0].userLike) {
+        setIsLike(["fas", "thumbs-up"]);
+      } else if (messageCommentLikeByCurrentUser[0].userDislike) {
+        setIsDislike(["fas", "thumbs-down"]);
+      }
     }
-    if (dislike === 1) {
-      setIsDislike(["fas", "thumbs-down"]);
-    }
-  }, [like, dislike]);
+  }, []);
 
   const onSubmitLikeComment = async (e) => {
     e.preventDefault();

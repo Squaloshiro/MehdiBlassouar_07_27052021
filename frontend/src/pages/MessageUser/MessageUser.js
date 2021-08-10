@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import api from "../../config/api";
 
-import LongMenu from "../../componants/Menu/LongMenu";
+import Menu from "../../componants/Menu/Menu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MessageLike from "../../componants/MessageLike/MessageLike";
 import Accordion from "../../componants/AccordionComment/Accordion";
-
+import PostComment from "../../componants/PostComment/PostComment";
 const MessageUser = ({ id, myUserId, admin }) => {
   const [messagesUser, setMessagesUser] = useState([]);
+  const [comments, setcomments] = useState([]);
 
   useEffect(() => {
     const getMessageUserApi = async () => {
@@ -83,17 +84,22 @@ const MessageUser = ({ id, myUserId, admin }) => {
     setMessagesUser(updateMessages);
   };
 
+  const postComment = (newComments) => {
+    setcomments(newComments);
+  };
+
   return (
     <div>
       {messagesUser &&
         messagesUser.map((element) => {
+          const messageLikeByCurrentUser = element?.Likes?.filter((elt) => myUserId === elt.userId);
           return (
             <div key={element.id} className="card-position">
               <div className="f-card">
                 <div className="header">
                   <div className="options">
                     {element.UserId === myUserId || admin === true ? (
-                      <LongMenu
+                      <Menu
                         element={element}
                         viewUpdateMessage={viewUpdateMessage}
                         deleteOneMessage={deleteOneMessage}
@@ -133,6 +139,8 @@ const MessageUser = ({ id, myUserId, admin }) => {
 
                 <div className="accordions">
                   <Accordion
+                    comments={comments}
+                    setcomments={setcomments}
                     myUserId={myUserId}
                     modifyComment={modifyComment}
                     newComments={element.comments}
@@ -151,6 +159,7 @@ const MessageUser = ({ id, myUserId, admin }) => {
                         messageId={element.id}
                         like={element.likes}
                         dislike={element.dislikes}
+                        messageLikeByCurrentUser={messageLikeByCurrentUser}
                       />
                     </span>
                     <span>
@@ -160,6 +169,12 @@ const MessageUser = ({ id, myUserId, admin }) => {
                   </div>
                 </div>
               </div>
+              <PostComment
+                modifyComment={modifyComment}
+                newComments={element.comments}
+                postComment={postComment}
+                messageId={element.id}
+              />
             </div>
           );
         })}

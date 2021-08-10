@@ -111,6 +111,9 @@ module.exports = {
           model: models.User,
           attributes: ["username", "avatar"],
         },
+        {
+          model: models.Like,
+        },
       ],
     })
       .then(function (messages) {
@@ -148,6 +151,9 @@ module.exports = {
         {
           model: models.User,
           attributes: ["username"],
+        },
+        {
+          model: models.Like,
         },
       ],
     })
