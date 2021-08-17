@@ -1,10 +1,8 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 
-import MessageUpdate from "../MessageUpdat/MessageUpdate";
 import "./modal.scss";
 
-const Modal = ({ viewUpdateMessage, messageId, element, openPopUp, setActive, active, onClick,messagesUser,setMessagesUser,myUserId }) => {
-  const [popUpIsOpen, setPopUpIsOpen] = useState(false);
+const Modal = ({ children, setActive, active, popUpIsOpen }) => {
   const clickOutSide = useRef();
 
   const handleClickOutside = (e) => {
@@ -22,17 +20,9 @@ const Modal = ({ viewUpdateMessage, messageId, element, openPopUp, setActive, ac
     setActive(false);
   };
 
-  return (
-    <div className="picturs">
-      {active && (
-        <div className="modal-componant" id="modal-componant">
-          <div className="last-content" ref={clickOutSide}>
-            <div className="hide" onClick={closeModal}>
-              ✕
-            </div>
-            <div className="styl">
-              <MessageUpdate
-              setMessagesUser={setMessagesUser}
+  /*<MessageUpdate
+                id={id}
+                setMessagesUser={setMessagesUser}
                 setActive={setActive}
                 messagesUser={messagesUser}
                 viewUpdateMessage={viewUpdateMessage}
@@ -41,8 +31,16 @@ const Modal = ({ viewUpdateMessage, messageId, element, openPopUp, setActive, ac
                 openPopUp={openPopUp}
                 onClick={onClick}
                 myUserId={myUserId}
-              />
+              />*/
+  return (
+    <div className="picturs">
+      {active && (
+        <div className="modal-componant" id="modal-componant">
+          <div className="last-content" ref={clickOutSide}>
+            <div className="hide" onClick={closeModal}>
+              ✕
             </div>
+            <div className="styl">{children}</div>
           </div>
         </div>
       )}

@@ -7,12 +7,20 @@ import "../../componants/MessageUpdat/update.scss";
 import api from "../../config/api";
 import { useState } from "react";
 import { toastTrigger } from "../../helper/toast";
-import {  useLocation } from "react-router";
-const MessageUpdate = ({ viewUpdateMessage, setActive, element, setPopUpIsOpen, openPopUp, onClick,myUserId,setMessagesUser }) => {
+import { useLocation } from "react-router";
+const MessageUpdate = ({
+  viewUpdateMessage,
+  setActive,
+  element,
+  setPopUpIsOpen,
+  onClick,
+  myUserId,
+  setMessagesUser,
+  id,
+}) => {
   const [title, setTitle] = useState(element.title);
   const [content, setContent] = useState(element.content);
-const location = useLocation();
-
+  const location = useLocation();
 
   const handleClose = () => {
     setPopUpIsOpen(false);
@@ -42,28 +50,28 @@ const location = useLocation();
         data: obj,
         headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
       });
-      if(location.pathname === "/profil"){
+
+      if (location.pathname === "/profil" || location.pathname === "/users/profils") {
         const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
 
-      try {
-        const response = await api({
-          method: "get",
-          url: "/messages/" + myUserId,
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        try {
+          const response = await api({
+            method: "get",
+            url: myUserId ? `/messages/${myUserId}` : `/messages/${id}`,
+            headers: { Authorization: `Bearer ${token}` },
+          });
 
-  setMessagesUser(response.data)
-      } catch (error) {
- toastTrigger("error", "une erreur est survenu");
+          setMessagesUser(response.data);
+        } catch (error) {
+          toastTrigger("error", "une erreur est survenu");
+        }
+        setActive(false);
+        toastTrigger("success", "Publication modifiée");
+      } else {
+        viewUpdateMessage(response.data);
+        setActive(false);
+        toastTrigger("success", "Publication modifiée");
       }
- setActive(false);
-      toastTrigger("success", "Publication modifiée");
-      }else{
-      viewUpdateMessage(response.data);
-      setActive(false);
-      toastTrigger("success", "Publication modifiée");
-      }
-
     } catch (error) {
       toastTrigger("error", "une erreur est survenu");
     }

@@ -2,6 +2,8 @@ const models = require("../models");
 const asyncLib = require("async");
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
+const moment = require("moment"); // pour formater les dates et heures
+moment.locale("fr");
 
 module.exports = {
   createcomment: function (req, res) {
@@ -87,7 +89,21 @@ module.exports = {
               },
             ],
           }).then(function (allCommentFound) {
-            return res.status(201).json(allCommentFound);
+            const allCommentFoundParsed = JSON.parse(JSON.stringify(allCommentFound));
+
+            if (allCommentFound) {
+              const commentsFormated = allCommentFoundParsed.map((element) => {
+                const date = moment(element.createdAt).local().format("LL");
+                const hour = moment(element.createdAt).local().format("LT");
+                element.createdAt = `${date} à ${hour}`;
+                const modifdate = moment(element.updatedAt).local().format("LL");
+                const modifhour = moment(element.updatedAt).local().format("LT");
+                element.updatedAt = `${modifdate} à ${modifhour}`;
+                return element;
+              });
+
+              return res.status(201).json(commentsFormated);
+            }
           });
         } else {
           return res.status(500).json({ error: "cannot post comment" });
@@ -120,9 +136,21 @@ module.exports = {
         },
       ],
     })
-      .then(function (messages) {
-        if (messages) {
-          res.status(200).json(messages);
+      .then(function (comment) {
+        const allCommentFoundParsed = JSON.parse(JSON.stringify(comment));
+
+        if (comment) {
+          const commentsFormated = allCommentFoundParsed.map((element) => {
+            const date = moment(element.createdAt).local().format("LL");
+            const hour = moment(element.createdAt).local().format("LT");
+            element.createdAt = `${date} à ${hour}`;
+            const modifdate = moment(element.updatedAt).local().format("LL");
+            const modifhour = moment(element.updatedAt).local().format("LT");
+            element.updatedAt = `${modifdate} à ${modifhour}`;
+            return element;
+          });
+
+          return res.status(201).json(commentsFormated);
         } else {
           res.status(404).json({ error: "no messages found" });
         }
@@ -209,9 +237,21 @@ module.exports = {
             },
           ],
         })
-          .then(function (messages) {
-            if (messages) {
-              res.status(200).json(messages);
+          .then(function (comment) {
+            const allCommentFoundParsed = JSON.parse(JSON.stringify(comment));
+
+            if (comment) {
+              const commentsFormated = allCommentFoundParsed.map((element) => {
+                const date = moment(element.createdAt).local().format("LL");
+                const hour = moment(element.createdAt).local().format("LT");
+                element.createdAt = `${date} à ${hour}`;
+                const modifdate = moment(element.updatedAt).local().format("LL");
+                const modifhour = moment(element.updatedAt).local().format("LT");
+                element.updatedAt = `${modifdate} à ${modifhour}`;
+                return element;
+              });
+
+              return res.status(201).json(commentsFormated);
             } else {
               res.status(404).json({ error: "no messages found" });
             }
@@ -303,8 +343,20 @@ module.exports = {
         },
       ],
       function (newMessage) {
+        const allCommentFoundParsed = JSON.parse(JSON.stringify(newMessage));
+
         if (newMessage) {
-          return res.status(201).json(newMessage);
+          const commentsFormated = allCommentFoundParsed.map((element) => {
+            const date = moment(element.createdAt).local().format("LL");
+            const hour = moment(element.createdAt).local().format("LT");
+            element.createdAt = `${date} à ${hour}`;
+            const modifdate = moment(element.updatedAt).local().format("LL");
+            const modifhour = moment(element.updatedAt).local().format("LT");
+            element.updatedAt = `${modifdate} à ${modifhour}`;
+            return element;
+          });
+
+          return res.status(201).json(commentsFormated);
         } else {
           return res.status(500).json({ error: "unable to update this comment" });
         }

@@ -9,7 +9,7 @@ import MessageImage from "../PostMessage/PostMessage";
 import Accordion from "../../componants/AccordionComment/Accordion";
 import PostComment from "../../componants/PostComment/PostComment";
 import Modal from "../../componants/Modal/Modal";
-
+import MessageUpdate from "../../componants/MessageUpdat/MessageUpdate";
 const LandingPage = ({ myUserId, admin }) => {
   const history = useHistory();
   const [messages, setMessages] = useState([]);
@@ -126,21 +126,20 @@ const LandingPage = ({ myUserId, admin }) => {
     <div className="flex-position">
       <MessageImage postMessage={postMessage} />
       {active && messageInModal && (
-        <Modal
-          setActive={setActive}
-          active={active}
-          openPopUp={openPopUp}
-          setPopUpIsOpen={setPopUpIsOpen}
-          onClick={closeMenu}
-          viewUpdateMessage={viewUpdateMessage}
-          element={messageInModal}
-          messageId={messageInModal.id}
-        />
+        <Modal popUpIsOpen={popUpIsOpen} setActive={setActive} active={active}>
+          <MessageUpdate
+            setActive={setActive}
+            viewUpdateMessage={viewUpdateMessage}
+            element={messageInModal}
+            setPopUpIsOpen={setPopUpIsOpen}
+            openPopUp={openPopUp}
+            onClick={closeMenu}
+          />
+        </Modal>
       )}
 
       {messages &&
         messages.map((element) => {
-
           const messageLikeByCurrentUser = element?.Likes?.filter((elt) => myUserId === elt.userId);
           return (
             <div key={element.id} className="card-position">
@@ -166,7 +165,21 @@ const LandingPage = ({ myUserId, admin }) => {
                     <div onClick={() => redirectToUserProfil(element.UserId)}>{element.User.username}</div>
                   </div>
                   <div className="time">
-                    <div>{element.createdAt}</div> · <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
+                    {element.createdAt === element.updatedAt ? (
+                      <div>
+                        <div>
+                          {" "}
+                          Le {element.createdAt} <FontAwesomeIcon icon={["fas", "globe"]} />
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <div>
+                          {" "}
+                          Modifié le {element.updatedAt} <FontAwesomeIcon icon={["fas", "globe"]} />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="content">

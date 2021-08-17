@@ -8,6 +8,7 @@ import "./messageuser.scss";
 import Accordion from "../../componants/AccordionComment/Accordion";
 import PostComment from "../../componants/PostComment/PostComment";
 import Modal from "../../componants/Modal/Modal";
+import MessageUpdate from "../../componants/MessageUpdat/MessageUpdate";
 const MessageUserMe = ({ avatar, myUserId, admin }) => {
   const [messagesUser, setMessagesUser] = useState([]);
   const [comments, setcomments] = useState([]);
@@ -108,19 +109,19 @@ const MessageUserMe = ({ avatar, myUserId, admin }) => {
   return (
     <div className="size-box">
       {active && messageInModal && (
-        <Modal
-        setMessagesUser={setMessagesUser}
-          setActive={setActive}
-          active={active}
-          openPopUp={openPopUp}
-          setPopUpIsOpen={setPopUpIsOpen}
-          onClick={closeMenu}
-          messagesUser={messagesUser}
-          viewUpdateMessage={viewUpdateMessage}
-          element={messageInModal}
-          messageId={messageInModal.id}
-          myUserId={myUserId}
-        />
+        <Modal popUpIsOpen={popUpIsOpen} setActive={setActive} active={active}>
+          <MessageUpdate
+            setMessagesUser={setMessagesUser}
+            setActive={setActive}
+            messagesUser={messagesUser}
+            viewUpdateMessage={viewUpdateMessage}
+            element={messageInModal}
+            setPopUpIsOpen={setPopUpIsOpen}
+            openPopUp={openPopUp}
+            onClick={closeMenu}
+            myUserId={myUserId}
+          />
+        </Modal>
       )}
       {messagesUser &&
         messagesUser.map((element) => {
@@ -133,7 +134,7 @@ const MessageUserMe = ({ avatar, myUserId, admin }) => {
                   <div className="options">
                     {element.UserId === myUserId || admin === true ? (
                       <Menu
-                      setMessagesUser={setMessagesUser}
+                        setMessagesUser={setMessagesUser}
                         openModal={openModal}
                         setActive={setActive}
                         active={active}
@@ -153,7 +154,19 @@ const MessageUserMe = ({ avatar, myUserId, admin }) => {
                     <div>{element.User.username}</div>
                   </div>
                   <div className="time">
-                    <div>{element.createdAt}</div> · <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
+                    {element.createdAt === element.updatedAt ? (
+                      <div>
+                        <div>
+                          Le {element.createdAt} <FontAwesomeIcon icon={["fas", "globe"]} />
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <div>
+                          Modifié le {element.updatedAt} <FontAwesomeIcon icon={["fas", "globe"]} />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="content">

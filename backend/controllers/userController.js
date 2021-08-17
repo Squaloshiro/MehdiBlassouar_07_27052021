@@ -29,7 +29,12 @@ module.exports = {
     }
 
     if (!email_regex.test(email)) {
-      return res.status(400).json({ error: "check your email" });
+      return res.status(400).json({ error: "email invalid" });
+    }
+    const endOfEmail = email.split("@");
+
+    if (endOfEmail[1] !== "groupomania.com") {
+      return res.status(400).json({ error: "votre email doit terminer par @groupomania.com" });
     }
 
     if (!password_regex.test(password)) {

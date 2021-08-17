@@ -6,6 +6,7 @@ import MessageLike from "../../componants/MessageLike/MessageLike";
 import Accordion from "../../componants/AccordionComment/Accordion";
 import PostComment from "../../componants/PostComment/PostComment";
 import Modal from "../../componants/Modal/Modal";
+import MessageUpdate from "../../componants/MessageUpdat/MessageUpdate";
 const MessageUser = ({ id, myUserId, admin }) => {
   const [messagesUser, setMessagesUser] = useState([]);
   const [comments, setcomments] = useState([]);
@@ -106,16 +107,18 @@ const MessageUser = ({ id, myUserId, admin }) => {
   return (
     <div>
       {active && messageInModal && (
-        <Modal
-          setActive={setActive}
-          active={active}
-          openPopUp={openPopUp}
-          setPopUpIsOpen={setPopUpIsOpen}
-          onClick={closeMenu}
-          viewUpdateMessage={viewUpdateMessage}
-          element={messageInModal}
-          messageId={messageInModal.id}
-        />
+        <Modal setActive={setActive} active={active} popUpIsOpen={popUpIsOpen}>
+          <MessageUpdate
+            id={id}
+            setMessagesUser={setMessagesUser}
+            setActive={setActive}
+            viewUpdateMessage={viewUpdateMessage}
+            element={messageInModal}
+            setPopUpIsOpen={setPopUpIsOpen}
+            openPopUp={openPopUp}
+            onClick={closeMenu}
+          />
+        </Modal>
       )}
       {messagesUser &&
         messagesUser.map((element) => {
@@ -127,6 +130,8 @@ const MessageUser = ({ id, myUserId, admin }) => {
                   <div className="options">
                     {element.UserId === myUserId || admin === true ? (
                       <Menu
+                        id={id}
+                        setMessagesUser={setMessagesUser}
                         openModal={openModal}
                         setActive={setActive}
                         active={active}
@@ -144,7 +149,21 @@ const MessageUser = ({ id, myUserId, admin }) => {
                     <div>{element.User.username}</div>
                   </div>
                   <div className="time">
-                    <div>{element.createdAt}</div> · <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
+                    {element.createdAt === element.updatedAt ? (
+                      <div>
+                        <div>
+                          {" "}
+                          Le {element.createdAt} <FontAwesomeIcon icon={["fas", "globe"]} />
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <div>
+                          {" "}
+                          Modifié le {element.updatedAt} <FontAwesomeIcon icon={["fas", "globe"]} />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="content">

@@ -10,9 +10,6 @@ const ProfilUser = ({ myUserId, admin, setIsLoggedin, setCheckLogin }) => {
   const location = useLocation();
   const history = useHistory();
   const [profil, setProfil] = useState({});
-  console.log('---------------loc2222---------------------');
-  console.log(location);
-  console.log('------------------------------------');
 
   useEffect(() => {
     if (location?.state?.id) {

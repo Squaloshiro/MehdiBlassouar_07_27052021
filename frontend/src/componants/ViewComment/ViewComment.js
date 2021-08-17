@@ -76,7 +76,21 @@ const ViewComment = ({ messageId, updatViewMessage }) => {
                     <div onClick={() => redirectToUserProfil(element.UserId)}>{element.User.username}</div>
                   </div>
                   <div className="time">
-                    <div>{element.createdAt}</div> · <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
+                    {element.createdAt === element.updatedAt ? (
+                      <div>
+                        <div>
+                          {" "}
+                          Le {element.createdAt} <FontAwesomeIcon icon={["fas", "globe"]} />
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <div>
+                          {" "}
+                          Modifié le {element.updatedAt} <FontAwesomeIcon icon={["fas", "globe"]} />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="content">

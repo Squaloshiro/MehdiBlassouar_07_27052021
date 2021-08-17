@@ -7,7 +7,7 @@ import MessageDestroy from "../DestroyMsg/DestroyMsg";
 import { useRef, useEffect } from "react";
 
 import Button from "../Button/Button";
-const Menu = ({ viewUpdateMessage, element, messageId, deleteOneMessage, openModal, setActive, active,setMessagesUser,myUserId }) => {
+const Menu = ({ element, messageId, deleteOneMessage, openModal, active }) => {
   const [menuActive, setMenuActive] = useState(false);
 
   const myRef = useRef();
