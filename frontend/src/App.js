@@ -12,6 +12,7 @@ import api from "./config/api";
 import "./assets/fontawesome";
 import ProfilPage from "./pages/ProfilPage/ProfilPage";
 import ProfilUser from "./pages/ProfilUser/ProfiUser";
+import { ToastContainer } from "react-toastify";
 
 const App = () => {
   const [isLoggedin, setIsLoggedin] = useState(false);
@@ -81,6 +82,7 @@ const App = () => {
             exact
             path="/users/profils"
             componant={ProfilUser}
+            setCheckLogin={setCheckLogin}
             isLoggedin={isLoggedin}
             admin={admin}
             setIsLoggedin={setIsLoggedin}
@@ -116,6 +118,7 @@ const App = () => {
         ></Route>
       </Switch>
       <Footer />
+      <ToastContainer />
     </Router>
   );
 };

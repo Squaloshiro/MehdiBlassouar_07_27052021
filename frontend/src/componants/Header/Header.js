@@ -27,11 +27,14 @@ const Header = ({ isLoggedin, setIsLoggedin }) => {
       <div className="image-rognage">
         <img src={logo} alt="Groupomania" className="lmj-logo" />
       </div>
-      {isLoggedin && !profilPageIsActif ? (
+      {isLoggedin ?(
+         isLoggedin && !profilPageIsActif ? (
         <Button onClick={() => history.push("/profil")} title="profil" />
       ) : (
         <Button onClick={() => history.push("/")} title="Accueil" />
-      )}
+      )
+      ):(<></>)}
+     
       {isLoggedin ? (
         <Button onClick={onLogout} title="Déconexion" />
       ) : (

@@ -1,14 +1,17 @@
 import { useState, useEffect } from "react";
 import api from "../../config/api";
-
 import Menu from "../../componants/Menu/Menu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MessageLike from "../../componants/MessageLike/MessageLike";
 import Accordion from "../../componants/AccordionComment/Accordion";
 import PostComment from "../../componants/PostComment/PostComment";
+import Modal from "../../componants/Modal/Modal";
 const MessageUser = ({ id, myUserId, admin }) => {
   const [messagesUser, setMessagesUser] = useState([]);
   const [comments, setcomments] = useState([]);
+  const [active, setActive] = useState(false);
+  const [messageInModal, setMessageInModal] = useState(null);
+  const [popUpIsOpen, setPopUpIsOpen] = useState(false);
 
   useEffect(() => {
     const getMessageUserApi = async () => {
@@ -87,9 +90,33 @@ const MessageUser = ({ id, myUserId, admin }) => {
   const postComment = (newComments) => {
     setcomments(newComments);
   };
+  const closeMenu = (e) => {
+    setActive(false);
+  };
 
+  const openPopUp = () => {
+    if (!popUpIsOpen) {
+      setPopUpIsOpen(true);
+    }
+  };
+  const openModal = (message) => {
+    setMessageInModal(message);
+    setActive(true);
+  };
   return (
     <div>
+      {active && messageInModal && (
+        <Modal
+          setActive={setActive}
+          active={active}
+          openPopUp={openPopUp}
+          setPopUpIsOpen={setPopUpIsOpen}
+          onClick={closeMenu}
+          viewUpdateMessage={viewUpdateMessage}
+          element={messageInModal}
+          messageId={messageInModal.id}
+        />
+      )}
       {messagesUser &&
         messagesUser.map((element) => {
           const messageLikeByCurrentUser = element?.Likes?.filter((elt) => myUserId === elt.userId);
@@ -100,6 +127,9 @@ const MessageUser = ({ id, myUserId, admin }) => {
                   <div className="options">
                     {element.UserId === myUserId || admin === true ? (
                       <Menu
+                        openModal={openModal}
+                        setActive={setActive}
+                        active={active}
                         element={element}
                         viewUpdateMessage={viewUpdateMessage}
                         deleteOneMessage={deleteOneMessage}

@@ -7,10 +7,13 @@ import MessageLike from "../../componants/MessageLike/MessageLike";
 import "./messageuser.scss";
 import Accordion from "../../componants/AccordionComment/Accordion";
 import PostComment from "../../componants/PostComment/PostComment";
-
+import Modal from "../../componants/Modal/Modal";
 const MessageUserMe = ({ avatar, myUserId, admin }) => {
   const [messagesUser, setMessagesUser] = useState([]);
   const [comments, setcomments] = useState([]);
+  const [active, setActive] = useState(false);
+  const [messageInModal, setMessageInModal] = useState(null);
+  const [popUpIsOpen, setPopUpIsOpen] = useState(false);
 
   useEffect(() => {
     const getMessageUserApi = async () => {
@@ -89,8 +92,36 @@ const MessageUserMe = ({ avatar, myUserId, admin }) => {
   const postComment = (newComments) => {
     setcomments(newComments);
   };
+  const closeMenu = (e) => {
+    setActive(false);
+  };
+
+  const openPopUp = () => {
+    if (!popUpIsOpen) {
+      setPopUpIsOpen(true);
+    }
+  };
+  const openModal = (message) => {
+    setMessageInModal(message);
+    setActive(true);
+  };
   return (
     <div className="size-box">
+      {active && messageInModal && (
+        <Modal
+        setMessagesUser={setMessagesUser}
+          setActive={setActive}
+          active={active}
+          openPopUp={openPopUp}
+          setPopUpIsOpen={setPopUpIsOpen}
+          onClick={closeMenu}
+          messagesUser={messagesUser}
+          viewUpdateMessage={viewUpdateMessage}
+          element={messageInModal}
+          messageId={messageInModal.id}
+          myUserId={myUserId}
+        />
+      )}
       {messagesUser &&
         messagesUser.map((element) => {
           const messageLikeByCurrentUser = element?.Likes?.filter((elt) => myUserId === elt.userId);
@@ -102,10 +133,16 @@ const MessageUserMe = ({ avatar, myUserId, admin }) => {
                   <div className="options">
                     {element.UserId === myUserId || admin === true ? (
                       <Menu
+                      setMessagesUser={setMessagesUser}
+                        openModal={openModal}
+                        setActive={setActive}
+                        active={active}
                         element={element}
+                        messagesUser={messagesUser}
                         viewUpdateMessage={viewUpdateMessage}
                         deleteOneMessage={deleteOneMessage}
                         messageId={element.id}
+                        myUserId={myUserId}
                       />
                     ) : (
                       <> </>

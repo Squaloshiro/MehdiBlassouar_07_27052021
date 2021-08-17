@@ -1,5 +1,6 @@
 import api from "../../config/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { toastTrigger } from "../../helper/toast";
 
 const DestroyComment = ({ messageId, newComments, modifyComment, deleteOneComment, commentsId }) => {
   const commentDestroy = async () => {
@@ -19,10 +20,9 @@ const DestroyComment = ({ messageId, newComments, modifyComment, deleteOneCommen
       newComments = newComments - 1;
       modifyComment({ newComments, messageId });
       // history.push("/");
+      toastTrigger("success", "Commantaire supprimé");
     } catch (error) {
-      console.log("---------------123---------------------");
-      console.log(error);
-      console.log("------------------------------------");
+      toastTrigger("error", "une erreur est survenu");
     }
   };
 

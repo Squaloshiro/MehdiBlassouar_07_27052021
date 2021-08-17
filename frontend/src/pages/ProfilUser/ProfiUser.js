@@ -4,13 +4,15 @@ import { useHistory, useLocation } from "react-router";
 import DropAccount from "../../componants/DropAccount/DropAccount";
 import MessageUser from "../MessageUser/MessageUser";
 import "./profiluser.scss";
-import Button from "../../componants/Button/Button";
 import AdminUpdate from "../../componants/AdminUpdate/AdminUpdate";
 
-const ProfilUser = ({ myUserId, admin, setIsLoggedin }) => {
+const ProfilUser = ({ myUserId, admin, setIsLoggedin, setCheckLogin }) => {
   const location = useLocation();
   const history = useHistory();
   const [profil, setProfil] = useState({});
+  console.log('---------------loc2222---------------------');
+  console.log(location);
+  console.log('------------------------------------');
 
   useEffect(() => {
     if (location?.state?.id) {
@@ -65,6 +67,7 @@ const ProfilUser = ({ myUserId, admin, setIsLoggedin }) => {
                     <AdminUpdate idUser={location.state.id} />
                     <DropAccount
                       admin={admin}
+                      setCheckLogin={setCheckLogin}
                       setIsLoggedin={setIsLoggedin}
                       userId={location.state.id}
                       title="Suprimer le compte"

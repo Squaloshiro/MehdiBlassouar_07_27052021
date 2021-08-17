@@ -2,8 +2,9 @@ import api from "../../config/api";
 import { useHistory } from "react-router-dom";
 
 import Button from "../Button/Button";
+import { toastTrigger } from "../../helper/toast";
 
-const DropAccount = ({ setIsLoggedin, userId, admin }) => {
+const DropAccount = ({ setIsLoggedin, userId, admin, setCheckLogin }) => {
   const history = useHistory();
 
   const dropProfil = async () => {
@@ -20,12 +21,17 @@ const DropAccount = ({ setIsLoggedin, userId, admin }) => {
       });
       if (admin) {
         history.push("/");
+        toastTrigger("success", "Compte supprimé");
       } else {
-        setIsLoggedin(false);
         sessionStorage.removeItem("groupomaniaToken");
         history.push("/connexion");
+        setIsLoggedin(false);
+        setCheckLogin(false);
+        toastTrigger("success", "Compte supprimé");
       }
-    } catch (error) {}
+    } catch (error) {
+      toastTrigger("error", "une erreur est survenu");
+    }
   };
 
   return (

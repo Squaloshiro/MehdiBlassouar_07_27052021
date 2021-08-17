@@ -7,10 +7,11 @@ import Avatar from "../Avatars/Avatars";
 import UpdadePassword from "../../componants/UpdatPassword/UpdatePassword";
 import DropAccount from "../../componants/DropAccount/DropAccount";
 
-const ProfilPage = ({ setIsLoggedin, admin }) => {
+const ProfilPage = ({ setIsLoggedin, admin,myUserId }) => {
   const [profil, setProfil] = useState({});
   const [bio, setBio] = useState("");
   const [active, setActive] = useState(false);
+
 
   const onChangeAvatar = (newAvatar) => {
     setProfil(newAvatar);

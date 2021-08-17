@@ -15,6 +15,10 @@ module.exports = {
     var content = req.body.content;
     var messageId = parseInt(req.params.messageId);
 
+    if (content === "") {
+      return res.status(400).json({ error: "missing parameters" });
+    }
+
     asyncLib.waterfall(
       [
         function (done) {

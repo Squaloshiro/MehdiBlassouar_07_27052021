@@ -56,10 +56,29 @@ module.exports = {
               done(null, userFound, bcryptePassword);
             });
           } else {
-            return res.status(409).json({ error: "user allready existing" });
+            return res.status(409).json({ error: "email allready existing" });
           }
         },
         function (userFound, bcryptePassword, done) {
+          models.User.findOne({
+            attributes: ["username"],
+            where: { username },
+          })
+            .then(function (userNameFound) {
+              done(null, userFound, bcryptePassword, userNameFound);
+            })
+            .catch(function (err) {
+              return res.status(500).json({ error: "user add problem" });
+            });
+        },
+        function (userFound, bcryptePassword, userNameFound, done) {
+          if (!userNameFound) {
+            done(null, userFound, bcryptePassword, userNameFound);
+          } else {
+            return res.status(409).json({ error: "user allready existing" });
+          }
+        },
+        function (userFound, bcryptePassword, userNameFound, done) {
           let newUser = models.User.create({
             email: email,
             username: username,
@@ -122,14 +141,14 @@ module.exports = {
               done(null, userFound, resBycrypt);
             });
           } else {
-            return res.status(404).json({ error: "user not found in data base" });
+            return res.status(404).json({ error: "Email ou password incorect" });
           }
         },
         function (userFound, resBycrypt, done) {
           if (resBycrypt) {
             done(userFound);
           } else {
-            return res.status(403).json({ error: "invalid password" });
+            return res.status(403).json({ error: "Email ou password incorect" });
           }
         },
       ],

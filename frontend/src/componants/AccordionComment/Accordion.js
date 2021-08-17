@@ -5,7 +5,7 @@ import api from "../../config/api";
 import { useHistory } from "react-router";
 import DestroyComment from "../DestroyComment/DestroyComment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import PostComment from "../PostComment/PostComment";
+
 import CommentLike from "../CommentLike/Commentlike";
 
 const Accordion = ({ title, comments, setcomments, messageId, modifyComment, newComments, myUserId, admin }) => {
@@ -27,10 +27,6 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
       }
       return element;
     });
-    setcomments(newComments);
-  };
-
-  const postComment = (newComments) => {
     setcomments(newComments);
   };
 

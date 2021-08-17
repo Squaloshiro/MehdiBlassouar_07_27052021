@@ -1,6 +1,7 @@
 import api from "../../config/api";
 import { useHistory } from "react-router-dom";
 import Button from "../Button/Button";
+import { toastTrigger } from "../../helper/toast";
 
 const MessageDestroy = ({ messageId, deleteOneMessage }) => {
   const history = useHistory();
@@ -19,10 +20,9 @@ const MessageDestroy = ({ messageId, deleteOneMessage }) => {
       });
       deleteOneMessage(messageId);
       history.push("/");
+      toastTrigger("success", "Publication supprimée");
     } catch (error) {
-      console.log("---------------123---------------------");
-      console.log(error);
-      console.log("------------------------------------");
+      toastTrigger("error", "une erreur est survenu");
     }
   };
 

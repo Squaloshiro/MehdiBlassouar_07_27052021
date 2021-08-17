@@ -9,18 +9,22 @@ const SignUp = ({ setMyUserId, setIsLoggedin, setAdmin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [valueError, setValueError] = useState("");
   const history = useHistory();
 
   const onChangeEmail = (e) => {
     setEmail(e.target.value);
+    setValueError("");
   };
 
   const onChangePassword = (e) => {
     setPassword(e.target.value);
+    setValueError("");
   };
 
   const onChangeUsername = (e) => {
     setUsername(e.target.value);
+    setValueError("");
   };
 
   const onSignUp = async () => {
@@ -45,7 +49,9 @@ const SignUp = ({ setMyUserId, setIsLoggedin, setAdmin }) => {
         setMyUserId(response.data.id);
       } catch (error) {}
       history.push("/");
-    } catch (error) {}
+    } catch (error) {
+      setValueError(error.response.data.error);
+    }
   };
 
   return (
@@ -60,6 +66,7 @@ const SignUp = ({ setMyUserId, setIsLoggedin, setAdmin }) => {
         <div className="element-marge  element-size">
           <Input onChange={onChangeUsername} value={username} label="Username" />
         </div>
+        {valueError && <div>{valueError}</div>}
         <div className="element-marge">
           <Button onClick={onSignUp} title="Valider" />
         </div>

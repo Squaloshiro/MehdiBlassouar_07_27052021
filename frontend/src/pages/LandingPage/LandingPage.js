@@ -9,7 +9,7 @@ import MessageImage from "../PostMessage/PostMessage";
 import Accordion from "../../componants/AccordionComment/Accordion";
 import PostComment from "../../componants/PostComment/PostComment";
 import Modal from "../../componants/Modal/Modal";
-import Button from "../../componants/Button/Button";
+
 const LandingPage = ({ myUserId, admin }) => {
   const history = useHistory();
   const [messages, setMessages] = useState([]);
@@ -108,9 +108,6 @@ const LandingPage = ({ myUserId, admin }) => {
     setcomments(newComments);
   };
 
-  const openMenu = () => {
-    setActive(true);
-  };
   const closeMenu = (e) => {
     setActive(false);
   };
@@ -143,6 +140,7 @@ const LandingPage = ({ myUserId, admin }) => {
 
       {messages &&
         messages.map((element) => {
+
           const messageLikeByCurrentUser = element?.Likes?.filter((elt) => myUserId === elt.userId);
           return (
             <div key={element.id} className="card-position">

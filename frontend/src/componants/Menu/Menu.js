@@ -1,21 +1,20 @@
 import { useState } from "react";
 
-import "./test.scss";
+import "./menu.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CustomizedDialogs from "../MessageUpdat/MessageUpdat";
+
 import MessageDestroy from "../DestroyMsg/DestroyMsg";
 import { useRef, useEffect } from "react";
-import Modal from "../../componants/Modal/Modal";
+
 import Button from "../Button/Button";
-const Menu = ({ viewUpdateMessage, element, messageId, deleteOneMessage, openModal }) => {
+const Menu = ({ viewUpdateMessage, element, messageId, deleteOneMessage, openModal, setActive, active,setMessagesUser,myUserId }) => {
   const [menuActive, setMenuActive] = useState(false);
 
-  const [popUpIsOpen, setPopUpIsOpen] = useState(false);
   const myRef = useRef();
 
   const handleClickOutside = (e) => {
     if (!myRef.current.contains(e.target)) {
-      if (!popUpIsOpen) {
+      if (menuActive) {
         setMenuActive(false);
       }
     }
@@ -24,15 +23,12 @@ const Menu = ({ viewUpdateMessage, element, messageId, deleteOneMessage, openMod
   const openMenu = () => {
     setMenuActive(true);
   };
-  const closeMenu = (e) => {
-    setMenuActive(false);
-  };
 
-  const openPopUp = () => {
-    if (!popUpIsOpen) {
-      setPopUpIsOpen(true);
+  useEffect(() => {
+    if (active) {
+      setMenuActive(false);
     }
-  };
+  }, [active]);
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);

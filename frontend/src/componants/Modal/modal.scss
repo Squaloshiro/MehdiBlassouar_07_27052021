@@ -9,27 +9,24 @@
 
 .modal-componant {
   display: flex;
-
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   justify-content: center;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.7);
   animation: modal-show 0.5s 1 forwards;
-  z-index: 20000;
+  z-index: 10000;
 }
 
 .last-content {
-  position: absolute;
-  float: left;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  position: relative;
   width: 680px;
   height: 780px;
   padding: 24px;
   background-color: white;
-  border: black 1px solid;
 }
 
 .modal-componant:target {
@@ -37,7 +34,7 @@
 }
 
 .hide {
-  //position: absolute;
+  position: absolute;
   top: 12px;
   right: 12px;
   width: 60px;

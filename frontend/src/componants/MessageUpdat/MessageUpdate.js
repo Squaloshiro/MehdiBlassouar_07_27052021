@@ -6,18 +6,15 @@ import "../../pages/LandingPage/landingpage.scss";
 import "../../componants/MessageUpdat/update.scss";
 import api from "../../config/api";
 import { useState } from "react";
+import { toastTrigger } from "../../helper/toast";
+import {  useLocation } from "react-router";
+const MessageUpdate = ({ viewUpdateMessage, setActive, element, setPopUpIsOpen, openPopUp, onClick,myUserId,setMessagesUser }) => {
+  const [title, setTitle] = useState(element.title);
+  const [content, setContent] = useState(element.content);
+const location = useLocation();
 
-const Update = ({ viewUpdateMessage, setActive, element, setPopUpIsOpen, openPopUp, onClick }) => {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [open, setOpen] = useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-    openPopUp();
-  };
   const handleClose = () => {
-    setOpen(false);
     setPopUpIsOpen(false);
     onClick();
   };
@@ -31,8 +28,12 @@ const Update = ({ viewUpdateMessage, setActive, element, setPopUpIsOpen, openPop
   };
 
   const updateMessage = async () => {
-    setOpen(false);
     const obj = { title, content };
+    if (title === "" || content === "" || (title === element.title && content === element.content)) {
+      setActive(false);
+      toastTrigger("error", "une erreur est survenu");
+      return;
+    }
     try {
       const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
       const response = await api({
@@ -41,9 +42,31 @@ const Update = ({ viewUpdateMessage, setActive, element, setPopUpIsOpen, openPop
         data: obj,
         headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
       });
+      if(location.pathname === "/profil"){
+        const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
+
+      try {
+        const response = await api({
+          method: "get",
+          url: "/messages/" + myUserId,
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+  setMessagesUser(response.data)
+      } catch (error) {
+ toastTrigger("error", "une erreur est survenu");
+      }
+ setActive(false);
+      toastTrigger("success", "Publication modifiée");
+      }else{
       viewUpdateMessage(response.data);
       setActive(false);
-    } catch (error) {}
+      toastTrigger("success", "Publication modifiée");
+      }
+
+    } catch (error) {
+      toastTrigger("error", "une erreur est survenu");
+    }
   };
 
   return (
@@ -59,14 +82,14 @@ const Update = ({ viewUpdateMessage, setActive, element, setPopUpIsOpen, openPop
           </div>
         </div>
         <div className="content">
-          <Input onChange={onChangeTitle} value={title} label={element.title}></Input>
+          <Input onChange={onChangeTitle} value={title} label="title"></Input>
         </div>
         {element.attachment ? (
           <div className="reference">
             <img alt="img" className="reference-thumb" src={element.attachment} />
             <div className="reference-content">
               <div className="reference-subtitle">
-                <Input onChange={onChangeContent} value={content} label={element.title}></Input>
+                <Input onChange={onChangeContent} value={content} label="content"></Input>
               </div>
               <div className="reference-font">Groupomania</div>
             </div>
@@ -75,7 +98,7 @@ const Update = ({ viewUpdateMessage, setActive, element, setPopUpIsOpen, openPop
           <div className="reference">
             <div className="reference-content">
               <div className="reference-subtitle">
-                <Input onChange={onChangeContent} value={content} label={element.content}></Input>
+                <Input onChange={onChangeContent} value={content} label="content"></Input>
               </div>
               <div className="reference-font">Groupomania</div>
             </div>
@@ -88,4 +111,4 @@ const Update = ({ viewUpdateMessage, setActive, element, setPopUpIsOpen, openPop
   );
 };
 
-export default Update;
+export default MessageUpdate;

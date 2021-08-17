@@ -8,14 +8,18 @@ import "./signin.scss";
 const SignIn = ({ setIsLoggedin, setMyUserId, setAdmin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [valueError, setValueError] = useState("");
   const history = useHistory();
 
   const onChangeEmail = (e) => {
     setEmail(e.target.value);
+    setValueError("");
   };
 
   const onChangePassword = (e) => {
     setPassword(e.target.value);
+    setValueError("");
   };
 
   const onSignIn = async () => {
@@ -39,7 +43,9 @@ const SignIn = ({ setIsLoggedin, setMyUserId, setAdmin }) => {
         setMyUserId(response.data.id);
       } catch (error) {}
       history.push("/");
-    } catch (error) {}
+    } catch (error) {
+      setValueError(error.response.data.error);
+    }
   };
 
   return (
@@ -48,9 +54,12 @@ const SignIn = ({ setIsLoggedin, setMyUserId, setAdmin }) => {
         <div className="element-size">
           <Input onChange={onChangeEmail} value={email} label="Email" type="email" />
         </div>
+
         <div className="element-marge  element-size">
           <Input onChange={onChangePassword} value={password} label="Password" type="password" />
         </div>
+        {valueError && <div>{valueError}</div>}
+
         <div className="element-marge">
           <Button onClick={onSignIn} title="Valider" />
         </div>

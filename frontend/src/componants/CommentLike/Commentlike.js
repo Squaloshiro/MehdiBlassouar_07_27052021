@@ -15,7 +15,7 @@ const CommentLike = ({ modifyCommentLike, commentsId, like, dislike, messageComm
         setIsDislike(["fas", "thumbs-down"]);
       }
     }
-  }, []);
+  }, [messageCommentLikeByCurrentUser]);
 
   const onSubmitLikeComment = async (e) => {
     e.preventDefault();

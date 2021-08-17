@@ -2,6 +2,7 @@ import Input from "../../componants/Input/Input";
 import Button from "../../componants/Button/Button";
 import { useState } from "react";
 import api from "../../config/api";
+import { toastTrigger } from "../../helper/toast";
 
 const PostComment = ({ postComment, messageId, newComments, modifyComment }) => {
   const [content, setContent] = useState("");
@@ -13,6 +14,11 @@ const PostComment = ({ postComment, messageId, newComments, modifyComment }) => 
   const onSubmitComment = async (e) => {
     e.preventDefault();
     const obj = { content };
+
+    if (!content) {
+      toastTrigger("error", "une erreur est survenu");
+      return;
+    }
 
     try {
       const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
@@ -27,12 +33,10 @@ const PostComment = ({ postComment, messageId, newComments, modifyComment }) => 
       modifyComment({ newComments, messageId });
       postComment(response.data);
       setContent("");
-
+      toastTrigger("success", "Commantaire posté");
       // history.push("/");
     } catch (error) {
-      console.log("------------------------------------");
-      console.log(error);
-      console.log("------------------------------------");
+      toastTrigger("error", "une erreur est survenu");
     }
   };
 
