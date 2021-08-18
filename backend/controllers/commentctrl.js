@@ -292,12 +292,23 @@ module.exports = {
             });
         },
         function (messageFound, done) {
+          models.Message.findOne({
+            where: { id: messageFound.messageId },
+          })
+            .then((publicFound) => {
+              done(null, messageFound, publicFound);
+            })
+            .catch((err) => {
+              return res.status(404).json({ error: "no messages found" });
+            });
+        },
+        function (messageFound, publicFound, done) {
           if (messageFound) {
             models.User.findOne({
               where: { id: userId },
             })
               .then(function (userFound) {
-                done(null, messageFound, userFound);
+                done(null, messageFound, publicFound, userFound);
               })
               .catch(function (err) {
                 return res.status(500).json({ error: "unableto verify user" });
@@ -306,7 +317,7 @@ module.exports = {
             return res.status(500).json({ error: "this message does not exist" });
           }
         },
-        function (messageFound, userFound, done) {
+        function (messageFound, publicFound, userFound, done) {
           models.Comment.findOne({
             attributes: ["content"],
             where: {
@@ -315,13 +326,13 @@ module.exports = {
             },
           })
             .then(function () {
-              done(null, messageFound, userFound);
+              done(null, messageFound, publicFound, userFound);
             })
             .catch(function (err) {
               return res.status(500).json({ error: "unable to verify this message" });
             });
         },
-        function (messageFound, userFound, done) {
+        function (messageFound, publicFound, userFound, done) {
           if (messageFound) {
             if (messageFound.UserId === userFound.id) {
               messageFound
@@ -329,9 +340,12 @@ module.exports = {
                   content: content ? content : messageFound.content,
                 })
                 .then(function (newMessage) {
-                  done(newMessage);
+                  done(publicFound, newMessage);
                 })
                 .catch(function (err) {
+                  console.log("--------------err----------------------");
+                  console.log(err);
+                  console.log("------------------------------------");
                   res.status(500).json({ error: "unable to update" });
                 });
             } else {
@@ -342,21 +356,42 @@ module.exports = {
           }
         },
       ],
-      function (newMessage) {
-        const allCommentFoundParsed = JSON.parse(JSON.stringify(newMessage));
-
+      function (publicFound, newMessage) {
         if (newMessage) {
-          const commentsFormated = allCommentFoundParsed.map((element) => {
-            const date = moment(element.createdAt).local().format("LL");
-            const hour = moment(element.createdAt).local().format("LT");
-            element.createdAt = `${date} à ${hour}`;
-            const modifdate = moment(element.updatedAt).local().format("LL");
-            const modifhour = moment(element.updatedAt).local().format("LT");
-            element.updatedAt = `${modifdate} à ${modifhour}`;
-            return element;
-          });
+          var fields = req.query.fields;
+          var limit = parseInt(req.query.limit);
+          var offset = parseInt(req.query.offset);
+          var order = req.query.order;
 
-          return res.status(201).json(commentsFormated);
+          models.Comment.findAll({
+            where: { messageId: publicFound.id },
+            order: [order != null ? order.split(":") : ["createdAt", "ASC"]],
+            attributes: fields !== "*" && fields != null ? fields.split(",") : null,
+            limit: !isNaN(limit) ? limit : null,
+            offset: !isNaN(offset) ? offset : null,
+            include: [
+              {
+                model: models.User,
+                attributes: ["username", "avatar"],
+              },
+            ],
+          }).then(function (comment) {
+            const allCommentFoundParsed = JSON.parse(JSON.stringify(comment));
+
+            if (comment) {
+              const commentsFormated = allCommentFoundParsed.map((element) => {
+                const date = moment(element.createdAt).local().format("LL");
+                const hour = moment(element.createdAt).local().format("LT");
+                element.createdAt = `${date} à ${hour}`;
+                const modifdate = moment(element.updatedAt).local().format("LL");
+                const modifhour = moment(element.updatedAt).local().format("LT");
+                element.updatedAt = `${modifdate} à ${modifhour}`;
+                return element;
+              });
+
+              return res.status(201).json(commentsFormated);
+            }
+          });
         } else {
           return res.status(500).json({ error: "unable to update this comment" });
         }

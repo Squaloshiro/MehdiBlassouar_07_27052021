@@ -61,7 +61,7 @@ const ProfilUser = ({ myUserId, admin, setIsLoggedin, setCheckLogin }) => {
                 )}
                 {admin === true ? (
                   <div>
-                    <AdminUpdate idUser={location.state.id} />
+                    <AdminUpdate profil={profil} idUser={location.state.id} />
                     <DropAccount
                       admin={admin}
                       setCheckLogin={setCheckLogin}

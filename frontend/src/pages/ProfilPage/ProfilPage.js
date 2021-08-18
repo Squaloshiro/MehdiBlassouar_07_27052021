@@ -6,12 +6,12 @@ import "./profilPage.scss";
 import Avatar from "../Avatars/Avatars";
 import UpdadePassword from "../../componants/UpdatPassword/UpdatePassword";
 import DropAccount from "../../componants/DropAccount/DropAccount";
+import Modal from "../../componants/Modal/Modal";
 
-const ProfilPage = ({ setIsLoggedin, admin,myUserId }) => {
+const ProfilPage = ({ setIsLoggedin, admin, myUserId }) => {
   const [profil, setProfil] = useState({});
   const [bio, setBio] = useState("");
   const [active, setActive] = useState(false);
-
 
   const onChangeAvatar = (newAvatar) => {
     setProfil(newAvatar);
@@ -79,16 +79,9 @@ const ProfilPage = ({ setIsLoggedin, admin,myUserId }) => {
                 Select
               </div>
               {active && (
-                <div className="modal" id="modal">
-                  <div className="modal-content">
-                    <div className="modal-hide" onClick={closeModal}>
-                      ✕
-                    </div>
-                    <div className="styl">
-                      <Avatar close={closeModal} onChangeAvatar={onChangeAvatar} />
-                    </div>
-                  </div>
-                </div>
+                <Modal setActive={setActive} active={active}>
+                  <Avatar close={closeModal} onChangeAvatar={onChangeAvatar} />
+                </Modal>
               )}
             </div>
             <div className="size-elt">

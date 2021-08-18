@@ -8,7 +8,7 @@ const fs = require("fs");
 
 const email_regex =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-const password_regex = /^(?=.*\d).{4,8}$/;
+const password_regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/;
 
 //Controller
 module.exports = {
@@ -38,7 +38,12 @@ module.exports = {
     }
 
     if (!password_regex.test(password)) {
-      return res.status(400).json({ error: "the password must be between 4 and 8 characters" });
+      return res
+        .status(400)
+        .json({
+          error:
+            "mot de passe non valide, 8 caractères minimum, contenant au moins une lettre minuscule, une lettre majuscule, un chiffre numérique et un caractère spécial",
+        });
     }
 
     asyncLib.waterfall(
@@ -197,7 +202,7 @@ module.exports = {
       });
   },
   getUserData: function (req, res) {
-    models.User.findByPk(req.params.id, { attributes: ["username", "bio", "avatar"] })
+    models.User.findByPk(req.params.id, { attributes: ["username", "bio", "avatar", "isAdmin"] })
       .then(function (user) {
         if (user) {
           res.status(201).json(user);
@@ -714,67 +719,7 @@ module.exports = {
       }
     );
   },
-  updateUserAdmin: function (req, res) {
-    const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token, process.env.TOKEN);
-    const userId = decodedToken.userId;
 
-    asyncLib.waterfall(
-      [
-        function (done) {
-          models.User.findByPk(req.params.id)
-            .then(function (userfound) {
-              done(null, userfound);
-            })
-            .catch(function (err) {
-              return res.status(500).json({ error: "unable to verify user" });
-            });
-        },
-        function (userfound, done) {
-          models.User.findOne({
-            where: { isAdmin: true },
-          })
-            .then(function (userAdminFound) {
-              done(null, userfound, userAdminFound);
-            })
-            .catch(function (err) {
-              return res.status(500).json({ error: "unable to verify admin" });
-            });
-        },
-
-        function (userfound, userAdminFound, done) {
-          if (userAdminFound.isAdmin === true && userAdminFound.id === userId) {
-            if (userfound.isAdmin === false) {
-              userfound
-                .update({
-                  isAdmin: true,
-                })
-                .then(function (newUserAdmin) {
-                  return res.status(201).json(newUserAdmin.isAdmin);
-                });
-            } else if (userfound.isAdmin === true) {
-              userfound
-                .update({
-                  isAdmin: false,
-                })
-                .then(function (newUserAdmin) {
-                  return res.status(201).json(newUserAdmin.isAdmin);
-                });
-            }
-          } else {
-            return res.status(500).json({ error: "you have not permission" });
-          }
-        },
-      ],
-      function (userFound) {
-        if (userFound) {
-          return res.status(201).json(userFound);
-        } else {
-          return res.status(500).json({ error: "unable to modify users account" });
-        }
-      }
-    );
-  },
   updateUserPassword: function (req, res) {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.TOKEN);
@@ -825,5 +770,69 @@ module.exports = {
         }
       },
     ]);
+  },
+  updateUserAdmin: function (req, res) {
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, process.env.TOKEN);
+    const userId = decodedToken.userId;
+
+    asyncLib.waterfall(
+      [
+        function (done) {
+          models.User.findByPk(req.params.id)
+            .then(function (userfound) {
+              done(null, userfound);
+            })
+            .catch(function (err) {
+              return res.status(500).json({ error: "unable to verify user" });
+            });
+        },
+        function (userfound, done) {
+          models.User.findOne({
+            where: { isAdmin: true },
+          })
+            .then(function (userAdminFound) {
+              done(null, userfound, userAdminFound);
+            })
+            .catch(function (err) {
+              console.log("---------------err---------------------");
+              console.log(err);
+              console.log("------------------------------------");
+              return res.status(500).json({ error: "unable to verify admin" });
+            });
+        },
+
+        function (userfound, userAdminFound, done) {
+          if (userAdminFound.isAdmin === true && userAdminFound.id === userId) {
+            if (userfound.isAdmin === false) {
+              userfound
+                .update({
+                  isAdmin: true,
+                })
+                .then(function (newUserAdmin) {
+                  return res.status(201).json(newUserAdmin.isAdmin);
+                });
+            } else if (userfound.isAdmin === true) {
+              userfound
+                .update({
+                  isAdmin: false,
+                })
+                .then(function (newUserAdmin) {
+                  return res.status(201).json(newUserAdmin.isAdmin);
+                });
+            }
+          } else {
+            return res.status(500).json({ error: "you have not permission" });
+          }
+        },
+      ],
+      function (userFound) {
+        if (userFound) {
+          return res.status(201).json(userFound);
+        } else {
+          return res.status(500).json({ error: "unable to modify users account" });
+        }
+      }
+    );
   },
 };

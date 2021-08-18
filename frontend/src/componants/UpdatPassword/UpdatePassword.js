@@ -2,6 +2,7 @@ import { useState } from "react";
 import api from "../../config/api";
 import Input from "../Input/Input";
 import Button from "../Button/Button";
+import { toastTrigger } from "../../helper/toast";
 const UpdadePassword = () => {
   const [oldPassword, setOldPasseword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -24,11 +25,13 @@ const UpdadePassword = () => {
         data: obj,
         headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
       });
-
+      toastTrigger("success", "Mots de passe modifié");
       console.log("------------response.data------------------------");
       console.log(response.data);
       console.log("------------------------------------");
-    } catch (error) {}
+    } catch (error) {
+      toastTrigger("error", "une erreur est survenu");
+    }
   };
 
   return (

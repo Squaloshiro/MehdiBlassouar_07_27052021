@@ -20,18 +20,6 @@ const Modal = ({ children, setActive, active, popUpIsOpen }) => {
     setActive(false);
   };
 
-  /*<MessageUpdate
-                id={id}
-                setMessagesUser={setMessagesUser}
-                setActive={setActive}
-                messagesUser={messagesUser}
-                viewUpdateMessage={viewUpdateMessage}
-                element={element}
-                setPopUpIsOpen={setPopUpIsOpen}
-                openPopUp={openPopUp}
-                onClick={onClick}
-                myUserId={myUserId}
-              />*/
   return (
     <div className="picturs">
       {active && (

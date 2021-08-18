@@ -1,8 +1,13 @@
 import Button from "../Button/Button";
 import api from "../../config/api";
-import { useState } from "react";
-const AdminUpdate = ({ idUser }) => {
-  const [active, setActive] = useState("");
+import { useState, useEffect } from "react";
+const AdminUpdate = ({ idUser, profil }) => {
+  const [active, setActive] = useState(profil.isAdmin);
+
+  useEffect(() => {
+    setActive(profil.isAdmin);
+  }, [profil.isAdmin]);
+
   const AdminClick = () => {
     const update = async () => {
       try {
@@ -12,6 +17,7 @@ const AdminUpdate = ({ idUser }) => {
           url: "/users/" + idUser,
           headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
         });
+
         setActive(response.data);
       } catch (error) {}
     };

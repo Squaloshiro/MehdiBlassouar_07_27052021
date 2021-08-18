@@ -4,13 +4,16 @@ import "../AccordionComment/accordion.scss";
 import api from "../../config/api";
 import { useHistory } from "react-router";
 import DestroyComment from "../DestroyComment/DestroyComment";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
+import CommentUpdate from "../CommentUpdate/CommentUpdate";
 import CommentLike from "../CommentLike/Commentlike";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Modal from "../../componants/Modal/Modal";
 
 const Accordion = ({ title, comments, setcomments, messageId, modifyComment, newComments, myUserId, admin }) => {
+  const [open, setOpen] = useState(false);
   const [active, setActive] = useState(false);
   const history = useHistory();
+  const [messageInModal, setMessageInModal] = useState(null);
   //const [comments, setcomments] = useState([]);
 
   const deleteOneComment = (commentId) => {
@@ -49,7 +52,7 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
         });
 
         setcomments(response.data);
-        setActive(!active);
+        setOpen(!open);
       } catch (error) {
         history.push("/connexion");
       }
@@ -57,8 +60,26 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
       history.push("/connexion");
     }
   };
+  const openModal = (comment) => {
+    setMessageInModal(comment);
+    setActive(true);
+  };
+  const closeModal = () => {
+    setActive(false);
+  };
   return (
-    <div className={`accordion ${active && "active"}`}>
+    <div className={`accordion ${open && "active"}`}>
+      {active && messageInModal && (
+        <Modal setActive={setActive} active={active}>
+          <CommentUpdate
+            close={closeModal}
+            setcomments={setcomments}
+            element={messageInModal}
+            setActive={setActive}
+            admin={admin}
+          />
+        </Modal>
+      )}
       <div className="accordion__title" onClick={handleToggle}>
         {title} <span className="accordion__icon"></span>
       </div>
@@ -108,6 +129,15 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
                             like={element.likes}
                             dislike={element.dislikes}
                           />
+                        </span>
+                        <span>
+                          {element.UserId === myUserId || admin === true ? (
+                            <div>
+                              <FontAwesomeIcon color="red" icon={["fas", "edit"]} onClick={(e) => openModal(element)} />
+                            </div>
+                          ) : (
+                            <></>
+                          )}
                         </span>
                         <span>
                           {element.UserId === myUserId || admin === true ? (

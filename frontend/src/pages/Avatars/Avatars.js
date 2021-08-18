@@ -28,7 +28,7 @@ const Avatar = ({ onChangeAvatar, close }) => {
   const [avatar, setAvatars] = useState("");
 
   const [selectCardIndex, setSelectCardIndex] = useState(null);
-  const tab = Array.from(Array(101).keys());
+  const tab = Array.from(Array(40).keys());
 
   tab.shift();
 
@@ -46,6 +46,7 @@ const Avatar = ({ onChangeAvatar, close }) => {
         data: { avatar },
         headers: { Authorization: `Bearer ${token}` },
       });
+
       onChangeAvatar(response.data);
       close();
     } catch (error) {

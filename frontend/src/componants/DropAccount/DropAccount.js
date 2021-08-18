@@ -1,12 +1,19 @@
 import api from "../../config/api";
 import { useHistory } from "react-router-dom";
-
+import { useState } from "react";
 import Button from "../Button/Button";
 import { toastTrigger } from "../../helper/toast";
 
 const DropAccount = ({ setIsLoggedin, userId, admin, setCheckLogin }) => {
   const history = useHistory();
+  const [active, setActive] = useState(false);
 
+  const handleActive = () => {
+    setActive(true);
+  };
+  const handleClose = () => {
+    setActive(false);
+  };
   const dropProfil = async () => {
     try {
       const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
@@ -36,7 +43,17 @@ const DropAccount = ({ setIsLoggedin, userId, admin, setCheckLogin }) => {
 
   return (
     <div>
-      <Button onClick={dropProfil} title="Supprimer" />
+      {!active ? (
+        <Button onClick={handleActive} title="Supprimer" />
+      ) : (
+        <div>
+          <div>Voulez-vous supprimé votre compte, cette action est définitive.</div>
+          <div>
+            <Button onClick={dropProfil} title="Oui" />
+            <Button onClick={handleClose} title="Non" />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
