@@ -3,13 +3,13 @@ import api from "../../config/api";
 import Menu from "../../componants/Menu/Menu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MessageLike from "../../componants/MessageLike/MessageLike";
-import Accordion from "../../componants/AccordionComment/Accordion";
+
 import PostComment from "../../componants/PostComment/PostComment";
 import Modal from "../../componants/Modal/Modal";
 import MessageUpdate from "../../componants/MessageUpdat/MessageUpdate";
 const MessageUser = ({ id, myUserId, admin }) => {
   const [messagesUser, setMessagesUser] = useState([]);
-  const [comments, setcomments] = useState([]);
+
   const [active, setActive] = useState(false);
   const [messageInModal, setMessageInModal] = useState(null);
   const [popUpIsOpen, setPopUpIsOpen] = useState(false);
@@ -88,9 +88,6 @@ const MessageUser = ({ id, myUserId, admin }) => {
     setMessagesUser(updateMessages);
   };
 
-  const postComment = (newComments) => {
-    setcomments(newComments);
-  };
   const closeMenu = (e) => {
     setActive(false);
   };
@@ -186,19 +183,7 @@ const MessageUser = ({ id, myUserId, admin }) => {
                   </div>
                 )}
 
-                <div className="accordions">
-                  <Accordion
-                    comments={comments}
-                    setcomments={setcomments}
-                    myUserId={myUserId}
-                    modifyComment={modifyComment}
-                    newComments={element.comments}
-                    deleteOneComment={deleteOneComment}
-                    messageId={element.id}
-                    admin={admin}
-                    title="commentaire"
-                  />
-                </div>
+                <div className="accordions"></div>
                 <div className="social">
                   <div className="social-content"></div>
                   <div className="social-buttons">
@@ -219,9 +204,11 @@ const MessageUser = ({ id, myUserId, admin }) => {
                 </div>
               </div>
               <PostComment
+                myUserId={myUserId}
+                admin={admin}
+                deleteOneComment={deleteOneComment}
                 modifyComment={modifyComment}
                 newComments={element.comments}
-                postComment={postComment}
                 messageId={element.id}
               />
             </div>

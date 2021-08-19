@@ -5,7 +5,7 @@ const AdminUpdate = ({ idUser, profil }) => {
   const [active, setActive] = useState(profil.isAdmin);
 
   useEffect(() => {
-    setActive(profil.isAdmin);
+    setActive(profil?.isAdmin);
   }, [profil.isAdmin]);
 
   const AdminClick = () => {

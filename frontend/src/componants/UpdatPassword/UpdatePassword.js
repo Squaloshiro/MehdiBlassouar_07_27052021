@@ -19,16 +19,15 @@ const UpdadePassword = () => {
     const obj = { oldPassword, newPassword };
     try {
       const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
-      const response = await api({
+      await api({
         method: "put",
         url: "/users/password",
         data: obj,
         headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
       });
+      setOldPasseword("");
+      setNewPassword("");
       toastTrigger("success", "Mots de passe modifié");
-      console.log("------------response.data------------------------");
-      console.log(response.data);
-      console.log("------------------------------------");
     } catch (error) {
       toastTrigger("error", "une erreur est survenu");
     }

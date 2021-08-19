@@ -18,7 +18,7 @@ module.exports = {
     let username = req.body.username;
     let password = req.body.password;
     let bio = req.body.bio;
-    let avatar = "/static/media/1.28242b0c.jpg";
+    let avatar = "/static/media/1.a2541ca9.jpg";
 
     if (email == null || username == null || password == null) {
       return res.status(400).json({ error: "missing params" });
@@ -38,12 +38,10 @@ module.exports = {
     }
 
     if (!password_regex.test(password)) {
-      return res
-        .status(400)
-        .json({
-          error:
-            "mot de passe non valide, 8 caractères minimum, contenant au moins une lettre minuscule, une lettre majuscule, un chiffre numérique et un caractère spécial",
-        });
+      return res.status(400).json({
+        error:
+          "mot de passe non valide, 8 caractères minimum, contenant au moins une lettre minuscule, une lettre majuscule, un chiffre numérique et un caractère spécial",
+      });
     }
 
     asyncLib.waterfall(

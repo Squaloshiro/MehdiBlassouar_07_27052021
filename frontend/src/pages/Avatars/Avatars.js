@@ -24,14 +24,14 @@ const Card = ({ number, selectCardIndex }) => {
     />
   );
 };
-const Avatar = ({ onChangeAvatar, close }) => {
+const Avatar = ({ onChangeAvatar, close, profil }) => {
   const [avatar, setAvatars] = useState("");
 
   const [selectCardIndex, setSelectCardIndex] = useState(null);
-  const tab = Array.from(Array(40).keys());
-
+  const tab = Array.from(Array(39).keys());
+  const table = Array.from(Array(40).keys());
   tab.shift();
-
+  table.shift();
   const onSubmitAvatar = (e, i) => {
     setAvatars(e.target.name);
     setSelectCardIndex(i + 1);
@@ -60,14 +60,23 @@ const Avatar = ({ onChangeAvatar, close }) => {
     <div>
       <div className="style">
         <div className="test">
-          {tab &&
-            tab.map((element, i) => {
-              return (
-                <div key={i} onClick={(e) => onSubmitAvatar(e, i)}>
-                  <Card selectCardIndex={selectCardIndex} number={element} />
-                </div>
-              );
-            })}
+          {profil.isAdmin === true
+            ? table &&
+              table.map((element, i) => {
+                return (
+                  <div key={i} onClick={(e) => onSubmitAvatar(e, i)}>
+                    <Card selectCardIndex={selectCardIndex} number={element} />
+                  </div>
+                );
+              })
+            : tab &&
+              tab.map((element, i) => {
+                return (
+                  <div key={i} onClick={(e) => onSubmitAvatar(e, i)}>
+                    <Card selectCardIndex={selectCardIndex} number={element} />
+                  </div>
+                );
+              })}
         </div>
       </div>
 

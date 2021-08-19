@@ -80,7 +80,7 @@ const ProfilPage = ({ setIsLoggedin, admin, myUserId }) => {
               </div>
               {active && (
                 <Modal setActive={setActive} active={active}>
-                  <Avatar close={closeModal} onChangeAvatar={onChangeAvatar} />
+                  <Avatar profil={profil} close={closeModal} onChangeAvatar={onChangeAvatar} />
                 </Modal>
               )}
             </div>
