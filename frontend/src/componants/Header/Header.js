@@ -3,8 +3,9 @@ import "./header.scss";
 import logo from "../../assets/logos/icon-left-font.png";
 import Button from "../Button/Button";
 import { useHistory, useLocation } from "react-router-dom";
+import SearchBar from "../SearchBar/SearchBar";
 
-const Header = ({ isLoggedin, setIsLoggedin }) => {
+const Header = ({ isLoggedin, myUserId, setIsLoggedin, setCheckLogin, setMyUserId }) => {
   const history = useHistory();
   const [profilPageIsActif, setprofilPageIsActif] = useState(false);
 
@@ -19,22 +20,29 @@ const Header = ({ isLoggedin, setIsLoggedin }) => {
   }, [location.pathname]);
   const onLogout = () => {
     setIsLoggedin(false);
+    setCheckLogin(false);
     sessionStorage.removeItem("groupomaniaToken");
+    setMyUserId("");
     history.push("/connexion");
   };
+
   return (
     <div className="lmj-banner flex">
       <div className="image-rognage">
         <img src={logo} alt="Groupomania" className="lmj-logo" />
       </div>
-      {isLoggedin ?(
-         isLoggedin && !profilPageIsActif ? (
-        <Button onClick={() => history.push("/profil")} title="profil" />
+
+      {isLoggedin && <SearchBar myUserId={myUserId} />}
+      {isLoggedin ? (
+        isLoggedin && !profilPageIsActif ? (
+          <Button onClick={() => history.push("/profil")} title="profil" />
+        ) : (
+          <Button onClick={() => history.push("/")} title="Accueil" />
+        )
       ) : (
-        <Button onClick={() => history.push("/")} title="Accueil" />
-      )
-      ):(<></>)}
-     
+        <></>
+      )}
+
       {isLoggedin ? (
         <Button onClick={onLogout} title="Déconexion" />
       ) : (

@@ -30,19 +30,27 @@ const MessageLike = ({ modifyLike, messageId, like, dislike, messageLikeByCurren
           "Content-Type": "multipart/from-data",
         },
       });
+
+      let userLike;
+      let userDislike;
       if (response.data === "like ajoutée") {
+        userLike = true;
         like = like + 1;
         setIsLike(["fas", "thumbs-up"]);
       } else if (response.data === "like ajoutée, dislike retirée") {
+        userLike = true;
         like = like + 1;
         setIsLike(["fas", "thumbs-up"]);
+        userDislike = false;
         dislike = dislike - 1;
         setIsDislike(["far", "thumbs-down"]);
       } else if (response.data === "like retirée") {
+        userLike = false;
         like = like - 1;
         setIsLike(["far", "thumbs-up"]);
       }
-      modifyLike({ messageId, like, dislike });
+
+      modifyLike({ messageId, like, dislike, userLike, userDislike });
 
       //history.push("/");
     } catch (error) {
@@ -65,20 +73,25 @@ const MessageLike = ({ modifyLike, messageId, like, dislike, messageLikeByCurren
           "Content-Type": "multipart/from-data",
         },
       });
-
+      let userLike;
+      let userDislike;
       if (response.data === "dislike ajoutée") {
+        userDislike = true;
         dislike = dislike + 1;
         setIsDislike(["fas", "thumbs-down"]);
       } else if (response.data === "dislike ajoutée, like retirée") {
+        userDislike = true;
         dislike = dislike + 1;
         setIsDislike(["fas", "thumbs-down"]);
+        userLike = false;
         like = like - 1;
         setIsLike(["far", "thumbs-up"]);
       } else if (response.data === "dislike retirée") {
+        userDislike = false;
         dislike = dislike - 1;
         setIsDislike(["far", "thumbs-down"]);
       }
-      modifyLike({ messageId, dislike, like });
+      modifyLike({ messageId, dislike, like, userLike, userDislike });
 
       //history.push("/");
     } catch (error) {

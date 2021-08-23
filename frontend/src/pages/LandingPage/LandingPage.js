@@ -75,14 +75,20 @@ const LandingPage = ({ myUserId, admin }) => {
     }
   };
 
-  const modifyLike = ({ messageId, like, dislike }) => {
+  const modifyLike = ({ messageId, like, dislike, userLike, userDislike }) => {
     const newMessage = messages.filter((element) => {
       if (element.id === messageId) {
         element.likes = like;
         element.dislikes = dislike;
+        const messageLikeByCurrentUser = element?.Likes?.filter((elt) => myUserId === elt.userId);
+        if (messageLikeByCurrentUser?.length) {
+          messageLikeByCurrentUser[0].userLike = userLike;
+          messageLikeByCurrentUser[0].userDislike = userDislike;
+        }
       }
       return element;
     });
+
     setMessages(newMessage);
   };
 
@@ -137,12 +143,13 @@ const LandingPage = ({ myUserId, admin }) => {
       {messages &&
         messages.map((element) => {
           const messageLikeByCurrentUser = element?.Likes?.filter((elt) => myUserId === elt.userId);
+
           return (
             <div key={element.id} className="card-position">
               <div className="f-card">
                 <div className="header">
                   <div className="options">
-                    {element.UserId === myUserId || admin === true ? (
+                    {(element.UserId === myUserId || admin === true) && (
                       <Menu
                         openModal={openModal}
                         setActive={setActive}
@@ -152,13 +159,12 @@ const LandingPage = ({ myUserId, admin }) => {
                         deleteOneMessage={deleteOneMessage}
                         messageId={element.id}
                       />
-                    ) : (
-                      <> </>
                     )}
                   </div>
                   <img className="co-logo" alt="img" src={element.User.avatar} />
                   <div className="co-name">
                     <div onClick={() => redirectToUserProfil(element.UserId)}>{element.User.username}</div>
+                    {element.User.isAdmin === true ? <div>Administrateur</div> : <></>}
                   </div>
                   <div className="time">
                     {element.createdAt === element.updatedAt ? (

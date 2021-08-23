@@ -59,7 +59,7 @@ const ProfilPage = ({ setIsLoggedin, admin, myUserId }) => {
         data: obj,
         headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
       });
-
+      setBio("");
       setProfil(response.data);
     } catch (error) {}
   };
@@ -97,7 +97,7 @@ const ProfilPage = ({ setIsLoggedin, admin, myUserId }) => {
                   <div className="margin-bio">Votre description est vide</div>
                 )}
                 <div className="flex-bio">
-                  <textarea className="textarea" onChange={onChangeBio} label="Ajouter votre description" />
+                  <textarea className="textarea" value={bio} onChange={onChangeBio} label="Ajouter votre description" />
                   <button onClick={updateProfilBio} className="button" type="button">
                     Envoyer
                   </button>

@@ -22,11 +22,16 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
     setcomments(filteredMessages);
   };
 
-  const modifyCommentLike = ({ commentsId, like, dislike }) => {
+  const modifyCommentLike = ({ commentsId, like, dislike, userLike, userDislike }) => {
     const newComments = comments.filter((element) => {
       if (element.id === commentsId) {
         element.likes = like;
         element.dislikes = dislike;
+        const messageCommentLikeByCurrentUser = element?.Commentlikes?.filter((elt) => myUserId === elt.userId);
+        if (messageCommentLikeByCurrentUser?.length) {
+          messageCommentLikeByCurrentUser[0].userLike = userLike;
+          messageCommentLikeByCurrentUser[0].userDislike = userDislike;
+        }
       }
       return element;
     });
@@ -87,7 +92,8 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
         <div className="flex-position">
           {comments &&
             comments.map((element) => {
-              const messageCommentLikeByCurrentUser = element?.CommentsLikes?.filter((elt) => myUserId === elt.userId);
+              const messageCommentLikeByCurrentUser = element?.Commentlikes?.filter((elt) => myUserId === elt.userId);
+
               return (
                 <div key={element.id} className="card-position">
                   <div className="f-card">
@@ -96,6 +102,7 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
                       <img className="co-logo" alt="img" src={element.User.avatar} />
                       <div className="co-name">
                         <div onClick={() => redirectToUserProfil(element.UserId)}>{element.User.username}</div>
+                        {element.User.isAdmin === true ? <div>Administrateur</div> : <></>}
                       </div>
                       <div className="time">
                         {element.createdAt === element.updatedAt ? (
@@ -131,16 +138,14 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
                           />
                         </span>
                         <span>
-                          {element.UserId === myUserId || admin === true ? (
+                          {(element.UserId === myUserId || admin === true) && (
                             <div>
                               <FontAwesomeIcon color="red" icon={["fas", "edit"]} onClick={(e) => openModal(element)} />
                             </div>
-                          ) : (
-                            <></>
                           )}
                         </span>
                         <span>
-                          {element.UserId === myUserId || admin === true ? (
+                          {(element.UserId === myUserId || admin === true) && (
                             <DestroyComment
                               modifyComment={modifyComment}
                               newComments={newComments}
@@ -149,8 +154,6 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
                               deleteOneComment={deleteOneComment}
                               admin={admin}
                             />
-                          ) : (
-                            <></>
                           )}
                         </span>
                       </div>

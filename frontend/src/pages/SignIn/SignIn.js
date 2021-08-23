@@ -39,6 +39,7 @@ const SignIn = ({ setIsLoggedin, setMyUserId, setAdmin }) => {
           method: "get",
           headers: { Authorization: `Bearer ${token}` },
         });
+
         setAdmin(response.data.isAdmin);
         setMyUserId(response.data.id);
       } catch (error) {}

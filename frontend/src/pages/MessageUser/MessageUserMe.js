@@ -5,7 +5,7 @@ import Menu from "../../componants/Menu/Menu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MessageLike from "../../componants/MessageLike/MessageLike";
 import "./messageuser.scss";
-
+import { toastTrigger } from "../../helper/toast";
 import PostComment from "../../componants/PostComment/PostComment";
 import Modal from "../../componants/Modal/Modal";
 import MessageUpdate from "../../componants/MessageUpdat/MessageUpdate";
@@ -29,21 +29,13 @@ const MessageUserMe = ({ avatar, myUserId, admin }) => {
 
         setMessagesUser(response.data);
       } catch (error) {
-        console.log("------------------------------------");
-        console.log(error);
-        console.log("------------------------------------");
+        toastTrigger("error", "une erreur est survenu");
       }
     };
     getMessageUserApi();
   }, [myUserId]);
 
-  const deleteOneComment = async (test) => {
-    //const idToRemove = commentId
-    /* const filteredMessages = messagesUser.map((element) => {
-      const test = element.Comments;
-      // test.filter((item) => item.id !== idToRemove);
-      test.splice(0, 1);
-    });*/
+  const deleteOneComment = async () => {
     const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
     try {
       const response = await api({
@@ -53,10 +45,7 @@ const MessageUserMe = ({ avatar, myUserId, admin }) => {
       });
       setMessagesUser(response.data);
     } catch (error) {
-      //rajouter un button en cas d'echec de chargement des messages
-      console.log("-------------error-----------------------");
-      console.log(error);
-      console.log("------------------------------------");
+      toastTrigger("error", "une erreur est survenu");
     }
   };
 
@@ -123,14 +112,14 @@ const MessageUserMe = ({ avatar, myUserId, admin }) => {
       )}
       {messagesUser &&
         messagesUser.map((element) => {
-          const messageLikeByCurrentUser = element?.Likes?.filter((elt) => myUserId === elt.userId);
+          const messageLikeByCurrentUser = element?.Likes?.filter((elt) => myUserId === elt.UserId);
 
           return (
             <div key={element.id} className="card-position">
               <div className="f-card">
                 <div className="header">
                   <div className="options">
-                    {element.UserId === myUserId || admin === true ? (
+                    {(element.UserId === myUserId || admin === true) && (
                       <Menu
                         setMessagesUser={setMessagesUser}
                         openModal={openModal}
@@ -143,13 +132,12 @@ const MessageUserMe = ({ avatar, myUserId, admin }) => {
                         messageId={element.id}
                         myUserId={myUserId}
                       />
-                    ) : (
-                      <> </>
                     )}
                   </div>
                   <img className="co-logo" alt="img" src={avatar} />
                   <div className="co-name">
                     <div>{element.User.username}</div>
+                    {element.User.isAdmin === true ? <div>Administrateur</div> : <></>}
                   </div>
                   <div className="time">
                     {element.createdAt === element.updatedAt ? (

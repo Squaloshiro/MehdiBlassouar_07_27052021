@@ -73,7 +73,7 @@ module.exports = {
             include: [
               {
                 model: models.User,
-                attributes: ["username", "avatar"],
+                attributes: ["username", "avatar", "isAdmin"],
               },
             ],
           }).then(function (allMessageFound) {
@@ -165,7 +165,7 @@ module.exports = {
             include: [
               {
                 model: models.User,
-                attributes: ["username", "avatar"],
+                attributes: ["username", "avatar", "isAdmin"],
               },
             ],
           }).then(function (allMessageFound) {
@@ -196,7 +196,6 @@ module.exports = {
     var limit = parseInt(req.query.limit);
     var offset = parseInt(req.query.offset);
     var order = req.query.order;
-
     const ITEMS_LIMIT = 50;
     if (limit > ITEMS_LIMIT) {
       limit = ITEMS_LIMIT;
@@ -210,18 +209,8 @@ module.exports = {
       include: [
         {
           model: models.User,
-          attributes: ["username", "avatar"],
-        } /*{
-                model: models.Comment,
-                attributes: ['content'],
-                order: [['createdAt', 'DESC']],
-                limit: 1,
-                include: [{
-                    model: models.User,
-
-                    attributes: ['username']
-                }],
-            }*/,
+          attributes: ["username", "avatar", "isAdmin"],
+        },
         {
           model: models.Like,
         },
@@ -279,7 +268,7 @@ module.exports = {
       include: [
         {
           model: models.User,
-          attributes: ["username", "avatar"],
+          attributes: ["username", "avatar", "isAdmin"],
         },
         {
           model: models.Like,
@@ -421,7 +410,7 @@ module.exports = {
             include: [
               {
                 model: models.User,
-                attributes: ["username", "avatar"],
+                attributes: ["username", "avatar", "isAdmin"],
               },
             ],
           }).then(function (allMessageFound) {

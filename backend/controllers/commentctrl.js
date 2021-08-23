@@ -85,7 +85,7 @@ module.exports = {
             include: [
               {
                 model: models.User,
-                attributes: ["username", "avatar"],
+                attributes: ["username", "avatar", "isAdmin"],
               },
             ],
           }).then(function (allCommentFound) {
@@ -129,10 +129,10 @@ module.exports = {
       include: [
         {
           model: models.User,
-          attributes: ["username", "avatar"],
+          attributes: ["username", "avatar", "isAdmin"],
         },
         {
-          model: models.Like,
+          model: models.Commentlike,
         },
       ],
     })
@@ -182,10 +182,10 @@ module.exports = {
       include: [
         {
           model: models.User,
-          attributes: ["username"],
+          attributes: ["username", "isAdmin"],
         },
         {
-          model: models.Like,
+          model: models.Commentlike,
         },
       ],
     })
@@ -233,7 +233,10 @@ module.exports = {
           include: [
             {
               model: models.User,
-              attributes: ["username", "avatar"],
+              attributes: ["username", "avatar", "isAdmin"],
+            },
+            {
+              model: models.Commentlike,
             },
           ],
         })
@@ -372,7 +375,7 @@ module.exports = {
             include: [
               {
                 model: models.User,
-                attributes: ["username", "avatar"],
+                attributes: ["username", "avatar", "isAdmin"],
               },
             ],
           }).then(function (comment) {

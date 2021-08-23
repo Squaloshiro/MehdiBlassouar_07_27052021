@@ -7,6 +7,7 @@ import Accordion from "../AccordionComment/Accordion";
 const PostComment = ({ myUserId, admin, messageId, deleteOneComment, newComments, modifyComment }) => {
   const [content, setContent] = useState("");
   const [comments, setcomments] = useState([]);
+
   const onChangeContent = (e) => {
     setContent(e.target.value);
   };

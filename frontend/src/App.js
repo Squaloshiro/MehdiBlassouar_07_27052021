@@ -18,8 +18,8 @@ const App = () => {
   const [isLoggedin, setIsLoggedin] = useState(false);
   const [checkLogin, setCheckLogin] = useState(false);
   const [admin, setAdmin] = useState(false);
-  const [myUserId, setMyUserId] = useState();
-  const [avatar, setAvatar] = useState();
+  const [myUserId, setMyUserId] = useState("");
+  const [avatar, setAvatar] = useState("");
 
   useEffect(() => {
     const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
@@ -32,6 +32,7 @@ const App = () => {
             method: "get",
             headers: { Authorization: `Bearer ${token}` },
           });
+
           setAdmin(response.data.isAdmin);
           setMyUserId(response.data.id);
           setAvatar(response.data.avatar);
@@ -49,7 +50,13 @@ const App = () => {
 
   return (
     <Router>
-      <Header isLoggedin={isLoggedin} setIsLoggedin={setIsLoggedin} />
+      <Header
+        myUserId={myUserId}
+        setMyUserId={setMyUserId}
+        setCheckLogin={setCheckLogin}
+        isLoggedin={isLoggedin}
+        setIsLoggedin={setIsLoggedin}
+      />
 
       <Switch>
         {checkLogin && (

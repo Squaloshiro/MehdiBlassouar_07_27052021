@@ -6,13 +6,16 @@ import { toastTrigger } from "../../helper/toast";
 const UpdadePassword = () => {
   const [oldPassword, setOldPasseword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [valueError, setValueError] = useState("");
 
   const onChangeOldPassword = (e) => {
     setOldPasseword(e.target.value);
+    setValueError("");
   };
 
   const onChangeNewPassWord = (e) => {
     setNewPassword(e.target.value);
+    setValueError("");
   };
 
   const updateProfilBio = async () => {
@@ -30,6 +33,7 @@ const UpdadePassword = () => {
       toastTrigger("success", "Mots de passe modifié");
     } catch (error) {
       toastTrigger("error", "une erreur est survenu");
+      setValueError(error.response.data.error);
     }
   };
 
@@ -41,6 +45,7 @@ const UpdadePassword = () => {
       <div>
         <Input onChange={onChangeNewPassWord} type="password" value={newPassword} label="Nouveau mots de passe" />
       </div>
+      {valueError && <div>{valueError}</div>}
       <div>
         <Button onClick={updateProfilBio} title="Envoyer" />
       </div>

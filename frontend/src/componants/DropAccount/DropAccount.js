@@ -36,7 +36,13 @@ const DropAccount = ({ setIsLoggedin, userId, admin }) => {
         toastTrigger("success", "Compte supprimé");
       }
     } catch (error) {
-      toastTrigger("error", "une erreur est survenu");
+      if (error.response.data.error === "Donner les droits d'accès") {
+        setActive(false);
+        toastTrigger("error", error.response.data.error);
+      } else {
+        setActive(false);
+        toastTrigger("error", "une erreur est survenu");
+      }
     }
   };
 
