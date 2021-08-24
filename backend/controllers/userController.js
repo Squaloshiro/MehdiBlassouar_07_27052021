@@ -14,13 +14,16 @@ const password_regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s
 module.exports = {
   register: function (req, res) {
     //Params
-    let email = req.body.email;
-    let username = req.body.username;
-    let password = req.body.password;
-    let bio = req.body.bio;
+    let { email, username, password, bio } = req.body;
+    console.log("----------email--------------------------");
+    console.log(email);
+    console.log("------------------------------------");
+    console.log("-------------username-----------------------");
+    console.log(username);
+    console.log("------------------------------------");
     let avatar = "/static/media/1.a2541ca9.jpg";
 
-    if (email == null || username == null || password == null) {
+    if (!email || !username || !password) {
       return res.status(400).json({ error: "missing params" });
     }
 
@@ -43,6 +46,8 @@ module.exports = {
           "mot de passe non valide, 8 caractères minimum, contenant au moins une lettre minuscule, une lettre majuscule, un chiffre numérique et un caractère spécial",
       });
     }
+    email = email.trim();
+    username = username.trim();
 
     asyncLib.waterfall(
       [
@@ -232,7 +237,7 @@ module.exports = {
       });
   },
   getUserData: function (req, res) {
-    models.User.findByPk(req.params.id, { attributes: ["username", "bio", "avatar", "isAdmin"] })
+    models.User.findByPk(req.params.id, { attributes: ["username", "email", "bio", "avatar", "isAdmin"] })
       .then(function (user) {
         if (user) {
           res.status(201).json(user);
@@ -712,11 +717,9 @@ module.exports = {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.TOKEN);
     const userId = decodedToken.userId;
-    let password = req.body.password;
 
-    let bio = req.body.bio;
-    let avatar = req.body.avatar;
-
+    let { bio, avatar, username } = req.body;
+    //bio = bio.trim();
     asyncLib.waterfall(
       [
         function (done) {
@@ -732,9 +735,29 @@ module.exports = {
             });
         },
         function (userFound, done) {
+          models.User.findOne({
+            attributes: ["username", "id"],
+            where: { username },
+          })
+            .then(function (userNameFound) {
+              done(null, userFound, userNameFound);
+            })
+            .catch(function (err) {
+              return res.status(500).json({ error: "user add problem" });
+            });
+        },
+        function (userFound, userNameFound, done) {
+          if (!userNameFound || (userNameFound && userNameFound.id === userId)) {
+            done(null, userFound);
+          } else {
+            return res.status(409).json({ error: "user allready existing" });
+          }
+        },
+        function (userFound, done) {
           if (userFound) {
             userFound
               .update({
+                username: username ? username : userFound.username,
                 bio: bio ? bio : userFound.bio,
                 avatar: avatar ? avatar : userFound.avatar,
               })
@@ -835,15 +858,12 @@ module.exports = {
         },
         function (userfound, done) {
           models.User.findOne({
-            where: { isAdmin: true },
+            where: { isAdmin: true, id: userId },
           })
             .then(function (userAdminFound) {
               done(null, userfound, userAdminFound);
             })
             .catch(function (err) {
-              console.log("---------------err---------------------");
-              console.log(err);
-              console.log("------------------------------------");
               return res.status(500).json({ error: "unable to verify admin" });
             });
         },

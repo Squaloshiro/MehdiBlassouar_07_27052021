@@ -5,11 +5,15 @@ import DropAccount from "../../componants/DropAccount/DropAccount";
 import MessageUser from "../MessageUser/MessageUser";
 import "./profiluser.scss";
 import AdminUpdate from "../../componants/AdminUpdate/AdminUpdate";
-
+import { toastTrigger } from "../../helper/toast";
 const ProfilUser = ({ myUserId, admin, setIsLoggedin, setCheckLogin }) => {
   const location = useLocation();
   const history = useHistory();
   const [profil, setProfil] = useState({});
+  const [isAdmin, setIsAdmin] = useState(false);
+  useEffect(() => {
+    setIsAdmin(profil?.isAdmin);
+  }, [profil?.isAdmin]);
 
   useEffect(() => {
     if (location?.state?.id) {
@@ -24,9 +28,7 @@ const ProfilUser = ({ myUserId, admin, setIsLoggedin, setCheckLogin }) => {
 
           setProfil(response.data);
         } catch (error) {
-          console.log("-------------error-----------------------");
-          console.log(error);
-          console.log("------------------------------------");
+          toastTrigger("error", "une erreur est survenu");
         }
       };
       getProfilUser();
@@ -61,7 +63,7 @@ const ProfilUser = ({ myUserId, admin, setIsLoggedin, setCheckLogin }) => {
                 )}
                 {admin === true ? (
                   <div>
-                    <AdminUpdate profil={profil} idUser={location.state.id} />
+                    <AdminUpdate isAdmin={isAdmin} setIsAdmin={setIsAdmin} profil={profil} idUser={location.state.id} />
                     <DropAccount
                       admin={admin}
                       setCheckLogin={setCheckLogin}
@@ -79,7 +81,7 @@ const ProfilUser = ({ myUserId, admin, setIsLoggedin, setCheckLogin }) => {
         </div>
       </div>
       <div className="flex-msg-2">
-        <MessageUser admin={admin} myUserId={myUserId} id={location.state.id} />
+        <MessageUser isAdmin={isAdmin} admin={admin} myUserId={myUserId} id={location.state.id} />
       </div>
     </div>
   );

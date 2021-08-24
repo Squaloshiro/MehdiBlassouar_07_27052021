@@ -4,18 +4,34 @@ import logo from "../../assets/logos/icon-left-font.png";
 import Button from "../Button/Button";
 import { useHistory, useLocation } from "react-router-dom";
 import SearchBar from "../SearchBar/SearchBar";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Header = ({ isLoggedin, myUserId, setIsLoggedin, setCheckLogin, setMyUserId }) => {
   const history = useHistory();
+  const home = <FontAwesomeIcon icon={["fas", "home"]} />;
+  const user = <FontAwesomeIcon icon={["fas", "user"]} />;
+  const logOut = <FontAwesomeIcon icon={["fas", "sign-out-alt"]} />;
+  const logIn = <FontAwesomeIcon icon={["fas", "sign-in-alt"]} />;
   const [profilPageIsActif, setprofilPageIsActif] = useState(false);
-
+  const [userProfilPageIsActif, setUserProfilPageIsActif] = useState(false);
+  const [signUpPage, setSignUpPage] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
     if (location.pathname === "/profil") {
+      setSignUpPage(false);
       setprofilPageIsActif(true);
+      setUserProfilPageIsActif(false);
+    } else if (location.pathname === "/users/profils") {
+      setSignUpPage(false);
+      setprofilPageIsActif(true);
+      setUserProfilPageIsActif(true);
+    } else if (location.pathname === "/inscription") {
+      setSignUpPage(true);
     } else {
+      setSignUpPage(false);
       setprofilPageIsActif(false);
+      setUserProfilPageIsActif(false);
     }
   }, [location.pathname]);
   const onLogout = () => {
@@ -33,21 +49,25 @@ const Header = ({ isLoggedin, myUserId, setIsLoggedin, setCheckLogin, setMyUserI
       </div>
 
       {isLoggedin && <SearchBar myUserId={myUserId} />}
-      {isLoggedin ? (
-        isLoggedin && !profilPageIsActif ? (
-          <Button onClick={() => history.push("/profil")} title="profil" />
+      <div className="button_position">
+        {isLoggedin ? (
+          isLoggedin && !profilPageIsActif ? (
+            <Button onClick={() => history.push("/profil")} title={user} />
+          ) : (
+            <Button onClick={() => history.push("/")} title={home} />
+          )
         ) : (
-          <Button onClick={() => history.push("/")} title="Accueil" />
-        )
-      ) : (
-        <></>
-      )}
-
-      {isLoggedin ? (
-        <Button onClick={onLogout} title="Déconexion" />
-      ) : (
-        <Button onClick={() => history.push("/inscription")} title="Inscription" />
-      )}
+          <></>
+        )}
+        {isLoggedin && userProfilPageIsActif && <Button onClick={() => history.push("/profil")} title={user} />}
+        {isLoggedin ? (
+          <Button onClick={onLogout} title={logOut} />
+        ) : !signUpPage ? (
+          <Button onClick={() => history.push("/inscription")} title="Inscription" />
+        ) : (
+          <Button onClick={() => history.push("/connexion")} title={logIn} />
+        )}
+      </div>
     </div>
   );
 };

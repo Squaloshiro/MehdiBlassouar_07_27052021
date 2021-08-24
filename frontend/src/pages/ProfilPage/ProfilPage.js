@@ -1,26 +1,36 @@
 import { useState, useEffect } from "react";
 import api from "../../config/api";
-
+import Input from "../../componants/Input/Input";
 import MessageUserMe from "../MessageUser/MessageUserMe";
 import "./profilPage.scss";
 import Avatar from "../Avatars/Avatars";
 import UpdadePassword from "../../componants/UpdatPassword/UpdatePassword";
 import DropAccount from "../../componants/DropAccount/DropAccount";
 import Modal from "../../componants/Modal/Modal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Button from "../../componants/Button/Button";
 
 const ProfilPage = ({ setIsLoggedin, admin, myUserId }) => {
   const [profil, setProfil] = useState({});
   const [bio, setBio] = useState("");
+  const [username, setUserName] = useState("");
   const [active, setActive] = useState(false);
+  const [activeUser, setActiveUser] = useState(false);
+  const [activeError, setActiveError] = useState("");
 
   const onChangeAvatar = (newAvatar) => {
     setProfil(newAvatar);
   };
-
+  const onChangeUserName = (e) => {
+    setActiveError("");
+    setUserName(e.target.value);
+  };
   const onChangeBio = (e) => {
     setBio(e.target.value);
   };
-
+  const clickModifUser = () => {
+    setActiveUser(true);
+  };
   const openModal = () => {
     setActive(true);
   };
@@ -40,11 +50,7 @@ const ProfilPage = ({ setIsLoggedin, admin, myUserId }) => {
         setProfil(response.data);
         try {
         } catch (error) {}
-      } catch (error) {
-        console.log("-------------error-----------------------");
-        console.log(error);
-        console.log("------------------------------------");
-      }
+      } catch (error) {}
     };
     getProfilUser();
   }, []);
@@ -64,13 +70,49 @@ const ProfilPage = ({ setIsLoggedin, admin, myUserId }) => {
     } catch (error) {}
   };
 
+  const updateProfilUsername = async () => {
+    const obj = { username };
+    if (username === "") {
+      setActiveUser(false);
+      return;
+    }
+    try {
+      const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
+      const response = await api({
+        method: "put",
+        url: "/users/me/",
+        data: obj,
+        headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+      });
+
+      setUserName("");
+      setActiveUser(false);
+      setProfil(response.data);
+    } catch (error) {
+      setUserName("");
+      setActiveError(error.response.data.error);
+    }
+  };
+
   return profil?.id ? (
     <div className="flex-direction">
       <div className="size">
         <div className="size-profil">
-          <div className="bor-username">
-            <div>{profil.username}</div>
-          </div>
+          {!activeUser ? (
+            <div className="bor-username">
+              <div>{profil.username}</div>
+              <div>
+                <FontAwesomeIcon onClick={clickModifUser} icon={["fas", "pen"]} />
+              </div>
+            </div>
+          ) : (
+            <div className="bor-username">
+              <Input onChange={onChangeUserName} value={username} label={profil.username} />
+              {activeError && <div>{activeError}</div>}
+              <Button onClick={updateProfilUsername} color="primary" title="Modifier" />
+            </div>
+          )}
+
           <div className="flex-elt-profil">
             <div className="flex-picturs">
               <div className="size-police-photo">Photo de profil</div>
@@ -115,7 +157,7 @@ const ProfilPage = ({ setIsLoggedin, admin, myUserId }) => {
           </div>
         </div>
         <div className="flex-msg">
-          <MessageUserMe admin={admin} avatar={profil.avatar} myUserId={profil.id} />
+          <MessageUserMe admin={admin} username={profil.username} avatar={profil.avatar} myUserId={profil.id} />
         </div>
       </div>
     </div>

@@ -34,9 +34,6 @@ const CommentUpdate = ({ setcomments, setActive, element, close }) => {
       close();
       toastTrigger("success", "Commentair modfié");
     } catch (error) {
-      console.log("-----------------error-------------------");
-      console.log(error);
-      console.log("------------------------------------");
       toastTrigger("error", "une erreur est survenu");
     }
   };

@@ -9,7 +9,7 @@ import { toastTrigger } from "../../helper/toast";
 import PostComment from "../../componants/PostComment/PostComment";
 import Modal from "../../componants/Modal/Modal";
 import MessageUpdate from "../../componants/MessageUpdat/MessageUpdate";
-const MessageUserMe = ({ avatar, myUserId, admin }) => {
+const MessageUserMe = ({ avatar, username, myUserId, admin }) => {
   const [messagesUser, setMessagesUser] = useState([]);
 
   const [active, setActive] = useState(false);
@@ -136,7 +136,8 @@ const MessageUserMe = ({ avatar, myUserId, admin }) => {
                   </div>
                   <img className="co-logo" alt="img" src={avatar} />
                   <div className="co-name">
-                    <div>{element.User.username}</div>
+                    {username ? <div>{username}</div> : <div>{element.User.username}</div>}
+
                     {element.User.isAdmin === true ? <div>Administrateur</div> : <></>}
                   </div>
                   <div className="time">

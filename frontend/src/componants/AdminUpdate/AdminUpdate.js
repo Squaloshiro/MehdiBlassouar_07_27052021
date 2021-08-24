@@ -1,36 +1,30 @@
 import Button from "../Button/Button";
 import api from "../../config/api";
-import { useState, useEffect } from "react";
-const AdminUpdate = ({ idUser, profil }) => {
-  const [active, setActive] = useState(profil.isAdmin);
+import { toastTrigger } from "../../helper/toast";
+const AdminUpdate = ({ idUser, profil, isAdmin, setIsAdmin }) => {
+  const AdminClick = async () => {
+    try {
+      const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
+      const response = await api({
+        method: "put",
+        url: "/users/" + idUser,
+        headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+      });
 
-  useEffect(() => {
-    setActive(profil?.isAdmin);
-  }, [profil.isAdmin]);
-
-  const AdminClick = () => {
-    const update = async () => {
-      try {
-        const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
-        const response = await api({
-          method: "put",
-          url: "/users/" + idUser,
-          headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
-        });
-
-        setActive(response.data);
-      } catch (error) {}
-    };
-    update();
+      setIsAdmin(response.data);
+      if (response.data === true) {
+        toastTrigger("success", "Admin créée");
+      } else {
+        toastTrigger("success", "Admin sup");
+      }
+    } catch (error) {
+      toastTrigger("error", "une erreur est survenu");
+    }
   };
 
   return (
     <div>
-      {!active ? (
-        <Button onClick={AdminClick} title="Donnée les droits" />
-      ) : (
-        <Button onClick={AdminClick} title="Enlevée les droits" />
-      )}
+      <Button onClick={AdminClick} title={!isAdmin ? "Donner les droits" : "Enlever les droits"} />
     </div>
   );
 };
