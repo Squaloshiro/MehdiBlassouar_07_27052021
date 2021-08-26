@@ -336,8 +336,19 @@ module.exports = {
             });
         },
         function (messageFound, publicFound, userFound, done) {
+          models.User.findOne({
+            where: { isAdmin: true, id: userId },
+          })
+            .then(function (userAdminfound) {
+              done(null, messageFound, publicFound, userFound, userAdminfound);
+            })
+            .catch(function (err) {
+              res.status(500).json({ error: "admin not found" });
+            });
+        },
+        function (messageFound, publicFound, userFound, userAdminfound, done) {
           if (messageFound) {
-            if (messageFound.UserId === userFound.id) {
+            if (messageFound.UserId === userFound.id || (userAdminfound.isAdmin && userAdminfound.id === userId)) {
               messageFound
                 .update({
                   content: content ? content : messageFound.content,
@@ -441,7 +452,7 @@ module.exports = {
       },
       function (messageFound, commentFound, done) {
         models.User.findOne({
-          where: { isAdmin: true },
+          where: { isAdmin: true, id: userId },
         })
           .then(function (userFound) {
             done(null, messageFound, commentFound, userFound);
@@ -499,7 +510,7 @@ module.exports = {
       },
       function (messageFound, commentFound, userFound, done) {
         if (commentFound) {
-          if (userFound.isAdmin === true && userFound.id === userId) {
+          if (commentFound.userId === userId || (userFound.isAdmin && userFound.id === userId)) {
             models.Comment.destroy({
               where: { id: commentId },
             })

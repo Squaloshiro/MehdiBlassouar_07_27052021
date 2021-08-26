@@ -6,7 +6,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import SearchBar from "../SearchBar/SearchBar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const Header = ({ isLoggedin, myUserId, setIsLoggedin, setCheckLogin, setMyUserId }) => {
+const Header = ({ isLoggedin, myUserId, setIsLoggedin, setCheckLogin, setMyUserId, avatar, setAdmin, userNewName }) => {
   const history = useHistory();
   const home = <FontAwesomeIcon icon={["fas", "home"]} />;
   const user = <FontAwesomeIcon icon={["fas", "user"]} />;
@@ -39,6 +39,7 @@ const Header = ({ isLoggedin, myUserId, setIsLoggedin, setCheckLogin, setMyUserI
     setCheckLogin(false);
     sessionStorage.removeItem("groupomaniaToken");
     setMyUserId("");
+    setAdmin(false);
     history.push("/connexion");
   };
 
@@ -48,7 +49,7 @@ const Header = ({ isLoggedin, myUserId, setIsLoggedin, setCheckLogin, setMyUserI
         <img src={logo} alt="Groupomania" className="lmj-logo" />
       </div>
 
-      {isLoggedin && <SearchBar myUserId={myUserId} />}
+      {isLoggedin && <SearchBar userNewName={userNewName} avatar={avatar} myUserId={myUserId} />}
       <div className="button_position">
         {isLoggedin ? (
           isLoggedin && !profilPageIsActif ? (

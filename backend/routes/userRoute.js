@@ -9,6 +9,7 @@ router.get("/users/me/", auth, userCtrl.getUserProfile);
 router.get("/users/all/", auth, userCtrl.getAllUserProfile);
 router.get("/users/:id/", auth, userCtrl.getUserData);
 router.put("/users/me/", auth, userCtrl.updateUserProfile);
+router.put("/users/name/", auth, userCtrl.updateUserNameProfile);
 router.put("/users/password/", auth, userCtrl.updateUserPassword);
 router.put("/users/:id/", auth, userCtrl.updateUserAdmin);
 router.delete("/users/:id/", auth, userCtrl.deleteUserProfile);

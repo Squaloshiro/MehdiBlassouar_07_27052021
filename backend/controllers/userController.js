@@ -15,20 +15,15 @@ module.exports = {
   register: function (req, res) {
     //Params
     let { email, username, password, bio } = req.body;
-    console.log("----------email--------------------------");
-    console.log(email);
-    console.log("------------------------------------");
-    console.log("-------------username-----------------------");
-    console.log(username);
-    console.log("------------------------------------");
+
     let avatar = "/static/media/1.a2541ca9.jpg";
 
     if (!email || !username || !password) {
       return res.status(400).json({ error: "missing params" });
     }
 
-    if (username.length >= 13 || username.length <= 4) {
-      return res.status(400).json({ error: "the nickname must be between 5 and 12 characters" });
+    if (username.length >= 13 || username.length <= 3) {
+      return res.status(400).json({ error: "the nickname must be between 4 and 12 characters" });
     }
 
     if (!email_regex.test(email)) {
@@ -274,7 +269,7 @@ module.exports = {
             },
             function (userFound, done) {
               models.User.findOne({
-                where: { isAdmin: true },
+                where: { isAdmin: true, id: userId },
               })
                 .then(function (userAdminFound) {
                   done(null, userFound, userAdminFound);
@@ -666,7 +661,6 @@ module.exports = {
                       if (err) {
                         console.log(err);
                       } else {
-                        console.log("all files removed");
                         models.Message.destroy({
                           where: { userId: userFound.id },
                         })
@@ -718,8 +712,60 @@ module.exports = {
     const decodedToken = jwt.verify(token, process.env.TOKEN);
     const userId = decodedToken.userId;
 
-    let { bio, avatar, username } = req.body;
-    //bio = bio.trim();
+    let { bio, avatar } = req.body;
+    if (bio) {
+      bio = bio.trim();
+    }
+    asyncLib.waterfall(
+      [
+        function (done) {
+          models.User.findOne({
+            //attributes: ["id", "bio"],
+            where: { id: userId },
+          })
+            .then(function (userFound) {
+              done(null, userFound);
+            })
+            .catch(function (err) {
+              return res.status(500).json({ error: "unable to verify user" });
+            });
+        },
+
+        function (userFound, done) {
+          if (userFound) {
+            userFound
+              .update({
+                bio: bio ? bio : userFound.bio,
+                avatar: avatar ? avatar : userFound.avatar,
+              })
+              .then(function () {
+                done(userFound);
+              })
+              .catch(function (err) {
+                res.status(500).json({ error: "unable to modify" });
+              });
+          } else {
+            res.status(404).json({ error: "user not found" });
+          }
+        },
+      ],
+      function (userFound) {
+        if (userFound) {
+          return res.status(201).json(userFound);
+        } else {
+          return res.status(500).json({ error: "unable to modify users account" });
+        }
+      }
+    );
+  },
+
+  updateUserNameProfile: function (req, res) {
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, process.env.TOKEN);
+    const userId = decodedToken.userId;
+
+    let { username } = req.body;
+    username = username.trim();
     asyncLib.waterfall(
       [
         function (done) {
@@ -743,6 +789,9 @@ module.exports = {
               done(null, userFound, userNameFound);
             })
             .catch(function (err) {
+              console.log("-------------errxv-----------------------");
+              console.log(err);
+              console.log("------------------------------------");
               return res.status(500).json({ error: "user add problem" });
             });
         },
@@ -758,8 +807,6 @@ module.exports = {
             userFound
               .update({
                 username: username ? username : userFound.username,
-                bio: bio ? bio : userFound.bio,
-                avatar: avatar ? avatar : userFound.avatar,
               })
               .then(function () {
                 done(userFound);

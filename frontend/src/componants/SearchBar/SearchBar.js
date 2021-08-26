@@ -3,14 +3,37 @@ import api from "../../config/api";
 import { toastTrigger } from "../../helper/toast";
 import { useHistory } from "react-router-dom";
 import "./searchbar.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const SearchBar = ({ myUserId }) => {
+const SearchBar = ({ myUserId, avatar, userNewName }) => {
   const [active, setActive] = useState(false);
   const history = useHistory();
   const clickOutSide = useRef();
   const [valueSearchBar, setValueSearchBar] = useState("");
   const [dataUser, setDataUser] = useState([]);
+  const [classNameSearch, setClassNameSearch] = useState("search-icon");
 
+  const useFocus = () => {
+    const htmlRef = useRef(null);
+    const setFocus = () => {
+      htmlRef.current && htmlRef.current.focus();
+    };
+    return [htmlRef, setFocus];
+  };
+  const [inputRef, setInputRef] = useFocus();
+
+  useEffect(() => {
+    if (active) {
+      setClassNameSearch("search-icon-after");
+    } else {
+      setClassNameSearch("search-icon");
+    }
+  }, [active]);
+
+  const onClickSearch = () => {
+    setInputRef();
+    setActive(true);
+  };
   const redirectToUserProfil = (id) => {
     if (id === myUserId) {
       history.push("/profil");
@@ -64,17 +87,38 @@ const SearchBar = ({ myUserId }) => {
     onClickSearchBar();
   }, []);
 
+  if (avatar) {
+    dataUser.filter((elt) => {
+      if (elt.id === myUserId) {
+        elt.avatar = avatar;
+        elt.userName = userNewName;
+      }
+      return elt;
+    });
+  }
+  if (userNewName) {
+    dataUser.filter((elt) => {
+      if (elt.id === myUserId) {
+        elt.username = userNewName;
+      }
+      return elt;
+    });
+  }
+
   return (
     <div className="search_flex">
-      <div className="Search">
+      <div className="search">
+        <FontAwesomeIcon onClick={onClickSearch} className={classNameSearch} icon={["fas", "search"]} />
         <input
+          ref={inputRef}
+          className="search-input"
           value={valueSearchBar}
           onClick={onClickSearchBar}
           onChange={handleChange}
-          type="text"
+          type="search"
           name="SearchBar"
           id="SearchBar"
-          placeholder="Recherche un utilisateur"
+          placeholder="Recherche un utilisateur..."
         />
       </div>
       {active && (
@@ -90,12 +134,12 @@ const SearchBar = ({ myUserId }) => {
                 })
                 .map((element) => {
                   return (
-                    <div className="search_card" key={element.id}>
+                    <div onClick={() => redirectToUserProfil(element.id)} className="search_card" key={element.id}>
                       <div className="search_avatar_flex">
                         <img className="search_avatar" alt="img" src={element.avatar} />
                       </div>
                       <div className="search_charactere">
-                        <div onClick={() => redirectToUserProfil(element.id)}>{element.username}</div>
+                        <div>{element.username}</div>
                         <div>{element.email}</div>
                         {element.isAdmin === true ? <div>Administrateur</div> : <></>}
                       </div>

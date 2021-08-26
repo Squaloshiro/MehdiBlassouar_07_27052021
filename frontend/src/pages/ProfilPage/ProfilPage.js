@@ -10,7 +10,7 @@ import Modal from "../../componants/Modal/Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from "../../componants/Button/Button";
 
-const ProfilPage = ({ setIsLoggedin, admin, myUserId }) => {
+const ProfilPage = ({ setIsLoggedin, admin, myUserId, setAvatar, setUserNewName }) => {
   const [profil, setProfil] = useState({});
   const [bio, setBio] = useState("");
   const [username, setUserName] = useState("");
@@ -19,6 +19,7 @@ const ProfilPage = ({ setIsLoggedin, admin, myUserId }) => {
   const [activeError, setActiveError] = useState("");
 
   const onChangeAvatar = (newAvatar) => {
+    setAvatar(newAvatar.avatar);
     setProfil(newAvatar);
   };
   const onChangeUserName = (e) => {
@@ -80,7 +81,7 @@ const ProfilPage = ({ setIsLoggedin, admin, myUserId }) => {
       const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
       const response = await api({
         method: "put",
-        url: "/users/me/",
+        url: "/users/name/",
         data: obj,
         headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
       });
@@ -88,6 +89,7 @@ const ProfilPage = ({ setIsLoggedin, admin, myUserId }) => {
       setUserName("");
       setActiveUser(false);
       setProfil(response.data);
+      setUserNewName(response.data.username);
     } catch (error) {
       setUserName("");
       setActiveError(error.response.data.error);

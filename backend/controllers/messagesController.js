@@ -220,9 +220,6 @@ module.exports = {
         const messagesParsed = JSON.parse(JSON.stringify(messages));
         if (messages) {
           const messagesFormated = messagesParsed.map((element) => {
-            /*console.log("----------------element--------------------");
-            console.log(element.createdAt);
-            console.log("------------------------------------");*/
             const date = moment(element.createdAt).local().format("LL");
             const hour = moment(element.createdAt).local().format("LT");
             element.createdAt = `${date} à ${hour}`;
@@ -232,9 +229,6 @@ module.exports = {
             return element;
           });
 
-          /*console.log("---------------messagesFormated---------------------");
-          console.log(messagesFormated);
-          console.log("------------------------------------");*/
           res.status(200).json(messagesFormated);
         } else {
           res.status(404).json({ error: "no messages found" });
@@ -246,9 +240,6 @@ module.exports = {
       });
   },
   listMessagesUser: function (req, res) {
-    /*const token = req.headers.authorization.split(' ')[1];
-        const decodedToken = jwt.verify(token, process.env.TOKEN,);
-        const userId = decodedToken.userId;*/
     var userId = req.params.userId;
     var fields = req.query.fields;
     var limit = parseInt(req.query.limit);
@@ -362,7 +353,7 @@ module.exports = {
         },
         function (messageFound, userFound, done) {
           models.User.findOne({
-            where: { isAdmin: true },
+            where: { isAdmin: true, id: userId },
           })
             .then(function (userAdminfound) {
               done(null, messageFound, userFound, userAdminfound);
@@ -373,10 +364,7 @@ module.exports = {
         },
         function (messageFound, userFound, userAdminfound, done) {
           if (messageFound) {
-            if (
-              messageFound.UserId === userFound.id ||
-              (userAdminfound.isAdmin === true && userAdminfound.id === userId)
-            ) {
+            if (messageFound.UserId === userFound.id || (userAdminfound.isAdmin && userAdminfound.id === userId)) {
               messageFound
                 .update({
                   content: content ? content : messageFound.content,
@@ -494,15 +482,12 @@ module.exports = {
             done(null, messageFound);
           })
           .catch(function (err) {
-            console.log("-------------------err-----------------");
-            console.log(err);
-            console.log("------------------------------------");
             res.status(500).json({ error: "unable to verify message" });
           });
       },
       function (messageFound, done) {
         models.User.findOne({
-          where: { isAdmin: true },
+          where: { isAdmin: true, id: userId },
         })
           .then(function (userAdminfound) {
             done(null, messageFound, userAdminfound);

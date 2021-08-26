@@ -20,6 +20,7 @@ const App = () => {
   const [admin, setAdmin] = useState(false);
   const [myUserId, setMyUserId] = useState("");
   const [avatar, setAvatar] = useState("");
+  const [userNewName, setUserNewName] = useState("");
 
   useEffect(() => {
     const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
@@ -51,6 +52,9 @@ const App = () => {
   return (
     <Router>
       <Header
+        setAdmin={setAdmin}
+        userNewName={userNewName}
+        avatar={avatar}
         myUserId={myUserId}
         setMyUserId={setMyUserId}
         setCheckLogin={setCheckLogin}
@@ -79,6 +83,8 @@ const App = () => {
             path="/profil"
             admin={admin}
             componant={ProfilPage}
+            setUserNewName={setUserNewName}
+            setAvatar={setAvatar}
             isLoggedin={isLoggedin}
             setIsLoggedin={setIsLoggedin}
             myUserId={myUserId}
