@@ -1,12 +1,11 @@
 .accordions {
-  border: 1px solid #eee;
 }
 
 .accordion__title {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #eee;
+  background: white;
   padding: 1rem;
   font-weight: bold;
 }
@@ -14,7 +13,7 @@
 .accordion__title:hover,
 .active .accordion__title {
   cursor: pointer;
-  background: #ddd;
+  background: white;
 }
 
 .accordion__icon {
@@ -50,8 +49,12 @@
 
 .active .accordion__content {
   visibility: visible;
+  min-height: 0;
+  max-height: 500px;
   height: auto;
-  overflow: visible;
+  overflow-y: scroll;
+  /* overflow: visible; */
   padding: 1rem;
   opacity: 1;
+  background-color: white;
 }

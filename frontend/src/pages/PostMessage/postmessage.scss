@@ -6,7 +6,7 @@
 }
 
 .post-cadre {
-  width: 50%;
+  width: 70%;
   margin-top: 1em;
   margin-bottom: 1em;
   display: flex;
@@ -39,4 +39,14 @@
 .size-button {
   width: 50em;
   height: 5em;
+}
+@media screen and (max-width: 745px) {
+  .post-cadre {
+    width: 95%;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }

@@ -6,6 +6,7 @@ import { useHistory } from "react-router";
 import FormData from "form-data";
 import TextArea from "../../componants/TextArea/InputTextArea";
 import { toastTrigger } from "../../helper/toast";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./postmessage.scss";
 
 const MessageImage = ({ postMessage }) => {
@@ -20,6 +21,7 @@ const MessageImage = ({ postMessage }) => {
   const [classNameContent, setClassNameContent] = useState("color_black");
   const [maxTitle, setmaxTitle] = useState("");
   const [maxContent, setmaxContent] = useState("");
+  const send = <FontAwesomeIcon icon={["fas", "paper-plane"]} />;
 
   useEffect(() => {
     if (compteurTitle > 255) {
@@ -61,54 +63,62 @@ const MessageImage = ({ postMessage }) => {
 
     formData.append("image", file);
     formData.append("message", json);
-
-    if (title && content) {
-      try {
-        if (file) {
-          const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
-          const response = await api({
-            method: "post",
-            url: "/messages/newimg/",
-            data: formData,
-            headers: {
-              Authorization: `Bearer ${token}`,
-              Accept: "application/json",
-              "Content-Type": "multipart/from-data",
-            },
-          });
-
-          postMessage(response.data);
-          setTitle("");
-          setCompteurTitle(0);
-          setContent("");
-          setCompteurContent(0);
-          setFile("");
-
-          setTheInputKey(Math.random().toString(36));
-          history.push("/");
-          toastTrigger("success", "Publication postée");
-        } else {
-          const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
-          const response = await api({
-            method: "post",
-            url: "/messages/new/",
-            data: obj,
-            headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
-          });
-          setTitle("");
-          setCompteurTitle(0);
-          setContent("");
-          setCompteurContent(0);
-          postMessage(response.data);
-          history.push("/");
-          toastTrigger("success", "Publication postée");
-        }
-      } catch (error) {
-        toastTrigger("error", "une erreur est survenu");
-      }
-    } else {
+    if (compteurTitle > 255) {
       toastTrigger("error", "une erreur est survenu");
       return;
+    }
+    if (compteurContent > 2550) {
+      toastTrigger("error", "une erreur est survenu");
+      return;
+    } else {
+      if (title && content) {
+        try {
+          if (file) {
+            const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
+            const response = await api({
+              method: "post",
+              url: "/messages/newimg/",
+              data: formData,
+              headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: "application/json",
+                "Content-Type": "multipart/from-data",
+              },
+            });
+
+            postMessage(response.data);
+            setTitle("");
+            setCompteurTitle(0);
+            setContent("");
+            setCompteurContent(0);
+            setFile("");
+
+            setTheInputKey(Math.random().toString(36));
+            history.push("/");
+            toastTrigger("success", "Publication postée");
+          } else {
+            const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
+            const response = await api({
+              method: "post",
+              url: "/messages/new/",
+              data: obj,
+              headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+            });
+            setTitle("");
+            setCompteurTitle(0);
+            setContent("");
+            setCompteurContent(0);
+            postMessage(response.data);
+            history.push("/");
+            toastTrigger("success", "Publication postée");
+          }
+        } catch (error) {
+          toastTrigger("error", "une erreur est survenu");
+        }
+      } else {
+        toastTrigger("error", "une erreur est survenu");
+        return;
+      }
     }
   };
 
@@ -121,7 +131,9 @@ const MessageImage = ({ postMessage }) => {
             Limite de caractère {maxTitle} : {compteurTitle}/255
           </div>
         )}
+
         <TextArea
+          style={{ width: "98.3%" }}
           id="outlined-multiline-static"
           label="Text"
           rows={4}
@@ -130,6 +142,7 @@ const MessageImage = ({ postMessage }) => {
           placeholder="Text"
           value={content}
         />
+
         {compteurContent > 0 && (
           <div className={classNameContent}>
             Limite de caractère {maxContent} : {compteurContent}/2550
@@ -138,7 +151,7 @@ const MessageImage = ({ postMessage }) => {
 
         <div className="file-button">
           <Input type="file" onChange={handleOnUploadFile} theInputKey={theInputKey} />
-          <Button size="small" onClick={onSubmitMessageImg} title="Envoyer" />
+          <Button size="small" onClick={onSubmitMessageImg} title={send} />
         </div>
       </div>
     </div>

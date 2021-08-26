@@ -1,3 +1,7 @@
+body {
+  margin: 0;
+}
+
 .lmj-banner {
   position: fixed;
   width: 100%;
@@ -12,14 +16,6 @@
   flex-direction: row;
   align-items: center;
   z-index: 500;
-}
-@media screen and (max-width: 1040px) {
-  .lmj-banner {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-  }
 }
 
 .lmj-title {
@@ -48,5 +44,69 @@
 
 .button_position {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
+}
+@media screen and (max-width: 1040px) {
+  .lmj-banner {
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: row;
+    align-items: center;
+    padding: 0;
+  }
+  .lmj-logo {
+    display: none;
+  }
+  .lmj-icon {
+    position: absolute;
+    left: 0px;
+    height: 6em;
+    width: 6em;
+    background-image: none;
+  }
+  .image-rognage {
+    width: 91px;
+  }
+}
+@media screen and (min-width: 1040px) {
+  .lmj-icon {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 745px) {
+  .lmj-banner {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, 3.8em);
+    align-items: center;
+    margin-top: 0;
+  }
+
+  .image-rognage {
+    grid-column: 1;
+    grid-row: 1;
+    width: 59px;
+    height: 59px;
+    justify-self: center;
+  }
+
+  .lmj-icon {
+    grid-column: 1;
+    grid-row: 1;
+    height: 4em;
+    width: 4em;
+    justify-self: center;
+  }
+
+  .search-bar-header {
+    grid-column: 1;
+    grid-row: 3;
+    justify-self: center;
+  }
+
+  .button_position {
+    grid-column: 1;
+    grid-row: 2;
+  }
 }

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./header.scss";
 import logo from "../../assets/logos/icon-left-font.png";
+import icon from "../../assets/logos/icon.svg";
 import Button from "../Button/Button";
 import { useHistory, useLocation } from "react-router-dom";
 import SearchBar from "../SearchBar/SearchBar";
@@ -47,9 +48,12 @@ const Header = ({ isLoggedin, myUserId, setIsLoggedin, setCheckLogin, setMyUserI
     <div className="lmj-banner flex">
       <div className="image-rognage">
         <img src={logo} alt="Groupomania" className="lmj-logo" />
+        <img src={icon} alt="Groupomania" className="lmj-icon" />
       </div>
 
-      {isLoggedin && <SearchBar userNewName={userNewName} avatar={avatar} myUserId={myUserId} />}
+      {isLoggedin && (
+        <SearchBar className="search-bar-header" userNewName={userNewName} avatar={avatar} myUserId={myUserId} />
+      )}
       <div className="button_position">
         {isLoggedin ? (
           isLoggedin && !profilPageIsActif ? (

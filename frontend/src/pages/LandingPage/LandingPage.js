@@ -185,7 +185,7 @@ const LandingPage = ({ myUserId, admin }) => {
                   </div>
                 </div>
                 <div className="content">
-                  <div>{element.title} </div>
+                  <div className="elt-title">{element.title} </div>
                 </div>
                 {element.attachment ? (
                   <div className="reference">

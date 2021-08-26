@@ -89,22 +89,25 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
         {title} <span className="accordion__icon"></span>
       </div>
       <div className="accordion__content">
-        <div className="flex-position">
+        <div className="flex-position-comment">
           {comments &&
             comments.map((element) => {
               const messageCommentLikeByCurrentUser = element?.Commentlikes?.filter((elt) => myUserId === elt.userId);
 
               return (
-                <div key={element.id} className="card-position">
-                  <div className="f-card">
-                    <div className="header">
-                      <div className="options"></div>
-                      <img className="co-logo" alt="img" src={element.User.avatar} />
-                      <div className="co-name">
+                <div key={element.id} className="card-position-comment">
+                  <div className="f-card-comment">
+                    <div className="header-comment">
+                      <img className="co-logo-comment" alt="img" src={element.User.avatar} />
+                      <div className="co-name-comment">
                         <div onClick={() => redirectToUserProfil(element.UserId)}>{element.User.username}</div>
-                        {element.User.isAdmin === true ? <div>Administrateur</div> : <></>}
+                        {element.User.isAdmin === true ? (
+                          <div onClick={() => redirectToUserProfil(element.UserId)}>Administrateur</div>
+                        ) : (
+                          <></>
+                        )}
                       </div>
-                      <div className="time">
+                      <div className="time-comment">
                         {element.createdAt === element.updatedAt ? (
                           <div>
                             <div>
@@ -122,40 +125,47 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
                         )}
                       </div>
                     </div>
-                    <div className="content">
+                    <div className="content-comment">
                       <div>{element.content} </div>
                     </div>
-                    <div className="social">
-                      <div className="social-content"></div>
-                      <div className="social-buttons">
-                        <span>
-                          <CommentLike
-                            messageCommentLikeByCurrentUser={messageCommentLikeByCurrentUser}
-                            modifyCommentLike={modifyCommentLike}
-                            commentsId={element.id}
-                            like={element.likes}
-                            dislike={element.dislikes}
-                          />
-                        </span>
-                        <span>
-                          {(element.UserId === myUserId || admin === true) && (
-                            <div>
-                              <FontAwesomeIcon color="red" icon={["fas", "edit"]} onClick={(e) => openModal(element)} />
-                            </div>
-                          )}
-                        </span>
-                        <span>
-                          {(element.UserId === myUserId || admin === true) && (
-                            <DestroyComment
-                              modifyComment={modifyComment}
-                              newComments={newComments}
+                    <div className="social-comment">
+                      <div className="social-buttons-comment">
+                        <div className="button-like-comment">
+                          <span>
+                            <CommentLike
+                              messageCommentLikeByCurrentUser={messageCommentLikeByCurrentUser}
+                              modifyCommentLike={modifyCommentLike}
                               commentsId={element.id}
-                              messageId={messageId}
-                              deleteOneComment={deleteOneComment}
-                              admin={admin}
+                              like={element.likes}
+                              dislike={element.dislikes}
                             />
-                          )}
-                        </span>
+                          </span>
+                        </div>
+                        <div className="button-updat-comment">
+                          <span>
+                            {(element.UserId === myUserId || admin === true) && (
+                              <div>
+                                <FontAwesomeIcon
+                                  color="red"
+                                  icon={["fas", "edit"]}
+                                  onClick={(e) => openModal(element)}
+                                />
+                              </div>
+                            )}
+                          </span>
+                          <span>
+                            {(element.UserId === myUserId || admin === true) && (
+                              <DestroyComment
+                                modifyComment={modifyComment}
+                                newComments={newComments}
+                                commentsId={element.id}
+                                messageId={messageId}
+                                deleteOneComment={deleteOneComment}
+                                admin={admin}
+                              />
+                            )}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
