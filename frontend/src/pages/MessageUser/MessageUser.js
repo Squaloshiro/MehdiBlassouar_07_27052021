@@ -7,6 +7,7 @@ import { toastTrigger } from "../../helper/toast";
 import PostComment from "../../componants/PostComment/PostComment";
 import Modal from "../../componants/Modal/Modal";
 import MessageUpdate from "../../componants/MessageUpdat/MessageUpdate";
+import "./messageuser.scss";
 const MessageUser = ({ id, myUserId, admin, isAdmin }) => {
   const [messagesUser, setMessagesUser] = useState([]);
   const [active, setActive] = useState(false);
@@ -90,7 +91,7 @@ const MessageUser = ({ id, myUserId, admin, isAdmin }) => {
     setActive(true);
   };
   return (
-    <div>
+    <div className="flex-position-message-user">
       {active && messageInModal && (
         <Modal setActive={setActive} active={active} popUpIsOpen={popUpIsOpen}>
           <MessageUpdate
@@ -127,7 +128,9 @@ const MessageUser = ({ id, myUserId, admin, isAdmin }) => {
                       />
                     )}
                   </div>
-                  <img className="co-logo" alt="img" src={element.User.avatar} />
+                  <div className="co-logo-size">
+                    <img className="co-logo" alt="img" src={element.User.avatar} />
+                  </div>
                   <div className="co-name">
                     <div>{element.User.username}</div>
                     {isAdmin === true ? <div>Administrateur</div> : <></>}
@@ -151,7 +154,7 @@ const MessageUser = ({ id, myUserId, admin, isAdmin }) => {
                   </div>
                 </div>
                 <div className="content">
-                  <div>{element.title} </div>
+                  <div className="elt-title">{element.title} </div>
                 </div>
                 {element.attachment ? (
                   <div className="reference">

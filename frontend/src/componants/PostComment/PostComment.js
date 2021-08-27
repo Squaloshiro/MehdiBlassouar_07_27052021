@@ -25,6 +25,9 @@ const PostComment = ({ myUserId, admin, messageId, deleteOneComment, newComments
   }, [compteurContent]);
 
   const onChangeContent = (e) => {
+    console.log("---------------eee---------------------");
+    console.log(e);
+    console.log("------------------------------------");
     setCompteurContent(e.target.value.length);
     setContent(e.target.value);
   };
@@ -89,7 +92,6 @@ const PostComment = ({ myUserId, admin, messageId, deleteOneComment, newComments
       <div className="post-cadre">
         <TextArea
           style={{ width: "98.3%" }}
-          id="outlined-multiline-static"
           label="Comment"
           rows={2}
           variant="outlined"

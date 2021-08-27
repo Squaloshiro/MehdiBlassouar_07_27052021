@@ -161,7 +161,9 @@ const LandingPage = ({ myUserId, admin }) => {
                       />
                     )}
                   </div>
-                  <img className="co-logo" alt="img" src={element.User.avatar} />
+                  <div className="co-logo-size">
+                    <img className="co-logo" alt="img" src={element.User.avatar} />
+                  </div>
                   <div className="co-name">
                     <div onClick={() => redirectToUserProfil(element.UserId)}>{element.User.username}</div>
                     {element.User.isAdmin === true ? <div>Administrateur</div> : <></>}

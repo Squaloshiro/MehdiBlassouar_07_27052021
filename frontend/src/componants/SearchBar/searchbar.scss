@@ -102,10 +102,18 @@
   color: #080808;
   text-decoration: none;
 }
+.search_avatar_flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 25%;
+  height: auto;
+  margin: 5px;
+}
 .search_avatar {
   border: black 1px solid;
-  width: 6em;
-  height: 6em;
+  width: 100%;
+  height: auto;
   border-radius: 50%;
 }
 
@@ -116,7 +124,7 @@
   justify-content: space-around;
   margin: 2px;
   width: 30%;
-  height: 27%;
+  height: auto;
   border: 0.063em solid #deebff;
   border-radius: 1.25em;
   box-shadow: 0 0 1em #0000002e;
@@ -137,7 +145,9 @@
   display: flex;
   align-items: center;
   flex-direction: column;
+  word-break: break-all;
   justify-content: center;
+  text-align: start;
 }
 @media screen and (max-width: 1593px) {
   .search_card {
@@ -178,5 +188,19 @@
 @media screen and (max-width: 795px) {
   .search_card {
     width: 100%;
+  }
+  .search_avatar_flex {
+    width: 15%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .search_avatar_flex {
+    width: 20%;
+  }
+}
+@media screen and (max-width: 325px) {
+  .search_avatar_flex {
+    width: 30%;
   }
 }

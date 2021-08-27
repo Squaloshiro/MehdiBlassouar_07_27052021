@@ -10,8 +10,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-const TextArea = ({ rows, rowsMax, placeholder, onChange, value, id, label, variant, multilinerows, style }) => {
+const TextArea = ({ rows, rowsMax, placeholder, onChange, value, label, variant, multilinerows, style }) => {
   const classes = useStyles();
+
   return (
     <form className={classes.root} noValidate autoComplete="off">
       <TextField
@@ -23,7 +24,6 @@ const TextArea = ({ rows, rowsMax, placeholder, onChange, value, id, label, vari
         multilinerows={multilinerows}
         rowsMax={rowsMax}
         placeholder={placeholder}
-        id={id}
         label={label}
         variant={variant}
       />

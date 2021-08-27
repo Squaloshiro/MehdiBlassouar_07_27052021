@@ -121,6 +121,135 @@ module.exports = {
       }
     );
   },
+
+  registerAdmin: function (req, res) {
+    //Params
+    let { email, username, password, bio } = req.body;
+
+    let avatar = "/static/media/39.9c2365c2.jpg";
+
+    if (!email || !username || !password) {
+      return res.status(400).json({ error: "missing params" });
+    }
+
+    if (username.length >= 13 || username.length <= 3) {
+      return res.status(400).json({ error: "the nickname must be between 4 and 12 characters" });
+    }
+
+    if (!email_regex.test(email)) {
+      return res.status(400).json({ error: "email invalid" });
+    }
+    const endOfEmail = email.split("@");
+
+    if (endOfEmail[1] !== "groupomania.com") {
+      return res.status(400).json({ error: "votre email doit terminer par @groupomania.com" });
+    }
+
+    if (!password_regex.test(password)) {
+      return res.status(400).json({
+        error:
+          "mot de passe non valide, 8 caractères minimum, contenant au moins une lettre minuscule, une lettre majuscule, un chiffre numérique et un caractère spécial",
+      });
+    }
+    email = email.trim();
+    username = username.trim();
+
+    asyncLib.waterfall(
+      [
+        function (done) {
+          models.User.findOne({
+            attributes: ["email"],
+            where: { email },
+          })
+            .then(function (userFound) {
+              done(null, userFound);
+            })
+            .catch(function (err) {
+              return res.status(500).json({ error: "user add problem" });
+            });
+        },
+        function (userFound, done) {
+          if (!userFound) {
+            bcrypt.hash(password, 5, function (err, bcryptePassword) {
+              done(null, userFound, bcryptePassword);
+            });
+          } else {
+            return res.status(409).json({ error: "email allready existing" });
+          }
+        },
+        function (userFound, bcryptePassword, done) {
+          models.User.findOne({
+            attributes: ["username"],
+            where: { username },
+          })
+            .then(function (userNameFound) {
+              done(null, userFound, bcryptePassword, userNameFound);
+            })
+            .catch(function (err) {
+              return res.status(500).json({ error: "user add problem" });
+            });
+        },
+        function (userFound, bcryptePassword, userNameFound, done) {
+          if (!userNameFound) {
+            done(null, userFound, bcryptePassword, userNameFound);
+          } else {
+            return res.status(409).json({ error: "user allready existing" });
+          }
+        },
+        function (userFound, bcryptePassword, userNameFound, done) {
+          models.User.findOne({
+            attributes: ["isAdmin"],
+            where: { isAdmin: true },
+          })
+            .then(function (userAdminFind) {
+              done(null, userFound, bcryptePassword, userNameFound, userAdminFind);
+            })
+            .catch(function (err) {
+              return res.status(500).json({ error: "admin add problem" });
+            });
+        },
+        function (userFound, bcryptePassword, userNameFound, userAdminFind, done) {
+          if (!userAdminFind) {
+            done(null, userFound, bcryptePassword, userNameFound, userAdminFind);
+          } else {
+            return res.status(409).json({ error: "admin allready existing" });
+          }
+        },
+        function (userFound, bcryptePassword, userNameFound, userAdminFind, done) {
+          let newUser = models.User.create({
+            email: email,
+            username: username,
+            password: bcryptePassword,
+            bio: bio,
+            avatar: avatar,
+            isAdmin: true,
+          })
+            .then(function (newUser) {
+              done(newUser);
+            })
+            .catch(function (err) {
+              return res.status(500).json({ error: "user cannot be added" });
+            });
+        },
+      ],
+      function (newUser) {
+        if (newUser) {
+          return res.status(200).json({
+            token: jwt.sign(
+              {
+                userId: newUser.id,
+                isAdmin: newUser.isAdmin,
+              },
+              process.env.TOKEN,
+              { expiresIn: "24h" }
+            ),
+          });
+        } else {
+          return res.status(500).json({ error: "user add problem" });
+        }
+      }
+    );
+  },
   login: function (req, res) {
     //params
     let email = req.body.email;

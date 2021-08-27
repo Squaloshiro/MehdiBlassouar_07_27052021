@@ -4,6 +4,7 @@ const userCtrl = require("../controllers/userController");
 const auth = require("../middleware/auth");
 
 router.post("/users/register/", userCtrl.register);
+router.post("/users/admin/", userCtrl.registerAdmin);
 router.post("/users/login/", userCtrl.login);
 router.get("/users/me/", auth, userCtrl.getUserProfile);
 router.get("/users/all/", auth, userCtrl.getAllUserProfile);

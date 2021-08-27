@@ -1,16 +1,15 @@
 import { useState, useRef, useEffect } from "react";
-import api from "../../config/api";
-import { toastTrigger } from "../../helper/toast";
+
 import { useHistory } from "react-router-dom";
 import "./searchbar.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const SearchBar = ({ myUserId, avatar, userNewName }) => {
+const SearchBar = ({ myUserId, avatar, userNewName, dataUser }) => {
   const [active, setActive] = useState(false);
   const history = useHistory();
   const clickOutSide = useRef();
   const [valueSearchBar, setValueSearchBar] = useState("");
-  const [dataUser, setDataUser] = useState([]);
+
   const [classNameSearch, setClassNameSearch] = useState("search-icon");
 
   const useFocus = () => {
@@ -68,24 +67,6 @@ const SearchBar = ({ myUserId, avatar, userNewName }) => {
     setActive(false);
     setValueSearchBar("");
   };
-
-  useEffect(() => {
-    const onClickSearchBar = async () => {
-      const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
-
-      try {
-        const response = await api({
-          method: "get",
-          url: "/users/all",
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setDataUser(response.data);
-      } catch (error) {
-        toastTrigger("error", "une erreur est survenu");
-      }
-    };
-    onClickSearchBar();
-  }, []);
 
   if (avatar) {
     dataUser.filter((elt) => {

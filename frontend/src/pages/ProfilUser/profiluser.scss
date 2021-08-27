@@ -7,31 +7,55 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: black 1px solid;
+}
+.flex-name-pictur {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  // width: 100%;
+  border-bottom: #d0d1d5 1px solid;
+  width: 90%;
 }
 .size-profil-2 {
   border: #d0d1d5 1px solid;
   box-shadow: 0 0 5px rgb(0 0 0 / 30%);
   margin-bottom: 2em;
   margin-top: 2em;
-  width: 80%;
+  width: 85%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: white;
+  border-radius: 30px;
+}
+.admin-control {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.admin-control-session {
+  width: 50%;
+}
+
+.admin-control-drop {
+  width: 50%;
 }
 
 .flex-msg-2 {
-  border: black 1px solid;
   width: 100%;
 }
 
 .bor-username-2 {
-  border-bottom: #d0d1d5 1px solid;
-  width: 90%;
+  width: 80%;
   display: flex;
   justify-content: center;
   font-size: 2em;
   margin-top: 1em;
+}
+.email-breack {
+  word-break: break-all;
 }
 
 .flex-elt-profil-2 {
@@ -46,23 +70,28 @@
 .flex-picturs-2 {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
+  align-items: center;
   margin-top: 1em;
   margin-bottom: 1em;
-  width: 50%;
+  width: 30%;
+}
+.size-elt-2 {
+  width: 70%;
 }
 
 .size-picturs-2 {
-  width: 35%;
-  height: 16em;
+  width: 60%;
+  height: auto;
   border: gray 1px solid;
-
-  border-radius: 0.6em 0.6em 0.6em 0.6em;
+  box-shadow: 0 0 5px rgb(0 0 0 / 30%);
+  border-radius: 50%;
 }
 
 .size-police-2 {
   font-size: 1.5em;
   margin-bottom: 0.5em;
+  word-break: break-all;
 }
 .size-police-photo-2 {
   font-size: 1.5em;
@@ -75,4 +104,35 @@
 
 .margin-bio-2 {
   margin-bottom: 1em;
+}
+@media screen and (max-width: 800px) {
+  .size-profil-2 {
+    width: 95%;
+  }
+  .size-picturs-2 {
+    width: 100%;
+  }
+  .size-elt-2 {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 414px) {
+  .size-profil-2 {
+    width: 100%;
+    border-radius: 0;
+  }
+}
+@media screen and (max-width: 545px) {
+  .admin-control {
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  .admin-control-session {
+    width: 100%;
+  }
+
+  .admin-control-drop {
+    width: 100%;
+  }
 }

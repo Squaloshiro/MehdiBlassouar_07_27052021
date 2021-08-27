@@ -13,6 +13,8 @@ import "./assets/fontawesome";
 import ProfilPage from "./pages/ProfilPage/ProfilPage";
 import ProfilUser from "./pages/ProfilUser/ProfiUser";
 import { ToastContainer } from "react-toastify";
+import { toastTrigger } from "./helper/toast";
+import AdminDashboard from "./pages/AdminDashBord/AdminDashboard";
 
 const App = () => {
   const [isLoggedin, setIsLoggedin] = useState(false);
@@ -21,6 +23,25 @@ const App = () => {
   const [myUserId, setMyUserId] = useState("");
   const [avatar, setAvatar] = useState("");
   const [userNewName, setUserNewName] = useState("");
+  const [dataUser, setDataUser] = useState([]);
+
+  useEffect(() => {
+    const onClickSearchBar = async () => {
+      const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
+
+      try {
+        const response = await api({
+          method: "get",
+          url: "/users/all",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setDataUser(response.data);
+      } catch (error) {
+        toastTrigger("error", "une erreur est survenu");
+      }
+    };
+    onClickSearchBar();
+  }, []);
 
   useEffect(() => {
     const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
@@ -52,6 +73,8 @@ const App = () => {
   return (
     <Router>
       <Header
+        dataUser={dataUser}
+        setDataUser={setDataUser}
         setAdmin={setAdmin}
         userNewName={userNewName}
         avatar={avatar}
@@ -95,6 +118,7 @@ const App = () => {
             exact
             path="/users/profils"
             componant={ProfilUser}
+            setDataUser={setDataUser}
             setCheckLogin={setCheckLogin}
             isLoggedin={isLoggedin}
             admin={admin}
@@ -129,6 +153,17 @@ const App = () => {
             )
           }
         ></Route>
+        <Route
+          path="/admin"
+          render={() =>
+            isLoggedin ? (
+              <Redirect to="/" />
+            ) : (
+              <AdminDashboard setAdmin={setAdmin} setIsLoggedin={setIsLoggedin} setMyUserId={setMyUserId} />
+            )
+          }
+        ></Route>
+        <Route path="/*" render={() => <Redirect to="/" />}></Route>
       </Switch>
       <Footer />
       <ToastContainer />

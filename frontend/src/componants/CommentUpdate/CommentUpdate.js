@@ -1,17 +1,32 @@
 import React from "react";
-import Input from "../Input/Input";
 import Button from "../Button/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../../pages/LandingPage/landingpage.scss";
 import "../../componants/MessageUpdat/update.scss";
 import api from "../../config/api";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toastTrigger } from "../../helper/toast";
+import TextArea from "../TextArea/InputTextArea";
 
 const CommentUpdate = ({ setcomments, setActive, element, close }) => {
   const [content, setContent] = useState(element.content);
+  const [compteurContent, setCompteurContent] = useState(0);
+  const [maxContent, setmaxContent] = useState("");
+  const [classNameContent, setClassNameContent] = useState("color_black");
+  const send = <FontAwesomeIcon icon={["fas", "paper-plane"]} />;
+
+  useEffect(() => {
+    if (compteurContent > 1000) {
+      setClassNameContent("color_red");
+      setmaxContent("atteind");
+    } else {
+      setClassNameContent("color_black");
+      setmaxContent("");
+    }
+  }, [compteurContent]);
 
   const onChangeContent = (e) => {
+    setCompteurContent(e.target.value.length);
     setContent(e.target.value);
   };
 
@@ -31,6 +46,7 @@ const CommentUpdate = ({ setcomments, setActive, element, close }) => {
         headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
       });
       setcomments(response.data);
+      setCompteurContent(0);
       close();
       toastTrigger("success", "Commentair modfié");
     } catch (error) {
@@ -43,9 +59,10 @@ const CommentUpdate = ({ setcomments, setActive, element, close }) => {
       <div className="f-card">
         <div className="header">
           <div className="options"></div>
-          <img className="co-logo" alt="img" src={element.User.avatar} />
+          <img className="co-logo-update" alt="img" src={element.User.avatar} />
           <div className="co-name">
             <div>{element.User.username}</div>
+            {element.User.isAdmin === true ? <div>Administrateur</div> : <></>}
           </div>
           <div className="time">
             {element.createdAt === element.updatedAt ? (
@@ -66,14 +83,27 @@ const CommentUpdate = ({ setcomments, setActive, element, close }) => {
           </div>
         </div>
         <div className="content">
-          <Input onChange={onChangeContent} value={content} label="content"></Input>
+          <TextArea
+            style={{ width: "98.3%" }}
+            label="Comment"
+            rows={2}
+            variant="outlined"
+            onChange={onChangeContent}
+            placeholder="Text"
+            value={content}
+          />
+          {compteurContent > 0 && (
+            <div className={classNameContent}>
+              Limite de caractère {maxContent} : {compteurContent}/1000
+            </div>
+          )}
         </div>
         <div className="social">
           <div className="social-content"></div>
           <div className="social-buttons"></div>
         </div>
       </div>
-      <Button autoFocus onClick={updateComment} color="primary" title="Modifier" />
+      <Button autoFocus onClick={updateComment} color="primary" title={send} />
     </div>
   );
 };

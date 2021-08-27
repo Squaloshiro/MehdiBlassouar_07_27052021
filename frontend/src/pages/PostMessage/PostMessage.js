@@ -134,7 +134,6 @@ const MessageImage = ({ postMessage }) => {
 
         <TextArea
           style={{ width: "98.3%" }}
-          id="outlined-multiline-static"
           label="Text"
           rows={4}
           variant="outlined"

@@ -3,8 +3,9 @@ import { useHistory } from "react-router-dom";
 import { useState } from "react";
 import Button from "../Button/Button";
 import { toastTrigger } from "../../helper/toast";
+import "./dropaccount.scss";
 
-const DropAccount = ({ setIsLoggedin, userId, admin }) => {
+const DropAccount = ({ setIsLoggedin, userId, admin, setDataUser }) => {
   const history = useHistory();
   const [active, setActive] = useState(false);
 
@@ -27,6 +28,16 @@ const DropAccount = ({ setIsLoggedin, userId, admin }) => {
         },
       });
       if (admin) {
+        try {
+          const response = await api({
+            method: "get",
+            url: "/users/all",
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setDataUser(response.data);
+        } catch (error) {
+          toastTrigger("error", "une erreur est survenu");
+        }
         history.push("/");
         toastTrigger("success", "Compte supprimé");
       } else {
@@ -47,9 +58,11 @@ const DropAccount = ({ setIsLoggedin, userId, admin }) => {
   };
 
   return (
-    <div>
+    <div className="position-button-drop">
       {!active ? (
-        <Button onClick={handleActive} title="Supprimer" />
+        <div className="position-button-drop-account">
+          <Button onClick={handleActive} title="Supprimer" />
+        </div>
       ) : (
         <div>
           <div>Voulez-vous supprimé votre compte, cette action est définitive.</div>

@@ -10,6 +10,7 @@ const PrivateRoute = ({
   setCheckLogin,
   setAvatar,
   setUserNewName,
+  setDataUser,
   ...rest
 }) => {
   return (
@@ -19,6 +20,7 @@ const PrivateRoute = ({
         isLoggedin ? (
           <Componant
             {...props}
+            setDataUser={setDataUser}
             setUserNewName={setUserNewName}
             setAvatar={setAvatar}
             setCheckLogin={setCheckLogin}

@@ -1,6 +1,7 @@
 import Button from "../Button/Button";
 import api from "../../config/api";
 import { toastTrigger } from "../../helper/toast";
+import "./adminupdate.scss";
 const AdminUpdate = ({ idUser, profil, isAdmin, setIsAdmin }) => {
   const AdminClick = async () => {
     try {
@@ -23,7 +24,7 @@ const AdminUpdate = ({ idUser, profil, isAdmin, setIsAdmin }) => {
   };
 
   return (
-    <div>
+    <div className="button-position-session">
       <Button onClick={AdminClick} title={!isAdmin ? "Donner les droits" : "Enlever les droits"} />
     </div>
   );

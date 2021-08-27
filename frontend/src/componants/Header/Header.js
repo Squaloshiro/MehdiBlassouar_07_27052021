@@ -7,7 +7,18 @@ import { useHistory, useLocation } from "react-router-dom";
 import SearchBar from "../SearchBar/SearchBar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const Header = ({ isLoggedin, myUserId, setIsLoggedin, setCheckLogin, setMyUserId, avatar, setAdmin, userNewName }) => {
+const Header = ({
+  isLoggedin,
+  myUserId,
+  setIsLoggedin,
+  setCheckLogin,
+  setMyUserId,
+  avatar,
+  setAdmin,
+  userNewName,
+  setDataUser,
+  dataUser,
+}) => {
   const history = useHistory();
   const home = <FontAwesomeIcon icon={["fas", "home"]} />;
   const user = <FontAwesomeIcon icon={["fas", "user"]} />;
@@ -52,7 +63,14 @@ const Header = ({ isLoggedin, myUserId, setIsLoggedin, setCheckLogin, setMyUserI
       </div>
 
       {isLoggedin && (
-        <SearchBar className="search-bar-header" userNewName={userNewName} avatar={avatar} myUserId={myUserId} />
+        <SearchBar
+          className="search-bar-header"
+          setDataUser={setDataUser}
+          dataUser={dataUser}
+          userNewName={userNewName}
+          avatar={avatar}
+          myUserId={myUserId}
+        />
       )}
       <div className="button_position">
         {isLoggedin ? (

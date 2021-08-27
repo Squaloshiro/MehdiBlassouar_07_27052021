@@ -5,6 +5,7 @@ import Menu from "../../componants/Menu/Menu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MessageLike from "../../componants/MessageLike/MessageLike";
 import "./messageuser.scss";
+
 import { toastTrigger } from "../../helper/toast";
 import PostComment from "../../componants/PostComment/PostComment";
 import Modal from "../../componants/Modal/Modal";
@@ -134,7 +135,9 @@ const MessageUserMe = ({ avatar, username, myUserId, admin }) => {
                       />
                     )}
                   </div>
-                  <img className="co-logo" alt="img" src={avatar} />
+                  <div className="co-logo-size">
+                    <img className="co-logo" alt="img" src={avatar} />
+                  </div>
                   <div className="co-name">
                     {username ? <div>{username}</div> : <div>{element.User.username}</div>}
 
@@ -157,7 +160,7 @@ const MessageUserMe = ({ avatar, username, myUserId, admin }) => {
                   </div>
                 </div>
                 <div className="content">
-                  <div>{element.title} </div>
+                  <div className="elt-title">{element.title} </div>
                 </div>
                 {element.attachment ? (
                   <div className="reference">
