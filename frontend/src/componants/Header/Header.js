@@ -8,6 +8,7 @@ import SearchBar from "../SearchBar/SearchBar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const Header = ({
+  setAvatar,
   isLoggedin,
   myUserId,
   setIsLoggedin,
@@ -52,6 +53,7 @@ const Header = ({
     sessionStorage.removeItem("groupomaniaToken");
     setMyUserId("");
     setAdmin(false);
+    setAvatar("");
     history.push("/connexion");
   };
 

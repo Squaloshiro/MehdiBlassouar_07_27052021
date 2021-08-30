@@ -3,12 +3,12 @@ import Button from "../../componants/Button/Button";
 import { useState } from "react";
 import api from "../../config/api";
 import { useHistory } from "react-router";
+import { toastTrigger } from "../../helper/toast";
 import "./signin.scss";
 
-const SignIn = ({ setIsLoggedin, setMyUserId, setAdmin }) => {
+const SignIn = ({ setIsLoggedin, setDataUser, setMyUserId, setAdmin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [valueError, setValueError] = useState("");
   const history = useHistory();
 
@@ -43,6 +43,16 @@ const SignIn = ({ setIsLoggedin, setMyUserId, setAdmin }) => {
         setAdmin(response.data.isAdmin);
         setMyUserId(response.data.id);
       } catch (error) {}
+      try {
+        const response = await api({
+          method: "get",
+          url: "/users/all",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setDataUser(response.data);
+      } catch (error) {
+        toastTrigger("error", "une erreur est survenu");
+      }
       history.push("/");
     } catch (error) {
       setValueError(error.response.data.error);

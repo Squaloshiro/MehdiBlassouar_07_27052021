@@ -26,24 +26,6 @@ const App = () => {
   const [dataUser, setDataUser] = useState([]);
 
   useEffect(() => {
-    const onClickSearchBar = async () => {
-      const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
-
-      try {
-        const response = await api({
-          method: "get",
-          url: "/users/all",
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setDataUser(response.data);
-      } catch (error) {
-        toastTrigger("error", "une erreur est survenu");
-      }
-    };
-    onClickSearchBar();
-  }, []);
-
-  useEffect(() => {
     const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
 
     if (!isLoggedin && token) {
@@ -54,7 +36,19 @@ const App = () => {
             method: "get",
             headers: { Authorization: `Bearer ${token}` },
           });
-
+          try {
+            const response = await api({
+              method: "get",
+              url: "/users/all",
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            setDataUser(response.data);
+          } catch (error) {
+            console.log("------------error------------------------");
+            console.log(error);
+            console.log("------------------------------------");
+            toastTrigger("error", "une erreur est survenu");
+          }
           setAdmin(response.data.isAdmin);
           setMyUserId(response.data.id);
           setAvatar(response.data.avatar);
@@ -73,6 +67,7 @@ const App = () => {
   return (
     <Router>
       <Header
+        setAvatar={setAvatar}
         dataUser={dataUser}
         setDataUser={setDataUser}
         setAdmin={setAdmin}
@@ -104,6 +99,7 @@ const App = () => {
           <PrivateRoute
             exact
             path="/profil"
+            avatar={avatar}
             admin={admin}
             componant={ProfilPage}
             setUserNewName={setUserNewName}
@@ -118,6 +114,8 @@ const App = () => {
             exact
             path="/users/profils"
             componant={ProfilUser}
+            avatar={avatar}
+            setAvatar={setAvatar}
             setDataUser={setDataUser}
             setCheckLogin={setCheckLogin}
             isLoggedin={isLoggedin}
@@ -134,6 +132,7 @@ const App = () => {
               <Redirect to="/" />
             ) : (
               <SignIn
+                setDataUser={setDataUser}
                 setAdmin={setAdmin}
                 setIsLoggedin={setIsLoggedin}
                 isLoggedin={isLoggedin}
@@ -149,7 +148,12 @@ const App = () => {
             isLoggedin ? (
               <Redirect to="/" />
             ) : (
-              <SignUp setAdmin={setAdmin} setIsLoggedin={setIsLoggedin} setMyUserId={setMyUserId} />
+              <SignUp
+                setDataUser={setDataUser}
+                setAdmin={setAdmin}
+                setIsLoggedin={setIsLoggedin}
+                setMyUserId={setMyUserId}
+              />
             )
           }
         ></Route>
@@ -159,11 +163,15 @@ const App = () => {
             isLoggedin ? (
               <Redirect to="/" />
             ) : (
-              <AdminDashboard setAdmin={setAdmin} setIsLoggedin={setIsLoggedin} setMyUserId={setMyUserId} />
+              <AdminDashboard
+                setDataUser={setDataUser}
+                setAdmin={setAdmin}
+                setIsLoggedin={setIsLoggedin}
+                setMyUserId={setMyUserId}
+              />
             )
           }
         ></Route>
-        <Route path="/*" render={() => <Redirect to="/" />}></Route>
       </Switch>
       <Footer />
       <ToastContainer />

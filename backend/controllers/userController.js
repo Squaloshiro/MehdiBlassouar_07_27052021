@@ -1020,7 +1020,8 @@ module.exports = {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.TOKEN);
     const userId = decodedToken.userId;
-
+    let avatar1 = "/static/media/1.a2541ca9.jpg";
+    let avatar2 = "/static/media/39.9c2365c2.jpg";
     asyncLib.waterfall(
       [
         function (done) {
@@ -1050,17 +1051,19 @@ module.exports = {
               userfound
                 .update({
                   isAdmin: true,
+                  avatar: avatar2,
                 })
                 .then(function (newUserAdmin) {
-                  return res.status(201).json(newUserAdmin.isAdmin);
+                  return res.status(201).json(newUserAdmin);
                 });
             } else if (userfound.isAdmin === true) {
               userfound
                 .update({
                   isAdmin: false,
+                  avatar: avatar1,
                 })
                 .then(function (newUserAdmin) {
-                  return res.status(201).json(newUserAdmin.isAdmin);
+                  return res.status(201).json(newUserAdmin);
                 });
             }
           } else {

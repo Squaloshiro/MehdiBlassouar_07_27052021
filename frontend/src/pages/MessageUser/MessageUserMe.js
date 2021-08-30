@@ -10,7 +10,7 @@ import { toastTrigger } from "../../helper/toast";
 import PostComment from "../../componants/PostComment/PostComment";
 import Modal from "../../componants/Modal/Modal";
 import MessageUpdate from "../../componants/MessageUpdat/MessageUpdate";
-const MessageUserMe = ({ avatar, username, myUserId, admin }) => {
+const MessageUserMe = ({ avatar, username, myUserId, admin, avatarAdmin }) => {
   const [messagesUser, setMessagesUser] = useState([]);
 
   const [active, setActive] = useState(false);

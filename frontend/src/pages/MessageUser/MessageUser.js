@@ -8,7 +8,7 @@ import PostComment from "../../componants/PostComment/PostComment";
 import Modal from "../../componants/Modal/Modal";
 import MessageUpdate from "../../componants/MessageUpdat/MessageUpdate";
 import "./messageuser.scss";
-const MessageUser = ({ id, myUserId, admin, isAdmin }) => {
+const MessageUser = ({ id, myUserId, admin, isAdmin, avatar }) => {
   const [messagesUser, setMessagesUser] = useState([]);
   const [active, setActive] = useState(false);
   const [messageInModal, setMessageInModal] = useState(null);

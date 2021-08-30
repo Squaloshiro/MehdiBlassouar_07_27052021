@@ -10,7 +10,7 @@ import MessageImage from "../PostMessage/PostMessage";
 import PostComment from "../../componants/PostComment/PostComment";
 import Modal from "../../componants/Modal/Modal";
 import MessageUpdate from "../../componants/MessageUpdat/MessageUpdate";
-const LandingPage = ({ myUserId, admin }) => {
+const LandingPage = ({ myUserId, admin, avatar }) => {
   const history = useHistory();
   const [messages, setMessages] = useState([]);
 

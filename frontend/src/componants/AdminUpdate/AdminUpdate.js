@@ -2,7 +2,7 @@ import Button from "../Button/Button";
 import api from "../../config/api";
 import { toastTrigger } from "../../helper/toast";
 import "./adminupdate.scss";
-const AdminUpdate = ({ idUser, profil, isAdmin, setIsAdmin }) => {
+const AdminUpdate = ({ idUser, profil, isAdmin, setIsAdmin, setAvatar }) => {
   const AdminClick = async () => {
     try {
       const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
@@ -12,7 +12,8 @@ const AdminUpdate = ({ idUser, profil, isAdmin, setIsAdmin }) => {
         headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
       });
 
-      setIsAdmin(response.data);
+      setAvatar(response.data.avatar);
+      setIsAdmin(response.data.isAdmin);
       if (response.data === true) {
         toastTrigger("success", "Admin créée");
       } else {

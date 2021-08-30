@@ -6,7 +6,7 @@ import MessageUser from "../MessageUser/MessageUser";
 import "./profiluser.scss";
 import AdminUpdate from "../../componants/AdminUpdate/AdminUpdate";
 import { toastTrigger } from "../../helper/toast";
-const ProfilUser = ({ myUserId, admin, setIsLoggedin, setCheckLogin, setDataUser }) => {
+const ProfilUser = ({ myUserId, admin, setIsLoggedin, setCheckLogin, setDataUser, setAvatar, avatar }) => {
   const location = useLocation();
   const history = useHistory();
   const [profil, setProfil] = useState({});
@@ -44,6 +44,7 @@ const ProfilUser = ({ myUserId, admin, setIsLoggedin, setCheckLogin, setDataUser
           <div className="flex-name-pictur">
             <div className="flex-picturs-2">
               <div className="size-police-photo-2">Avatar</div>
+
               <img alt="img" className="size-picturs-2" src={profil.avatar} />
             </div>
             <div className="bor-username-2">
@@ -68,6 +69,7 @@ const ProfilUser = ({ myUserId, admin, setIsLoggedin, setCheckLogin, setDataUser
                   <div className="admin-control">
                     <div className="admin-control-session">
                       <AdminUpdate
+                        setAvatar={setAvatar}
                         isAdmin={isAdmin}
                         setIsAdmin={setIsAdmin}
                         profil={profil}
@@ -94,7 +96,7 @@ const ProfilUser = ({ myUserId, admin, setIsLoggedin, setCheckLogin, setDataUser
         </div>
       </div>
       <div className="flex-msg-2">
-        <MessageUser isAdmin={isAdmin} admin={admin} myUserId={myUserId} id={location.state.id} />
+        <MessageUser avatar={avatar} isAdmin={isAdmin} admin={admin} myUserId={myUserId} id={location.state.id} />
       </div>
     </div>
   );

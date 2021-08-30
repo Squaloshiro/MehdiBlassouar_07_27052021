@@ -45,6 +45,15 @@ const MessageImage = ({ postMessage }) => {
   };
 
   const onChangeTitle = (e) => {
+    const regexUpercase = /[A-Z]/g;
+    let findLengthUppercase = e.target.value.match(regexUpercase);
+    if (findLengthUppercase) {
+      findLengthUppercase = findLengthUppercase.length;
+    }
+    console.log("-----------findLengthUppercase-------------------------");
+    console.log(findLengthUppercase);
+    console.log("------------------------------------");
+
     setCompteurTitle(e.target.value.length);
     setTitle(e.target.value);
   };
