@@ -24,6 +24,8 @@ const App = () => {
   const [avatar, setAvatar] = useState("");
   const [userNewName, setUserNewName] = useState("");
   const [dataUser, setDataUser] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const [profil, setProfil] = useState([]);
 
   useEffect(() => {
     const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
@@ -44,9 +46,6 @@ const App = () => {
             });
             setDataUser(response.data);
           } catch (error) {
-            console.log("------------error------------------------");
-            console.log(error);
-            console.log("------------------------------------");
             toastTrigger("error", "une erreur est survenu");
           }
           setAdmin(response.data.isAdmin);
@@ -86,6 +85,8 @@ const App = () => {
             exact
             path="/"
             componant={LandingPage}
+            messages={messages}
+            setMessages={setMessages}
             avatar={avatar}
             myUserId={myUserId}
             isLoggedin={isLoggedin}
@@ -122,6 +123,9 @@ const App = () => {
             admin={admin}
             setIsLoggedin={setIsLoggedin}
             myUserId={myUserId}
+            setMessages={setMessages}
+            profil={profil}
+            setProfil={setProfil}
           />
         )}
 

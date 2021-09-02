@@ -11,6 +11,10 @@ const PrivateRoute = ({
   setAvatar,
   setUserNewName,
   setDataUser,
+  messages,
+  setMessages,
+  profil,
+  setProfil,
   ...rest
 }) => {
   return (
@@ -20,6 +24,8 @@ const PrivateRoute = ({
         isLoggedin ? (
           <Componant
             {...props}
+            messages={messages}
+            setMessages={setMessages}
             setDataUser={setDataUser}
             setUserNewName={setUserNewName}
             setAvatar={setAvatar}
@@ -28,6 +34,8 @@ const PrivateRoute = ({
             setIsLoggedin={setIsLoggedin}
             admin={admin}
             avatar={avatar}
+            profil={profil}
+            setProfil={setProfil}
           />
         ) : (
           <Redirect to={{ pathname: "/connexion" }} />

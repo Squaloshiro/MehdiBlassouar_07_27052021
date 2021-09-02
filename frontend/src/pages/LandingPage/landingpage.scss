@@ -13,7 +13,16 @@
 }
 
 .card-position {
-  width: 70%;
+  width: 50%;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  border-radius: 10px;
+  border: 1px solid #d0d1d5;
+  background-color: white;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+.card-position-comment-2 {
+  width: 100%;
   margin-top: 1em;
   margin-bottom: 1em;
   border-radius: 10px;
@@ -102,11 +111,14 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-
+.logo-landing-page {
+  cursor: pointer;
+}
 body {
   // animation: pulse 5s infinite;
   // animation-timing-function: ease-out;
-  background-color: #afadac;
+  //background-color: #afadac;
+  background-image: url(../../assets/fond-landing.jpg);
 }
 
 /*@keyframes pulse {
@@ -140,11 +152,8 @@ body {
 }
 
 .co-logo {
-  float: left;
   margin-right: 8px;
   border-radius: 50%;
-  width: 100%;
-  height: 100%;
 }
 .co-logo-update {
   float: left;
@@ -166,27 +175,31 @@ body {
   align-items: center;
   max-height: 123px;
   min-height: 15px;
-  width: 10%;
+  width: 18%;
 }
-
-@media screen and (max-width: 1259px) {
+@media screen and (min-width: 2000px) {
   .co-logo-size {
-    width: 12%;
+    width: 10%;
   }
 }
-@media screen and (max-width: 1035px) {
+@media screen and (max-width: 1259px) {
   .co-logo-size {
     width: 14%;
   }
 }
+@media screen and (max-width: 1035px) {
+  .co-logo-size {
+    width: 16%;
+  }
+}
 @media screen and (max-width: 428px) {
   .co-logo-size {
-    width: 19%;
+    width: 21%;
   }
 }
 @media screen and (max-width: 228px) {
   .co-logo-size {
-    width: 30%;
+    width: 32%;
   }
 }
 .co-name {
@@ -271,12 +284,9 @@ body {
   width: 100%;
 }
 .reference-thumb {
-  display: block;
-  width: 100%;
-  height: 25em;
-  object-fit: cover;
+  display: flex;
+  justify-content: center;
 }
-
 .reference-content {
   border: 2px solid black;
   border: 2px solid rgba(0, 0, 0, 0.1);
@@ -387,6 +397,11 @@ body {
 @media screen and (max-width: 1045px) {
   .flex-position {
     margin-top: 6em;
+  }
+}
+@media screen and (max-width: 768px) {
+  .card-position {
+    width: 95%;
   }
 }
 @media screen and (max-width: 745px) {

@@ -2,7 +2,20 @@ import Button from "../Button/Button";
 import api from "../../config/api";
 import { toastTrigger } from "../../helper/toast";
 import "./adminupdate.scss";
-const AdminUpdate = ({ idUser, profil, isAdmin, setIsAdmin, setAvatar }) => {
+import { useHistory, useLocation } from "react-router";
+const AdminUpdate = ({
+  idUser,
+  setDataUser,
+  setMessagesUser,
+  setProfil,
+  setMessages,
+
+  isAdmin,
+  setIsAdmin,
+  setAvatar,
+}) => {
+  const location = useLocation();
+  const history = useHistory();
   const AdminClick = async () => {
     try {
       const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
@@ -14,7 +27,52 @@ const AdminUpdate = ({ idUser, profil, isAdmin, setIsAdmin, setAvatar }) => {
 
       setAvatar(response.data.avatar);
       setIsAdmin(response.data.isAdmin);
-      if (response.data === true) {
+      try {
+        const response = await api({
+          method: "get",
+          url: "/messages",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setMessages(response.data);
+      } catch (error) {
+        //rajouter un button en cas d'echec de chargement des messages
+      }
+      if (location?.state?.id) {
+        try {
+          const response = await api({
+            method: "get",
+            url: "/users/" + location.state.id,
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          setProfil(response.data);
+        } catch (error) {
+          toastTrigger("error", "une erreur est survenu");
+        }
+      } else {
+        history.push("/");
+      }
+      try {
+        const response = await api({
+          method: "get",
+          url: "/messages/" + idUser,
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setMessagesUser(response.data);
+      } catch (error) {
+        toastTrigger("error", "une erreur est survenu");
+      }
+      try {
+        const response = await api({
+          method: "get",
+          url: "/users/all",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setDataUser(response.data);
+      } catch (error) {
+        toastTrigger("error", "une erreur est survenu");
+      }
+      if (response.data.isAdmin === true) {
         toastTrigger("success", "Admin créée");
       } else {
         toastTrigger("success", "Admin sup");

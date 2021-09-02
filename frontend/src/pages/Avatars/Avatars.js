@@ -15,6 +15,7 @@ const images = importAll(require.context("../../assets/avatars_grands", false, /
 const Card = ({ number, selectCardIndex }) => {
   return (
     <img
+      className="radius-avatar"
       style={selectCardIndex === number ? { border: "1px solid black" } : null}
       name={images[`${number}.jpg`].default}
       src={images[`${number}.jpg`].default}
@@ -57,14 +58,14 @@ const Avatar = ({ onChangeAvatar, close, profil }) => {
   };
 
   return (
-    <div>
+    <div className="style_avatar">
       <div className="style">
         <div className="test">
           {profil.isAdmin === true
             ? table &&
               table.map((element, i) => {
                 return (
-                  <div key={i} onClick={(e) => onSubmitAvatar(e, i)}>
+                  <div className="avatar_card" key={i} onClick={(e) => onSubmitAvatar(e, i)}>
                     <Card selectCardIndex={selectCardIndex} number={element} />
                   </div>
                 );
@@ -72,7 +73,7 @@ const Avatar = ({ onChangeAvatar, close, profil }) => {
             : tab &&
               tab.map((element, i) => {
                 return (
-                  <div key={i} onClick={(e) => onSubmitAvatar(e, i)}>
+                  <div className="avatar_card" key={i} onClick={(e) => onSubmitAvatar(e, i)}>
                     <Card selectCardIndex={selectCardIndex} number={element} />
                   </div>
                 );

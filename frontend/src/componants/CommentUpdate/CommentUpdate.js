@@ -12,7 +12,7 @@ const CommentUpdate = ({ setcomments, setActive, element, close }) => {
   const [content, setContent] = useState(element.content);
   const [compteurContent, setCompteurContent] = useState(0);
   const [maxContent, setmaxContent] = useState("");
-  const [classNameContent, setClassNameContent] = useState("color_black");
+  const [classNameContent, setClassNameContent] = useState("color-green");
   const send = <FontAwesomeIcon icon={["fas", "paper-plane"]} />;
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const CommentUpdate = ({ setcomments, setActive, element, close }) => {
       setClassNameContent("color_red");
       setmaxContent("atteind");
     } else {
-      setClassNameContent("color_black");
+      setClassNameContent("color-green");
       setmaxContent("");
     }
   }, [compteurContent]);
@@ -55,7 +55,7 @@ const CommentUpdate = ({ setcomments, setActive, element, close }) => {
   };
 
   return (
-    <div key={element.id} className="card-position">
+    <div key={element.id} className="card-position-comment-2">
       <div className="f-card">
         <div className="header">
           <div className="options"></div>

@@ -60,19 +60,30 @@ const SignIn = ({ setIsLoggedin, setDataUser, setMyUserId, setAdmin }) => {
   };
 
   return (
-    <div className="lmj-main">
-      <div className="lmj-flex">
-        <div className="element-size">
-          <Input onChange={onChangeEmail} value={email} label="Email" type="email" />
-        </div>
+    <div className="sign-in-flex">
+      <div className="lmj-main-sign-in">
+        <div className="sign-in-position-center">
+          <div className="lmj-flex">
+            <div>Connexion</div>
+            <div className="element-size">
+              <Input style={{ width: "100%" }} onChange={onChangeEmail} value={email} label="Email" type="email" />
+            </div>
 
-        <div className="element-marge  element-size">
-          <Input onChange={onChangePassword} value={password} label="Password" type="password" />
-        </div>
-        {valueError && <div>{valueError}</div>}
+            <div className="element-marge  element-size">
+              <Input
+                style={{ width: "100%" }}
+                onChange={onChangePassword}
+                value={password}
+                label="Password"
+                type="password"
+              />
+            </div>
+            {valueError && <div>{valueError}</div>}
 
-        <div className="element-marge">
-          <Button onClick={onSignIn} title="Valider" />
+            <div className="element-marge">
+              <Button onClick={onSignIn} title="Valider" />
+            </div>
+          </div>
         </div>
       </div>
     </div>

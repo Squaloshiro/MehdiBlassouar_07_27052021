@@ -1,1 +1,37 @@
+.reference-thumb-2 {
+  display: block;
+  width: 100%;
+  height: 18em;
+  object-fit: cover;
+}
+.new-position {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+.co-logo-size-update {
+  display: flex;
+  align-items: center;
+  max-height: 130px;
+  min-height: 15px;
+  width: 70%;
+}
 
+@media screen and (max-width: 540px) {
+  .reference-thumb-2 {
+    height: 12em;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .reference-thumb-2 {
+    height: 14em;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .reference-thumb-2 {
+    height: 10em;
+  }
+}

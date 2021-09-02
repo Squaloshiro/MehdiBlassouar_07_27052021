@@ -5,13 +5,14 @@ import { toastTrigger } from "../../helper/toast";
 import Accordion from "../AccordionComment/Accordion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import TextArea from "../TextArea/InputTextArea";
+import "./postcomment.scss";
 
 const PostComment = ({ myUserId, admin, messageId, deleteOneComment, newComments, modifyComment }) => {
   const [content, setContent] = useState("");
   const [comments, setcomments] = useState([]);
   const [compteurContent, setCompteurContent] = useState(0);
   const [maxContent, setmaxContent] = useState("");
-  const [classNameContent, setClassNameContent] = useState("color_black");
+  const [classNameContent, setClassNameContent] = useState("color-green");
   const send = <FontAwesomeIcon icon={["fas", "paper-plane"]} />;
 
   useEffect(() => {
@@ -19,15 +20,12 @@ const PostComment = ({ myUserId, admin, messageId, deleteOneComment, newComments
       setClassNameContent("color_red");
       setmaxContent("atteind");
     } else {
-      setClassNameContent("color_black");
+      setClassNameContent("color-green");
       setmaxContent("");
     }
   }, [compteurContent]);
 
   const onChangeContent = (e) => {
-    console.log("---------------eee---------------------");
-    console.log(e);
-    console.log("------------------------------------");
     setCompteurContent(e.target.value.length);
     setContent(e.target.value);
   };
@@ -87,24 +85,26 @@ const PostComment = ({ myUserId, admin, messageId, deleteOneComment, newComments
         deleteOneComment={deleteOneComment}
         messageId={messageId}
         admin={admin}
-        title="commentaire"
+        title="Afficher les commentaires"
       />
-      <div className="post-cadre">
-        <TextArea
-          style={{ width: "98.3%" }}
-          label="Comment"
-          rows={2}
-          variant="outlined"
-          onChange={onChangeContent}
-          placeholder="Text"
-          value={content}
-        />
-        {compteurContent > 0 && (
-          <div className={classNameContent}>
-            Limite de caractère {maxContent} : {compteurContent}/1000
-          </div>
-        )}
-        <Button size="small" onClick={onSubmitComment} title={send} />
+      <div className="post-cadre-comment">
+        <div className="post-cadre-comment-input">
+          <TextArea
+            style={{ width: "97.3%" }}
+            label="Comment"
+            rows={2}
+            variant="outlined"
+            onChange={onChangeContent}
+            placeholder="Text"
+            value={content}
+          />
+          {compteurContent > 0 && (
+            <div className={classNameContent}>
+              Limite de caractère {maxContent} : {compteurContent}/1000
+            </div>
+          )}
+          <Button size="small" onClick={onSubmitComment} title={send} />
+        </div>
       </div>
     </div>
   );

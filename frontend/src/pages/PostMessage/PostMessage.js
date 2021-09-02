@@ -1,4 +1,5 @@
 import Input from "../../componants/Input/Input";
+import InputFile from "../../componants/InputFile/InputFile";
 import Button from "../../componants/Button/Button";
 import { useState, useEffect } from "react";
 import api from "../../config/api";
@@ -17,8 +18,8 @@ const MessageImage = ({ postMessage }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [theInputKey, setTheInputKey] = useState("");
-  const [classNameTitle, setClassNameTitle] = useState("color_black");
-  const [classNameContent, setClassNameContent] = useState("color_black");
+  const [classNameTitle, setClassNameTitle] = useState("color-green");
+  const [classNameContent, setClassNameContent] = useState("color-green");
   const [maxTitle, setmaxTitle] = useState("");
   const [maxContent, setmaxContent] = useState("");
   const send = <FontAwesomeIcon icon={["fas", "paper-plane"]} />;
@@ -28,14 +29,14 @@ const MessageImage = ({ postMessage }) => {
       setClassNameTitle("color_red");
       setmaxTitle("atteind");
     } else {
-      setClassNameTitle("color_black");
+      setClassNameTitle("color-green");
       setmaxTitle("");
     }
     if (compteurContent > 2550) {
       setClassNameContent("color_red");
       setmaxContent("atteind");
     } else {
-      setClassNameContent("color_black");
+      setClassNameContent("color-green");
       setmaxContent("");
     }
   }, [compteurTitle, compteurContent]);
@@ -45,15 +46,6 @@ const MessageImage = ({ postMessage }) => {
   };
 
   const onChangeTitle = (e) => {
-    const regexUpercase = /[A-Z]/g;
-    let findLengthUppercase = e.target.value.match(regexUpercase);
-    if (findLengthUppercase) {
-      findLengthUppercase = findLengthUppercase.length;
-    }
-    console.log("-----------findLengthUppercase-------------------------");
-    console.log(findLengthUppercase);
-    console.log("------------------------------------");
-
     setCompteurTitle(e.target.value.length);
     setTitle(e.target.value);
   };
@@ -158,7 +150,7 @@ const MessageImage = ({ postMessage }) => {
         )}
 
         <div className="file-button">
-          <Input type="file" onChange={handleOnUploadFile} theInputKey={theInputKey} />
+          <InputFile onChange={handleOnUploadFile} theInputKey={theInputKey} />
           <Button size="small" onClick={onSubmitMessageImg} title={send} />
         </div>
       </div>

@@ -6,11 +6,22 @@ import MessageUser from "../MessageUser/MessageUser";
 import "./profiluser.scss";
 import AdminUpdate from "../../componants/AdminUpdate/AdminUpdate";
 import { toastTrigger } from "../../helper/toast";
-const ProfilUser = ({ myUserId, admin, setIsLoggedin, setCheckLogin, setDataUser, setAvatar, avatar }) => {
+const ProfilUser = ({
+  profil,
+  setProfil,
+  setMessages,
+  myUserId,
+  admin,
+  setIsLoggedin,
+  setCheckLogin,
+  setDataUser,
+  setAvatar,
+  avatar,
+}) => {
   const location = useLocation();
   const history = useHistory();
-  const [profil, setProfil] = useState({});
   const [isAdmin, setIsAdmin] = useState(false);
+  const [messagesUser, setMessagesUser] = useState([]);
   useEffect(() => {
     setIsAdmin(profil?.isAdmin);
   }, [profil?.isAdmin]);
@@ -35,7 +46,7 @@ const ProfilUser = ({ myUserId, admin, setIsLoggedin, setCheckLogin, setDataUser
     } else {
       history.push("/");
     }
-  }, [history, location.state.id]);
+  }, [history, location.state.id, setProfil]);
 
   return (
     <div className="flex-direction-2">
@@ -69,11 +80,16 @@ const ProfilUser = ({ myUserId, admin, setIsLoggedin, setCheckLogin, setDataUser
                   <div className="admin-control">
                     <div className="admin-control-session">
                       <AdminUpdate
+                        setProfil={setProfil}
+                        setMessages={setMessages}
                         setAvatar={setAvatar}
                         isAdmin={isAdmin}
                         setIsAdmin={setIsAdmin}
                         profil={profil}
                         idUser={location.state.id}
+                        messagesUser={messagesUser}
+                        setMessagesUser={setMessagesUser}
+                        setDataUser={setDataUser}
                       />
                     </div>
                     <div className="admin-control-drop">
@@ -96,7 +112,15 @@ const ProfilUser = ({ myUserId, admin, setIsLoggedin, setCheckLogin, setDataUser
         </div>
       </div>
       <div className="flex-msg-2">
-        <MessageUser avatar={avatar} isAdmin={isAdmin} admin={admin} myUserId={myUserId} id={location.state.id} />
+        <MessageUser
+          messagesUser={messagesUser}
+          setMessagesUser={setMessagesUser}
+          avatar={avatar}
+          isAdmin={isAdmin}
+          admin={admin}
+          myUserId={myUserId}
+          id={location.state.id}
+        />
       </div>
     </div>
   );

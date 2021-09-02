@@ -1,6 +1,3 @@
-.accordions {
-}
-
 .accordion__title {
   display: flex;
   align-items: center;
@@ -8,12 +5,14 @@
   background: white;
   padding: 1rem;
   font-weight: bold;
+  border: 1px solid transparent;
 }
 
 .accordion__title:hover,
 .active .accordion__title {
   cursor: pointer;
   background: white;
+  border: 1px solid #d0d1d5;
 }
 
 .accordion__icon {

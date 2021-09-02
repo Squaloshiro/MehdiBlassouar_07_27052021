@@ -9,6 +9,7 @@ import Modal from "../../componants/Modal/Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from "../../componants/Button/Button";
 import TextArea from "../../componants/TextArea/InputTextArea";
+import { toastTrigger } from "../../helper/toast";
 
 const ProfilPage = ({ setIsLoggedin, admin, myUserId, setAvatar, setUserNewName, avatar }) => {
   const [profil, setProfil] = useState({});
@@ -18,12 +19,16 @@ const ProfilPage = ({ setIsLoggedin, admin, myUserId, setAvatar, setUserNewName,
   const [activeUser, setActiveUser] = useState(false);
   const [activeBio, setActiveBio] = useState(false);
   const [activeError, setActiveError] = useState("");
+  const [compteurBio, setCompteurBio] = useState(0);
+  const [maxBio, setmaxBio] = useState("");
+  const [classNameBio, setClassNameBio] = useState("color-green");
   const clickOutSide = useRef();
   const clickOutSideBio = useRef();
 
   const handleClickOutside = (e) => {
     if (!clickOutSide.current?.contains(e.target)) {
       setActiveUser(false);
+      setActiveError("");
     }
   };
   const handleClickOutsideBio = (e) => {
@@ -31,6 +36,16 @@ const ProfilPage = ({ setIsLoggedin, admin, myUserId, setAvatar, setUserNewName,
       setActiveBio(false);
     }
   };
+
+  useEffect(() => {
+    if (compteurBio > 2550) {
+      setClassNameBio("color_red");
+      setmaxBio("atteind");
+    } else {
+      setClassNameBio("color-green");
+      setmaxBio("");
+    }
+  }, [compteurBio]);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -51,6 +66,7 @@ const ProfilPage = ({ setIsLoggedin, admin, myUserId, setAvatar, setUserNewName,
     setUserName(e.target.value);
   };
   const onChangeBio = (e) => {
+    setCompteurBio(e.target.value.length);
     setBio(e.target.value);
   };
   const clickModifUser = () => {
@@ -90,6 +106,10 @@ const ProfilPage = ({ setIsLoggedin, admin, myUserId, setAvatar, setUserNewName,
 
       return;
     }
+    if (compteurBio > 2550) {
+      toastTrigger("error", "une erreur est survenu");
+      return;
+    }
     try {
       const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
       const response = await api({
@@ -100,6 +120,7 @@ const ProfilPage = ({ setIsLoggedin, admin, myUserId, setAvatar, setUserNewName,
       });
       setBio("");
       setActiveBio(false);
+      setCompteurBio(0);
       setProfil(response.data);
     } catch (error) {}
   };
@@ -155,16 +176,19 @@ const ProfilPage = ({ setIsLoggedin, admin, myUserId, setAvatar, setUserNewName,
                   </div>
                 </div>
               ) : (
-                <div ref={clickOutSide} className="bor-username">
-                  <TextArea
-                    variant="outlined"
-                    rows={1}
-                    onChange={onChangeUserName}
-                    value={username}
-                    label={profil.username}
-                  />
-                  {activeError && <div>{activeError}</div>}
-                  <Button onClick={updateProfilUsername} color="primary" title="Modifier" />
+                <div className="error-position">
+                  <div ref={clickOutSide} className="bor-username">
+                    <TextArea
+                      variant="outlined"
+                      rows={1}
+                      onChange={onChangeUserName}
+                      value={username}
+                      label={profil.username}
+                    />
+
+                    <Button onClick={updateProfilUsername} color="primary" title="Modifier" />
+                  </div>
+                  {activeError && <div className="color_red">{activeError}</div>}
                 </div>
               )}
               <div className="email">
@@ -190,16 +214,23 @@ const ProfilPage = ({ setIsLoggedin, admin, myUserId, setAvatar, setUserNewName,
                       <FontAwesomeIcon onClick={clickModifBio} color="blue" icon={["fas", "pen"]} />
                     </div>
                   ) : (
-                    <div ref={clickOutSideBio} className="flex-bio">
-                      <textarea
-                        className="textarea"
-                        value={bio}
-                        onChange={onChangeBio}
-                        placeholder="Ajouter votre description"
-                      />
-                      <button onClick={updateProfilBio} className="button" type="button">
-                        Envoyer
-                      </button>
+                    <div>
+                      <div ref={clickOutSideBio} className="flex-bio">
+                        <textarea
+                          className="textarea"
+                          value={bio}
+                          onChange={onChangeBio}
+                          placeholder="Ajouter votre description"
+                        />
+                        <button onClick={updateProfilBio} className="button" type="button">
+                          Envoyer
+                        </button>
+                      </div>
+                      {compteurBio > 0 && (
+                        <div className={classNameBio}>
+                          Limite de caractère {maxBio} : {compteurBio}/2550
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

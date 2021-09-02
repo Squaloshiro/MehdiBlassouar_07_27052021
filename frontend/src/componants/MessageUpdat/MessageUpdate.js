@@ -22,8 +22,8 @@ const MessageUpdate = ({
   const [title, setTitle] = useState(element.title);
   const [content, setContent] = useState(element.content);
   const location = useLocation();
-  const [classNameTitle, setClassNameTitle] = useState("color_black");
-  const [classNameContent, setClassNameContent] = useState("color_black");
+  const [classNameTitle, setClassNameTitle] = useState("color-green");
+  const [classNameContent, setClassNameContent] = useState("color-green");
   const [compteurContent, setCompteurContent] = useState(0);
   const [compteurTitle, setCompteurTitle] = useState(0);
   const [maxTitle, setmaxTitle] = useState("");
@@ -34,14 +34,14 @@ const MessageUpdate = ({
       setClassNameTitle("color_red");
       setmaxTitle("atteind");
     } else {
-      setClassNameTitle("color_black");
+      setClassNameTitle("color-green");
       setmaxTitle("");
     }
     if (compteurContent > 2550) {
       setClassNameContent("color_red");
       setmaxContent("atteind");
     } else {
-      setClassNameContent("color_black");
+      setClassNameContent("color-green");
       setmaxContent("");
     }
   }, [compteurTitle, compteurContent]);
@@ -108,7 +108,9 @@ const MessageUpdate = ({
     <div className="new-position" key={element.id}>
       <div onClose={handleClose}>
         <div>
-          <img className="co-logo-update" alt="img" src={element.User.avatar} />
+          <div className="co-logo-size-update">
+            <img height="100%" width="100%" className="co-logo-update" alt="img" src={element.User.avatar} />
+          </div>
           <div className="co-name">
             <div>{element.User.username}</div>
             {element.User.isAdmin === true ? <div>Administrateur</div> : <></>}
@@ -141,14 +143,16 @@ const MessageUpdate = ({
         </div>
         {element.attachment ? (
           <div className="reference">
-            <img alt="img" className="reference-thumb" src={element.attachment} />
+            <div className="reference-thumb-2">
+              <img height="100%" width="100%" alt="img" src={element.attachment} />
+            </div>
             <div className="reference-content">
               <div className="reference-subtitle">
                 <TextArea
                   style={{ width: "98.3%" }}
                   onChange={onChangeContent}
                   value={content}
-                  rows={4}
+                  rows={2}
                   variant="outlined"
                   label="Comment"
                   placeholder="content"

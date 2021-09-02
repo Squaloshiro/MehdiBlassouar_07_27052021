@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./header.scss";
-import logo from "../../assets/logos/icon-left-font.png";
-import icon from "../../assets/logos/icon.svg";
+import logo from "../../assets/logos/mon_icon_4.png";
+import icon from "../../assets/logos/mon_icon_10.png";
 import Button from "../Button/Button";
 import { useHistory, useLocation } from "react-router-dom";
 import SearchBar from "../SearchBar/SearchBar";
@@ -28,6 +28,7 @@ const Header = ({
   const [profilPageIsActif, setprofilPageIsActif] = useState(false);
   const [userProfilPageIsActif, setUserProfilPageIsActif] = useState(false);
   const [signUpPage, setSignUpPage] = useState(false);
+  const [pointorActive, setPointorActive] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -46,7 +47,16 @@ const Header = ({
       setprofilPageIsActif(false);
       setUserProfilPageIsActif(false);
     }
+  }, [location.pathname, pointorActive]);
+
+  useEffect(() => {
+    if (location.pathname === "/") {
+      setPointorActive(true);
+    } else {
+      setPointorActive(false);
+    }
   }, [location.pathname]);
+
   const onLogout = () => {
     setIsLoggedin(false);
     setCheckLogin(false);
@@ -60,8 +70,18 @@ const Header = ({
   return (
     <div className="lmj-banner flex">
       <div className="image-rognage">
-        <img src={logo} alt="Groupomania" className="lmj-logo" />
-        <img src={icon} alt="Groupomania" className="lmj-icon" />
+        <img
+          onClick={() => history.push("/")}
+          src={logo}
+          alt="Groupomania"
+          className={`${pointorActive ? "lmj-logo-2" : "lmj-logo"}`}
+        />
+        <img
+          onClick={() => history.push("/")}
+          src={icon}
+          alt="Groupomania"
+          className={`${pointorActive ? "lmj-icon-2" : "lmj-icon"}`}
+        />
       </div>
 
       {isLoggedin && (

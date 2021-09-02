@@ -222,41 +222,50 @@ const AdminDashboard = ({ setMyUserId, setDataUser, setIsLoggedin, setAdmin }) =
   };
 
   return (
-    <div className="lmj-main">
-      <div ref={clickOutSide} className="lmj-flex">
-        <div className="element-size">
-          <Input onChange={onChangeEmail} value={email} label="Email" type="email" />
-          <div>{verifGroupo && <div className={classNameGroupo}>Doit finir par "@groupomania.com" </div>}</div>
-        </div>
-        <div className="element-marge  element-size">
-          <Input onChange={onChangePassword} value={password} label="Password" type="password" />
-          <div>
-            {compteurNewPassword > 0 && (
-              <div className={classNameNewPassWord}>Minimum de caratère : {compteurNewPassword}/8</div>
-            )}
+    <div className="sign-in-flex">
+      <div className="lmj-main-sign-in">
+        <div ref={clickOutSide} className="lmj-flex">
+          <div>Admin</div>
+          <div className="element-size">
+            <Input style={{ width: "100%" }} onChange={onChangeEmail} value={email} label="Email" type="email" />
+            <div>{verifGroupo && <div className={classNameGroupo}>Doit finir par "@groupomania.com" </div>}</div>
           </div>
-          <div>{activeUppercase && <div className={classNameUppercase}>Minimum 1 majuscule </div>}</div>
-          <div>{activeUppercase && <div className={classNameLowercase}>Minimum 1 minuscule </div>}</div>
-          <div>{activeUppercase && <div className={classNameNumber}>Minimum 1 chiffre </div>}</div>
-          <div>{activeUppercase && <div className={classNameCharacter}>Minimum 1 charatère spécial </div>}</div>
-        </div>
-        <div className="element-marge  element-size">
-          <Input onChange={onChangeUsername} value={username} label="Username" />
-          <div>
-            {compteurUserName > 0 && (
-              <div className={classNameUserName}>Minimum de caratère : {compteurUserName}/4</div>
-            )}
+          <div className="element-marge  element-size">
+            <Input
+              style={{ width: "100%" }}
+              onChange={onChangePassword}
+              value={password}
+              label="Password"
+              type="password"
+            />
+            <div>
+              {compteurNewPassword > 0 && (
+                <div className={classNameNewPassWord}>Minimum de caratère : {compteurNewPassword}/8</div>
+              )}
+            </div>
+            <div>{activeUppercase && <div className={classNameUppercase}>Minimum 1 majuscule </div>}</div>
+            <div>{activeUppercase && <div className={classNameLowercase}>Minimum 1 minuscule </div>}</div>
+            <div>{activeUppercase && <div className={classNameNumber}>Minimum 1 chiffre </div>}</div>
+            <div>{activeUppercase && <div className={classNameCharacter}>Minimum 1 charatère spécial </div>}</div>
           </div>
-        </div>
-        {valueError && <div>{valueError}</div>}
-        <div className="element-marge">
-          <Button onClick={onSignUp} title="Valider" />
-        </div>
-        {active && (
-          <div ref={clickOutSideError} className="color-red">
-            Vériffiez vos information de saisie
+          <div className="element-marge  element-size">
+            <Input style={{ width: "100%" }} onChange={onChangeUsername} value={username} label="Username" />
+            <div>
+              {compteurUserName > 0 && (
+                <div className={classNameUserName}>Minimum de caratère : {compteurUserName}/4</div>
+              )}
+            </div>
           </div>
-        )}
+          {valueError && <div>{valueError}</div>}
+          <div className="element-marge">
+            <Button onClick={onSignUp} title="Valider" />
+          </div>
+          {active && (
+            <div ref={clickOutSideError} className="color-red">
+              Vériffiez vos information de saisie
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

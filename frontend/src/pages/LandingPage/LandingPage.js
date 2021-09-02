@@ -10,9 +10,8 @@ import MessageImage from "../PostMessage/PostMessage";
 import PostComment from "../../componants/PostComment/PostComment";
 import Modal from "../../componants/Modal/Modal";
 import MessageUpdate from "../../componants/MessageUpdat/MessageUpdate";
-const LandingPage = ({ myUserId, admin, avatar }) => {
+const LandingPage = ({ setMessages, messages, myUserId, admin, avatar }) => {
   const history = useHistory();
-  const [messages, setMessages] = useState([]);
 
   const [active, setActive] = useState(false);
   const [messageInModal, setMessageInModal] = useState(null);
@@ -39,7 +38,7 @@ const LandingPage = ({ myUserId, admin, avatar }) => {
     } else {
       history.push("/connexion");
     }
-  }, [history]);
+  }, [history, setMessages]);
 
   const deleteOneComment = async (test) => {
     //const idToRemove = commentId
@@ -162,7 +161,14 @@ const LandingPage = ({ myUserId, admin, avatar }) => {
                     )}
                   </div>
                   <div className="co-logo-size">
-                    <img className="co-logo" alt="img" src={element.User.avatar} />
+                    <img
+                      onClick={() => redirectToUserProfil(element.UserId)}
+                      height="100%"
+                      width="100%"
+                      className="co-logo logo-landing-page"
+                      alt="img"
+                      src={element.User.avatar}
+                    />
                   </div>
                   <div className="co-name">
                     <div onClick={() => redirectToUserProfil(element.UserId)}>{element.User.username}</div>
@@ -191,7 +197,10 @@ const LandingPage = ({ myUserId, admin, avatar }) => {
                 </div>
                 {element.attachment ? (
                   <div className="reference">
-                    <img alt="img" className="reference-thumb" src={element.attachment} />
+                    <div className="reference-thumb ">
+                      <img alt="img" height="100%" width="100%" src={element.attachment} />
+                    </div>
+
                     <div className="reference-content">
                       <div className="reference-subtitle">{element.content}</div>
                       <div className="reference-font">Groupomania</div>

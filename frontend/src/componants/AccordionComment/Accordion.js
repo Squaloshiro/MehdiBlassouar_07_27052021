@@ -15,6 +15,7 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
   const history = useHistory();
   const [messageInModal, setMessageInModal] = useState(null);
   //const [comments, setcomments] = useState([]);
+  const [activeHide, setActiveHide] = useState(false);
 
   const deleteOneComment = (commentId) => {
     const idToRemove = commentId;
@@ -67,6 +68,7 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
   };
   const openModal = (comment) => {
     setMessageInModal(comment);
+    setActiveHide(true);
     setActive(true);
   };
   const closeModal = () => {
@@ -75,8 +77,9 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
   return (
     <div className={`accordion ${open && "active"}`}>
       {active && messageInModal && (
-        <Modal setActive={setActive} active={active}>
+        <Modal activeHide={activeHide} setActive={setActive} active={active}>
           <CommentUpdate
+            setActiveHide={setActiveHide}
             close={closeModal}
             setcomments={setcomments}
             element={messageInModal}
@@ -146,7 +149,7 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
                             {(element.UserId === myUserId || admin === true) && (
                               <div>
                                 <FontAwesomeIcon
-                                  color="red"
+                                  color="blue"
                                   icon={["fas", "edit"]}
                                   onClick={(e) => openModal(element)}
                                 />

@@ -2,7 +2,7 @@ import { useRef, useEffect } from "react";
 
 import "./modal.scss";
 
-const Modal = ({ children, setActive, active, popUpIsOpen }) => {
+const Modal = ({ children, setActive, active, popUpIsOpen, activeHide }) => {
   const clickOutSide = useRef();
 
   const handleClickOutside = (e) => {
@@ -24,8 +24,8 @@ const Modal = ({ children, setActive, active, popUpIsOpen }) => {
     <div className="picturs">
       {active && (
         <div className="modal-componant" id="modal-componant">
-          <div className="last-content" ref={clickOutSide}>
-            <div className="hide" onClick={closeModal}>
+          <div className={`${activeHide ? "last-content-comment-update" : "last-content"}`} ref={clickOutSide}>
+            <div className={`${activeHide ? "hide-comment-update" : "hide"}   `} onClick={closeModal}>
               ✕
             </div>
             <div className="styl">{children}</div>

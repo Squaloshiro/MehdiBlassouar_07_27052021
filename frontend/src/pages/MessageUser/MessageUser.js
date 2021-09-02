@@ -8,8 +8,7 @@ import PostComment from "../../componants/PostComment/PostComment";
 import Modal from "../../componants/Modal/Modal";
 import MessageUpdate from "../../componants/MessageUpdat/MessageUpdate";
 import "./messageuser.scss";
-const MessageUser = ({ id, myUserId, admin, isAdmin, avatar }) => {
-  const [messagesUser, setMessagesUser] = useState([]);
+const MessageUser = ({ id, messagesUser, setMessagesUser, myUserId, admin, isAdmin, avatar }) => {
   const [active, setActive] = useState(false);
   const [messageInModal, setMessageInModal] = useState(null);
   const [popUpIsOpen, setPopUpIsOpen] = useState(false);
@@ -30,7 +29,7 @@ const MessageUser = ({ id, myUserId, admin, isAdmin, avatar }) => {
       }
     };
     getMessageUserApi();
-  }, [id]);
+  }, [id, setMessagesUser]);
 
   const deleteOneComment = async () => {
     const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
@@ -108,7 +107,7 @@ const MessageUser = ({ id, myUserId, admin, isAdmin, avatar }) => {
       )}
       {messagesUser &&
         messagesUser.map((element) => {
-          const messageLikeByCurrentUser = element?.Likes?.filter((elt) => myUserId === elt.UserId);
+          const messageLikeByCurrentUser = element?.Likes?.filter((elt) => myUserId === elt.userId);
           return (
             <div key={element.id} className="card-position">
               <div className="f-card">
@@ -129,7 +128,7 @@ const MessageUser = ({ id, myUserId, admin, isAdmin, avatar }) => {
                     )}
                   </div>
                   <div className="co-logo-size">
-                    <img className="co-logo" alt="img" src={element.User.avatar} />
+                    <img height="100%" width="100%" className="co-logo" alt="img" src={element.User.avatar} />
                   </div>
                   <div className="co-name">
                     <div>{element.User.username}</div>
@@ -158,7 +157,9 @@ const MessageUser = ({ id, myUserId, admin, isAdmin, avatar }) => {
                 </div>
                 {element.attachment ? (
                   <div className="reference">
-                    <img alt="img" className="reference-thumb" src={element.attachment} />
+                    <div className="reference-thumb">
+                      <img alt="img" height="100%" width="100%" src={element.attachment} />
+                    </div>
                     <div className="reference-content">
                       <div className="reference-subtitle">{element.content}</div>
                       <div className="reference-font">Groupomania</div>

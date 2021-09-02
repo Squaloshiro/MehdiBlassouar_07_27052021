@@ -136,7 +136,7 @@ const MessageUserMe = ({ avatar, username, myUserId, admin, avatarAdmin }) => {
                     )}
                   </div>
                   <div className="co-logo-size">
-                    <img className="co-logo" alt="img" src={avatar} />
+                    <img height="100%" width="100%" className="co-logo" alt="img" src={avatar} />
                   </div>
                   <div className="co-name">
                     {username ? <div>{username}</div> : <div>{element.User.username}</div>}
@@ -164,7 +164,7 @@ const MessageUserMe = ({ avatar, username, myUserId, admin, avatarAdmin }) => {
                 </div>
                 {element.attachment ? (
                   <div className="reference">
-                    <img alt="img" className="reference-thumb" src={element.attachment} />
+                    <img height="100%" width="100%" alt="img" className="reference-thumb" src={element.attachment} />
                     <div className="reference-content">
                       <div className="reference-subtitle">{element.content}</div>
                       <div className="reference-font">Groupomania</div>

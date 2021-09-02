@@ -7,6 +7,14 @@
   width: 50%;
 }
 
+.styl {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
 .modal-componant {
   display: flex;
   position: fixed;
@@ -23,10 +31,16 @@
 
 .last-content {
   position: relative;
-  width: 680px;
+  width: 733px;
   height: 780px;
   padding: 24px;
   background-color: white;
+}
+.last-content-comment-update {
+  position: relative;
+  width: 733px;
+  height: 780px;
+  padding: 24px;
 }
 
 .modal-componant:target {
@@ -47,4 +61,65 @@
   text-align: center;
   color: black;
   text-decoration: none;
+}
+.hide-comment-update {
+  position: absolute;
+  top: 224px;
+  right: 12px;
+  width: 60px;
+  height: 60px;
+  padding: 0;
+  -webkit-appearance: none;
+  background-color: transparent;
+  border: none;
+  font-size: 25px;
+  text-align: center;
+  color: black;
+  text-decoration: none;
+}
+@media screen and (max-width: 660px) {
+  .hide-comment-update {
+    top: 237px;
+  }
+}
+@media screen and (max-width: 540px) {
+  .last-content {
+    height: 650px;
+  }
+  .last-content-comment-update {
+    height: 650px;
+  }
+  .hide-comment-update {
+    top: 183px;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .last-content {
+    height: 672px;
+  }
+  .last-content-comment-update {
+    height: 672px;
+  }
+  .hide-comment-update {
+    top: 203px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .last-content {
+    height: 600px;
+  }
+  .last-content-comment-update {
+    height: 600px;
+  }
+  .hide-comment-update {
+    top: 169px;
+  }
+}
+
+@media screen and (max-width: 209px) {
+  .hide-comment-update {
+    top: 161px;
+  }
 }
