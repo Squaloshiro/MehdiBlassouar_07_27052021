@@ -1,9 +1,15 @@
 import api from "../../config/api";
-
+import "./destroyMsg.scss";
 import Button from "../Button/Button";
 import { toastTrigger } from "../../helper/toast";
 
-const MessageDestroy = ({ messageId, deleteOneMessage }) => {
+const MessageDestroy = ({ messageId, setActive, deleteOneMessage, onClick, setPopUpIsOpen }) => {
+  const handleClose = () => {
+    setPopUpIsOpen(false);
+
+    onClick();
+  };
+
   const destroyMessage = async () => {
     try {
       const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
@@ -17,12 +23,21 @@ const MessageDestroy = ({ messageId, deleteOneMessage }) => {
         },
       });
       deleteOneMessage(messageId);
+      onClick();
       toastTrigger("success", "Publication supprimée");
     } catch (error) {
       toastTrigger("error", "une erreur est survenu");
     }
   };
 
-  return <Button onClick={destroyMessage} title="Supprimer" />;
+  return (
+    <div className="destroy-msg-flex">
+      <div>Voullez-vous supprimer votre message</div>
+      <div>
+        <Button onClick={destroyMessage} title="Supprimer" />
+        <Button onClick={handleClose} title="Annuler" />
+      </div>
+    </div>
+  );
 };
 export default MessageDestroy;

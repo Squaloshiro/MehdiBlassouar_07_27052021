@@ -10,12 +10,14 @@ import { toastTrigger } from "../../helper/toast";
 import PostComment from "../../componants/PostComment/PostComment";
 import Modal from "../../componants/Modal/Modal";
 import MessageUpdate from "../../componants/MessageUpdat/MessageUpdate";
+import MessageDestroy from "../../componants/DestroyMsg/DestroyMsg";
 const MessageUserMe = ({ avatar, username, myUserId, admin, avatarAdmin }) => {
   const [messagesUser, setMessagesUser] = useState([]);
-
+  const [activeHide, setActiveHide] = useState(false);
   const [active, setActive] = useState(false);
   const [messageInModal, setMessageInModal] = useState(null);
   const [popUpIsOpen, setPopUpIsOpen] = useState(false);
+  const [messageInModalDestroy, setMessageInModalDestroy] = useState(null);
 
   useEffect(() => {
     const getMessageUserApi = async () => {
@@ -83,6 +85,8 @@ const MessageUserMe = ({ avatar, username, myUserId, admin, avatarAdmin }) => {
 
   const closeMenu = (e) => {
     setActive(false);
+    setMessageInModal(null);
+    setMessageInModalDestroy(null);
   };
 
   const openPopUp = () => {
@@ -94,10 +98,17 @@ const MessageUserMe = ({ avatar, username, myUserId, admin, avatarAdmin }) => {
     setMessageInModal(message);
     setActive(true);
   };
+
+  const openModalDestroy = (messageId) => {
+    setActiveHide(true);
+    setMessageInModalDestroy(messageId);
+    setActive(true);
+  };
+
   return (
     <div className="size-box">
       {active && messageInModal && (
-        <Modal popUpIsOpen={popUpIsOpen} setActive={setActive} active={active}>
+        <Modal onClick={closeMenu} popUpIsOpen={popUpIsOpen} setActive={setActive} active={active}>
           <MessageUpdate
             setMessagesUser={setMessagesUser}
             setActive={setActive}
@@ -108,6 +119,24 @@ const MessageUserMe = ({ avatar, username, myUserId, admin, avatarAdmin }) => {
             openPopUp={openPopUp}
             onClick={closeMenu}
             myUserId={myUserId}
+          />
+        </Modal>
+      )}
+      {active && messageInModalDestroy && (
+        <Modal
+          onClick={closeMenu}
+          activeHide={activeHide}
+          popUpIsOpen={popUpIsOpen}
+          setActive={setActive}
+          active={active}
+        >
+          <MessageDestroy
+            onClick={closeMenu}
+            openPopUp={openPopUp}
+            setPopUpIsOpen={setPopUpIsOpen}
+            setActive={setActive}
+            deleteOneMessage={deleteOneMessage}
+            messageId={messageInModalDestroy}
           />
         </Modal>
       )}
@@ -122,6 +151,7 @@ const MessageUserMe = ({ avatar, username, myUserId, admin, avatarAdmin }) => {
                   <div className="options">
                     {(element.UserId === myUserId || admin === true) && (
                       <Menu
+                        openModalDestroy={openModalDestroy}
                         setMessagesUser={setMessagesUser}
                         openModal={openModal}
                         setActive={setActive}

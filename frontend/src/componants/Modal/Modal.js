@@ -2,12 +2,14 @@ import { useRef, useEffect } from "react";
 
 import "./modal.scss";
 
-const Modal = ({ children, setActive, active, popUpIsOpen, activeHide }) => {
+const Modal = ({ close, children, onClick, setActive, active, popUpIsOpen, activeHide }) => {
   const clickOutSide = useRef();
 
   const handleClickOutside = (e) => {
     if (!clickOutSide.current.contains(e.target)) {
       if (!popUpIsOpen) {
+        onClick();
+        //close();
         setActive(false);
       }
     }
@@ -17,6 +19,8 @@ const Modal = ({ children, setActive, active, popUpIsOpen, activeHide }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   });
   const closeModal = () => {
+    onClick();
+    //close();
     setActive(false);
   };
 

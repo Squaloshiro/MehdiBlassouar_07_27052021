@@ -3,11 +3,10 @@ import { useState } from "react";
 import "./menu.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import MessageDestroy from "../DestroyMsg/DestroyMsg";
 import { useRef, useEffect } from "react";
 
 import Button from "../Button/Button";
-const Menu = ({ element, messageId, deleteOneMessage, openModal, active }) => {
+const Menu = ({ element, messageId, openModalDestroy, deleteOneMessage, openModal, active }) => {
   const [menuActive, setMenuActive] = useState(false);
 
   const myRef = useRef();
@@ -42,7 +41,7 @@ const Menu = ({ element, messageId, deleteOneMessage, openModal, active }) => {
       {menuActive && (
         <div className="new-content">
           <Button title="Modifier" onClick={(e) => openModal(element)} />
-          <MessageDestroy deleteOneMessage={deleteOneMessage} messageId={messageId} />
+          <Button title="Supprimer" onClick={(e) => openModalDestroy(messageId)} />
         </div>
       )}
     </div>

@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 import { toastTrigger } from "../../helper/toast";
 import TextArea from "../TextArea/InputTextArea";
 
-const CommentUpdate = ({ setcomments, setActive, element, close }) => {
+const CommentUpdate = ({ setPopUpIsOpen, setcomments, setActive, element, close }) => {
   const [content, setContent] = useState(element.content);
   const [compteurContent, setCompteurContent] = useState(0);
   const [maxContent, setmaxContent] = useState("");
@@ -24,6 +24,11 @@ const CommentUpdate = ({ setcomments, setActive, element, close }) => {
       setmaxContent("");
     }
   }, [compteurContent]);
+
+  const handleClose = () => {
+    setPopUpIsOpen(false);
+    close();
+  };
 
   const onChangeContent = (e) => {
     setCompteurContent(e.target.value.length);
@@ -56,7 +61,7 @@ const CommentUpdate = ({ setcomments, setActive, element, close }) => {
 
   return (
     <div key={element.id} className="card-position-comment-2">
-      <div className="f-card">
+      <div onClose={handleClose} className="f-card">
         <div className="header">
           <div className="options"></div>
           <img className="co-logo-update" alt="img" src={element.User.avatar} />

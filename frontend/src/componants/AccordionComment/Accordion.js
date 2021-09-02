@@ -14,6 +14,8 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
   const [active, setActive] = useState(false);
   const history = useHistory();
   const [messageInModal, setMessageInModal] = useState(null);
+  const [messageInModalDestroy, setMessageInModalDestroy] = useState(null);
+  const [popUpIsOpen, setPopUpIsOpen] = useState(false);
   //const [comments, setcomments] = useState([]);
   const [activeHide, setActiveHide] = useState(false);
 
@@ -66,6 +68,12 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
       history.push("/connexion");
     }
   };
+  const openPopUp = () => {
+    if (!popUpIsOpen) {
+      setPopUpIsOpen(true);
+    }
+  };
+
   const openModal = (comment) => {
     setMessageInModal(comment);
     setActiveHide(true);
@@ -73,18 +81,56 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
   };
   const closeModal = () => {
     setActive(false);
+    setMessageInModal(null);
+    setMessageInModalDestroy(null);
+  };
+  const openModalDestroy = (messageId) => {
+    setMessageInModalDestroy(messageId);
+    setActiveHide(true);
+    setActive(true);
   };
   return (
     <div className={`accordion ${open && "active"}`}>
       {active && messageInModal && (
-        <Modal activeHide={activeHide} setActive={setActive} active={active}>
+        <Modal
+          popUpIsOpen={popUpIsOpen}
+          onClick={closeModal}
+          activeHide={activeHide}
+          setActive={setActive}
+          active={active}
+        >
           <CommentUpdate
+            setPopUpIsOpen={setPopUpIsOpen}
             setActiveHide={setActiveHide}
             close={closeModal}
             setcomments={setcomments}
             element={messageInModal}
             setActive={setActive}
             admin={admin}
+            openPopUp={openPopUp}
+          />
+        </Modal>
+      )}
+      {active && messageInModalDestroy && (
+        <Modal
+          popUpIsOpen={popUpIsOpen}
+          onClick={closeModal}
+          activeHide={activeHide}
+          setActive={setActive}
+          active={active}
+        >
+          <DestroyComment
+            setPopUpIsOpen={setPopUpIsOpen}
+            setActiveHide={setActiveHide}
+            setActive={setActive}
+            close={closeModal}
+            modifyComment={modifyComment}
+            newComments={newComments}
+            commentsId={messageInModalDestroy}
+            messageId={messageId}
+            deleteOneComment={deleteOneComment}
+            admin={admin}
+            openPopUp={openPopUp}
           />
         </Modal>
       )}
@@ -158,13 +204,10 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
                           </span>
                           <span>
                             {(element.UserId === myUserId || admin === true) && (
-                              <DestroyComment
-                                modifyComment={modifyComment}
-                                newComments={newComments}
-                                commentsId={element.id}
-                                messageId={messageId}
-                                deleteOneComment={deleteOneComment}
-                                admin={admin}
+                              <FontAwesomeIcon
+                                color="red"
+                                icon={["fas", "trash-alt"]}
+                                onClick={(e) => openModalDestroy(element.id)}
                               />
                             )}
                           </span>

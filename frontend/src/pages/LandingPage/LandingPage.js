@@ -10,13 +10,16 @@ import MessageImage from "../PostMessage/PostMessage";
 import PostComment from "../../componants/PostComment/PostComment";
 import Modal from "../../componants/Modal/Modal";
 import MessageUpdate from "../../componants/MessageUpdat/MessageUpdate";
+import MessageDestroy from "../../componants/DestroyMsg/DestroyMsg";
 const LandingPage = ({ setMessages, messages, myUserId, admin, avatar }) => {
   const history = useHistory();
 
   const [active, setActive] = useState(false);
-  const [messageInModal, setMessageInModal] = useState(null);
-  const [popUpIsOpen, setPopUpIsOpen] = useState(false);
 
+  const [messageInModal, setMessageInModal] = useState(null);
+  const [messageInModalDestroy, setMessageInModalDestroy] = useState(null);
+  const [popUpIsOpen, setPopUpIsOpen] = useState(false);
+  const [activeHide, setActiveHide] = useState(false);
   useEffect(() => {
     if (sessionStorage.getItem("groupomaniaToken")) {
       const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
@@ -41,12 +44,6 @@ const LandingPage = ({ setMessages, messages, myUserId, admin, avatar }) => {
   }, [history, setMessages]);
 
   const deleteOneComment = async (test) => {
-    //const idToRemove = commentId
-    /*const filteredMessages = messages.map((element) => {
-      const test = element.Comments;
-      // test.filter((item) => item.id !== idToRemove);
-      test.splice(0, 1);
-    });*/
     const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
     try {
       const response = await api({
@@ -111,6 +108,8 @@ const LandingPage = ({ setMessages, messages, myUserId, admin, avatar }) => {
 
   const closeMenu = (e) => {
     setActive(false);
+    setMessageInModal(null);
+    setMessageInModalDestroy(null);
   };
 
   const openPopUp = () => {
@@ -123,18 +122,44 @@ const LandingPage = ({ setMessages, messages, myUserId, admin, avatar }) => {
     setActive(true);
   };
 
+  const openModalDestroy = (messageId) => {
+    setActiveHide(true);
+    setMessageInModalDestroy(messageId);
+    setActive(true);
+  };
+
   return (
     <div className="flex-position">
       <MessageImage postMessage={postMessage} />
       {active && messageInModal && (
-        <Modal popUpIsOpen={popUpIsOpen} setActive={setActive} active={active}>
+        <Modal onClick={closeMenu} popUpIsOpen={popUpIsOpen} setActive={setActive} active={active}>
           <MessageUpdate
             setActive={setActive}
+            setMessageInModal={setMessageInModal}
             viewUpdateMessage={viewUpdateMessage}
             element={messageInModal}
             setPopUpIsOpen={setPopUpIsOpen}
             openPopUp={openPopUp}
             onClick={closeMenu}
+          />
+        </Modal>
+      )}
+      {active && messageInModalDestroy && (
+        <Modal
+          onClick={closeMenu}
+          activeHide={activeHide}
+          popUpIsOpen={popUpIsOpen}
+          setActive={setActive}
+          active={active}
+        >
+          <MessageDestroy
+            setMessageInModalDestroy={setMessageInModalDestroy}
+            onClick={closeMenu}
+            openPopUp={openPopUp}
+            setPopUpIsOpen={setPopUpIsOpen}
+            setActive={setActive}
+            deleteOneMessage={deleteOneMessage}
+            messageId={messageInModalDestroy}
           />
         </Modal>
       )}
@@ -151,6 +176,7 @@ const LandingPage = ({ setMessages, messages, myUserId, admin, avatar }) => {
                     {(element.UserId === myUserId || admin === true) && (
                       <Menu
                         openModal={openModal}
+                        openModalDestroy={openModalDestroy}
                         setActive={setActive}
                         active={active}
                         element={element}

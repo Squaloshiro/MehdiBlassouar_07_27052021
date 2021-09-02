@@ -64,7 +64,7 @@ const MessageUpdate = ({
   const updateMessage = async () => {
     const obj = { title, content };
     if (title === "" || content === "" || (title === element.title && content === element.content)) {
-      setActive(false);
+      onClick();
       toastTrigger("error", "une erreur est survenu");
       return;
     }
@@ -92,11 +92,11 @@ const MessageUpdate = ({
         } catch (error) {
           toastTrigger("error", "une erreur est survenu");
         }
-        setActive(false);
+        onClick();
         toastTrigger("success", "Publication modifiée");
       } else {
         viewUpdateMessage(response.data);
-        setActive(false);
+        onClick();
         toastTrigger("success", "Publication modifiée");
       }
     } catch (error) {
