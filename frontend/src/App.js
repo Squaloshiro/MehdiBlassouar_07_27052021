@@ -5,7 +5,7 @@ import Footer from "./componants/Footer/Footer";
 import SignIn from "./pages/SignIn/SignIn";
 import SignUp from "./pages/SignUp/SignUp";
 import LandingPage from "./pages/LandingPage/LandingPage";
-import MessageImage from "./pages/PostMessage/PostMessage";
+
 import "./componants/Header/header.scss";
 import PrivateRoute from "./pages/PrivateRoute/PrivateRoute";
 import api from "./config/api";
@@ -15,9 +15,11 @@ import ProfilUser from "./pages/ProfilUser/ProfiUser";
 import { ToastContainer } from "react-toastify";
 import { toastTrigger } from "./helper/toast";
 import AdminDashboard from "./pages/AdminDashBord/AdminDashboard";
+import Error404 from "./componants/Error404/Error404";
+import useLoggin from "./helper/useLoggin";
 
 const App = () => {
-  const [isLoggedin, setIsLoggedin] = useState(false);
+  const loggin = useLoggin();
   const [checkLogin, setCheckLogin] = useState(false);
   const [admin, setAdmin] = useState(false);
   const [myUserId, setMyUserId] = useState("");
@@ -30,7 +32,7 @@ const App = () => {
   useEffect(() => {
     const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
 
-    if (!isLoggedin && token) {
+    if (!loggin.isLoggedin && token) {
       const getUser = async () => {
         try {
           const response = await api({
@@ -51,7 +53,7 @@ const App = () => {
           setAdmin(response.data.isAdmin);
           setMyUserId(response.data.id);
           setAvatar(response.data.avatar);
-          setIsLoggedin(true);
+          loggin.onLoggin();
           setCheckLogin(true);
         } catch (error) {
           setCheckLogin(true);
@@ -61,7 +63,7 @@ const App = () => {
     } else {
       setCheckLogin(true);
     }
-  }, [isLoggedin]);
+  }, [loggin]);
 
   return (
     <Router>
@@ -75,8 +77,6 @@ const App = () => {
         myUserId={myUserId}
         setMyUserId={setMyUserId}
         setCheckLogin={setCheckLogin}
-        isLoggedin={isLoggedin}
-        setIsLoggedin={setIsLoggedin}
       />
 
       <Switch>
@@ -89,12 +89,9 @@ const App = () => {
             setMessages={setMessages}
             avatar={avatar}
             myUserId={myUserId}
-            isLoggedin={isLoggedin}
             admin={admin}
           />
         )}
-
-        {checkLogin && <PrivateRoute exact path="/post-message" componant={MessageImage} isLoggedin={isLoggedin} />}
 
         {checkLogin && (
           <PrivateRoute
@@ -105,8 +102,6 @@ const App = () => {
             componant={ProfilPage}
             setUserNewName={setUserNewName}
             setAvatar={setAvatar}
-            isLoggedin={isLoggedin}
-            setIsLoggedin={setIsLoggedin}
             myUserId={myUserId}
           />
         )}
@@ -119,9 +114,7 @@ const App = () => {
             setAvatar={setAvatar}
             setDataUser={setDataUser}
             setCheckLogin={setCheckLogin}
-            isLoggedin={isLoggedin}
             admin={admin}
-            setIsLoggedin={setIsLoggedin}
             myUserId={myUserId}
             setMessages={setMessages}
             profil={profil}
@@ -130,52 +123,42 @@ const App = () => {
         )}
 
         <Route
+          exact
           path="/connexion"
           render={() =>
-            isLoggedin ? (
+            loggin.isLoggedin ? (
               <Redirect to="/" />
             ) : (
-              <SignIn
-                setDataUser={setDataUser}
-                setAdmin={setAdmin}
-                setIsLoggedin={setIsLoggedin}
-                isLoggedin={isLoggedin}
-                setMyUserId={setMyUserId}
-              />
+              <SignIn setDataUser={setDataUser} setAdmin={setAdmin} setMyUserId={setMyUserId} />
             )
           }
         ></Route>
 
         <Route
+          exact
           path="/inscription"
           render={() =>
-            isLoggedin ? (
+            loggin.isLoggedin ? (
               <Redirect to="/" />
             ) : (
-              <SignUp
-                setDataUser={setDataUser}
-                setAdmin={setAdmin}
-                setIsLoggedin={setIsLoggedin}
-                setMyUserId={setMyUserId}
-              />
+              <SignUp setDataUser={setDataUser} setAdmin={setAdmin} setMyUserId={setMyUserId} />
             )
           }
         ></Route>
         <Route
+          exact
           path="/admin"
           render={() =>
-            isLoggedin ? (
+            loggin.isLoggedin ? (
               <Redirect to="/" />
             ) : (
-              <AdminDashboard
-                setDataUser={setDataUser}
-                setAdmin={setAdmin}
-                setIsLoggedin={setIsLoggedin}
-                setMyUserId={setMyUserId}
-              />
+              <AdminDashboard setDataUser={setDataUser} setAdmin={setAdmin} setMyUserId={setMyUserId} />
             )
           }
         ></Route>
+        <Route path="*">
+          <Error404 />
+        </Route>
       </Switch>
       <Footer />
       <ToastContainer />

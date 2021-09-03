@@ -8,9 +8,12 @@ const Modal = ({ close, children, onClick, setActive, active, popUpIsOpen, activ
   const handleClickOutside = (e) => {
     if (!clickOutSide.current.contains(e.target)) {
       if (!popUpIsOpen) {
-        onClick();
-        //close();
-        setActive(false);
+        if (onClick) {
+          setActive(false);
+          onClick();
+        } else {
+          setActive(false);
+        }
       }
     }
   };

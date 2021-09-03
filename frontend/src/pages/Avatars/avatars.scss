@@ -33,14 +33,10 @@
 }
 .avatar_card {
   height: auto;
-  width: 30%;
+  width: 23%;
   margin: 5px;
 }
-@media screen and (max-width: 377px) {
-  .avatar_card {
-    width: 25%;
-  }
-}
+
 @media screen and (min-width: 1700px) {
   body {
     font-size: 1em;
@@ -48,5 +44,21 @@
   .co-logo {
     width: 75%;
     height: 75%;
+  }
+}
+
+@media screen and (max-width: 577px) {
+  .avatar_card {
+    width: 22%;
+  }
+}
+@media screen and (max-width: 410px) {
+  .avatar_card {
+    width: 28%;
+  }
+}
+@media screen and (max-width: 377px) {
+  .avatar_card {
+    width: 25%;
   }
 }

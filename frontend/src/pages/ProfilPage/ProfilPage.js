@@ -10,8 +10,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from "../../componants/Button/Button";
 import TextArea from "../../componants/TextArea/InputTextArea";
 import { toastTrigger } from "../../helper/toast";
-
-const ProfilPage = ({ setIsLoggedin, admin, myUserId, setAvatar, setUserNewName, avatar }) => {
+import { useHistory } from "react-router";
+const ProfilPage = ({ admin, myUserId, setAvatar, setUserNewName, avatar }) => {
   const [profil, setProfil] = useState({});
   const [bio, setBio] = useState("");
   const [username, setUserName] = useState("");
@@ -24,7 +24,7 @@ const ProfilPage = ({ setIsLoggedin, admin, myUserId, setAvatar, setUserNewName,
   const [classNameBio, setClassNameBio] = useState("color-green");
   const clickOutSide = useRef();
   const clickOutSideBio = useRef();
-
+  const history = useHistory();
   const handleClickOutside = (e) => {
     if (!clickOutSide.current?.contains(e.target)) {
       setActiveUser(false);
@@ -92,12 +92,12 @@ const ProfilPage = ({ setIsLoggedin, admin, myUserId, setAvatar, setUserNewName,
           headers: { Authorization: `Bearer ${token}` },
         });
         setProfil(response.data);
-        try {
-        } catch (error) {}
-      } catch (error) {}
+      } catch (error) {
+        history.push("/connexion");
+      }
     };
     getProfilUser();
-  }, []);
+  }, [history]);
 
   const updateProfilBio = async () => {
     const obj = { bio };
@@ -162,8 +162,8 @@ const ProfilPage = ({ setIsLoggedin, admin, myUserId, setAvatar, setUserNewName,
               <Button onClick={openModal} title="selecte" />
 
               {active && (
-                <Modal setActive={setActive} active={active}>
-                  <Avatar profil={profil} close={closeModal} onChangeAvatar={onChangeAvatar} />
+                <Modal onClick={closeModal} setActive={setActive} active={active}>
+                  <Avatar profil={profil} onClick={closeModal} onChangeAvatar={onChangeAvatar} />
                 </Modal>
               )}
             </div>
@@ -242,7 +242,7 @@ const ProfilPage = ({ setIsLoggedin, admin, myUserId, setAvatar, setUserNewName,
               <UpdadePassword />
             </div>
             <div className="drop-account">
-              <DropAccount userId={profil.id} setIsLoggedin={setIsLoggedin} />
+              <DropAccount userId={profil.id} />
             </div>
           </div>
         </div>

@@ -6,12 +6,12 @@ import Button from "../Button/Button";
 import { useHistory, useLocation } from "react-router-dom";
 import SearchBar from "../SearchBar/SearchBar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
+import useLoggin from "../../helper/useLoggin";
 const Header = ({
   setAvatar,
-  isLoggedin,
+
   myUserId,
-  setIsLoggedin,
+
   setCheckLogin,
   setMyUserId,
   avatar,
@@ -21,6 +21,7 @@ const Header = ({
   dataUser,
 }) => {
   const history = useHistory();
+  const loggin = useLoggin();
   const home = <FontAwesomeIcon icon={["fas", "home"]} />;
   const user = <FontAwesomeIcon icon={["fas", "user"]} />;
   const logOut = <FontAwesomeIcon icon={["fas", "sign-out-alt"]} />;
@@ -58,7 +59,7 @@ const Header = ({
   }, [location.pathname]);
 
   const onLogout = () => {
-    setIsLoggedin(false);
+    loggin.onLoggOut();
     setCheckLogin(false);
     sessionStorage.removeItem("groupomaniaToken");
     setMyUserId("");
@@ -84,7 +85,7 @@ const Header = ({
         />
       </div>
 
-      {isLoggedin && (
+      {loggin.isLoggedin && (
         <SearchBar
           className="search-bar-header"
           setDataUser={setDataUser}
@@ -95,8 +96,8 @@ const Header = ({
         />
       )}
       <div className="button_position">
-        {isLoggedin ? (
-          isLoggedin && !profilPageIsActif ? (
+        {loggin.isLoggedin ? (
+          loggin.isLoggedin && !profilPageIsActif ? (
             <Button onClick={() => history.push("/profil")} title={user} />
           ) : (
             <Button onClick={() => history.push("/")} title={home} />
@@ -104,8 +105,8 @@ const Header = ({
         ) : (
           <></>
         )}
-        {isLoggedin && userProfilPageIsActif && <Button onClick={() => history.push("/profil")} title={user} />}
-        {isLoggedin ? (
+        {loggin.isLoggedin && userProfilPageIsActif && <Button onClick={() => history.push("/profil")} title={user} />}
+        {loggin.isLoggedin ? (
           <Button onClick={onLogout} title={logOut} />
         ) : !signUpPage ? (
           <Button onClick={() => history.push("/inscription")} title="Inscription" />

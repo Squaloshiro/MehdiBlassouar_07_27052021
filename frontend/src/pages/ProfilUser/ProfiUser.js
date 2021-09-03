@@ -12,7 +12,7 @@ const ProfilUser = ({
   setMessages,
   myUserId,
   admin,
-  setIsLoggedin,
+
   setCheckLogin,
   setDataUser,
   setAvatar,
@@ -97,7 +97,6 @@ const ProfilUser = ({
                         setDataUser={setDataUser}
                         admin={admin}
                         setCheckLogin={setCheckLogin}
-                        setIsLoggedin={setIsLoggedin}
                         userId={location.state.id}
                         title="Suprimer le compte"
                       />

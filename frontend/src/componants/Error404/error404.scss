@@ -1,0 +1,18 @@
+.eror-position {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 3000;
+}
+
+.button-error {
+  position: absolute;
+  z-index: 4000;
+}
+.error-flex {
+  display: flex;
+
+  justify-content: center;
+
+  border: black 1px solid;
+}

@@ -1,9 +1,8 @@
 import { Route, Redirect } from "react-router-dom";
-
+import useLoggin from "../../helper/useLoggin";
 const PrivateRoute = ({
   componant: Componant,
-  isLoggedin,
-  setIsLoggedin,
+
   myUserId,
   admin,
   avatar,
@@ -17,11 +16,13 @@ const PrivateRoute = ({
   setProfil,
   ...rest
 }) => {
+  const loggin = useLoggin();
+
   return (
     <Route
       {...rest}
       render={(props) =>
-        isLoggedin ? (
+        loggin.isLoggedin ? (
           <Componant
             {...props}
             messages={messages}
@@ -31,7 +32,6 @@ const PrivateRoute = ({
             setAvatar={setAvatar}
             setCheckLogin={setCheckLogin}
             myUserId={myUserId}
-            setIsLoggedin={setIsLoggedin}
             admin={admin}
             avatar={avatar}
             profil={profil}

@@ -20,12 +20,12 @@ const Card = ({ number, selectCardIndex }) => {
       name={images[`${number}.jpg`].default}
       src={images[`${number}.jpg`].default}
       alt={number}
-      height={150}
-      width={150}
+      height={100}
+      width={100}
     />
   );
 };
-const Avatar = ({ onChangeAvatar, close, profil }) => {
+const Avatar = ({ onChangeAvatar, onClick, profil }) => {
   const [avatar, setAvatars] = useState("");
 
   const [selectCardIndex, setSelectCardIndex] = useState(null);
@@ -49,7 +49,7 @@ const Avatar = ({ onChangeAvatar, close, profil }) => {
       });
 
       onChangeAvatar(response.data);
-      close();
+      onClick();
     } catch (error) {
       console.log("------------------------------------");
       console.log(error);
