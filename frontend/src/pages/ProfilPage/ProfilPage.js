@@ -11,17 +11,20 @@ import Button from "../../componants/Button/Button";
 import TextArea from "../../componants/TextArea/InputTextArea";
 import { toastTrigger } from "../../helper/toast";
 import { useHistory } from "react-router";
-const ProfilPage = ({ admin, myUserId, setAvatar, setUserNewName, avatar }) => {
+const ProfilPage = ({ admin, isLoggedin, setIsLoggedin, myUserId, setDataUser, setAvatar, setUserNewName, avatar }) => {
   const [profil, setProfil] = useState({});
   const [bio, setBio] = useState("");
+
   const [username, setUserName] = useState("");
   const [active, setActive] = useState(false);
   const [activeUser, setActiveUser] = useState(false);
   const [activeBio, setActiveBio] = useState(false);
   const [activeError, setActiveError] = useState("");
   const [compteurBio, setCompteurBio] = useState(0);
+  const [compteurUserName, setCompteurUserName] = useState(0);
   const [maxBio, setmaxBio] = useState("");
   const [classNameBio, setClassNameBio] = useState("color-green");
+  const [classNameUserName, setClassNameUserName] = useState("color-green-username");
   const clickOutSide = useRef();
   const clickOutSideBio = useRef();
   const history = useHistory();
@@ -29,6 +32,8 @@ const ProfilPage = ({ admin, myUserId, setAvatar, setUserNewName, avatar }) => {
     if (!clickOutSide.current?.contains(e.target)) {
       setActiveUser(false);
       setActiveError("");
+      setUserName("");
+      setCompteurUserName(0);
     }
   };
   const handleClickOutsideBio = (e) => {
@@ -45,7 +50,12 @@ const ProfilPage = ({ admin, myUserId, setAvatar, setUserNewName, avatar }) => {
       setClassNameBio("color-green");
       setmaxBio("");
     }
-  }, [compteurBio]);
+    if (compteurUserName < 4 || compteurUserName > 12) {
+      setClassNameUserName("color_red_username");
+    } else {
+      setClassNameUserName("color-green_username");
+    }
+  }, [compteurBio, compteurUserName]);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -63,6 +73,7 @@ const ProfilPage = ({ admin, myUserId, setAvatar, setUserNewName, avatar }) => {
   };
   const onChangeUserName = (e) => {
     setActiveError("");
+    setCompteurUserName(e.target.value.length);
     setUserName(e.target.value);
   };
   const onChangeBio = (e) => {
@@ -91,6 +102,7 @@ const ProfilPage = ({ admin, myUserId, setAvatar, setUserNewName, avatar }) => {
           url: "/users/me",
           headers: { Authorization: `Bearer ${token}` },
         });
+
         setProfil(response.data);
       } catch (error) {
         history.push("/connexion");
@@ -129,7 +141,14 @@ const ProfilPage = ({ admin, myUserId, setAvatar, setUserNewName, avatar }) => {
     const obj = { username };
     if (username === "") {
       setActiveUser(false);
+      setUserName("");
+      setCompteurUserName(0);
 
+      return;
+    }
+
+    if (compteurUserName < 4 || compteurUserName > 12) {
+      toastTrigger("error", "une erreur est survenu");
       return;
     }
     try {
@@ -140,10 +159,21 @@ const ProfilPage = ({ admin, myUserId, setAvatar, setUserNewName, avatar }) => {
         data: obj,
         headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
       });
-
+      try {
+        const response = await api({
+          method: "get",
+          url: "/users/all",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setDataUser(response.data);
+      } catch (error) {
+        toastTrigger("error", "une erreur est survenu");
+      }
       setUserName("");
       setActiveUser(false);
       setProfil(response.data);
+      setUserName("");
+      setCompteurUserName(0);
       setUserNewName(response.data.username);
     } catch (error) {
       setUserName("");
@@ -170,7 +200,7 @@ const ProfilPage = ({ admin, myUserId, setAvatar, setUserNewName, avatar }) => {
             <div className="identity-user">
               {!activeUser ? (
                 <div className="bor-username">
-                  <div>{profil.username}</div>
+                  <div className="usernam-page-profil">{profil.username}</div>
                   <div className="pen">
                     <FontAwesomeIcon onClick={clickModifUser} color="blue" icon={["fas", "pen"]} />
                   </div>
@@ -178,13 +208,18 @@ const ProfilPage = ({ admin, myUserId, setAvatar, setUserNewName, avatar }) => {
               ) : (
                 <div className="error-position">
                   <div ref={clickOutSide} className="bor-username">
-                    <TextArea
-                      variant="outlined"
-                      rows={1}
-                      onChange={onChangeUserName}
-                      value={username}
-                      label={profil.username}
-                    />
+                    <div className="username-positon-update">
+                      <TextArea
+                        variant="outlined"
+                        rows={1}
+                        onChange={onChangeUserName}
+                        value={username}
+                        label={profil.username}
+                      />
+                      {compteurUserName > 0 && (
+                        <div className={classNameUserName}>Limite de caractère : {compteurUserName}/12</div>
+                      )}
+                    </div>
 
                     <Button onClick={updateProfilUsername} color="primary" title="Modifier" />
                   </div>
@@ -242,7 +277,7 @@ const ProfilPage = ({ admin, myUserId, setAvatar, setUserNewName, avatar }) => {
               <UpdadePassword />
             </div>
             <div className="drop-account">
-              <DropAccount userId={profil.id} />
+              <DropAccount isLoggedin={isLoggedin} setIsLoggedin={setIsLoggedin} userId={profil.id} />
             </div>
           </div>
         </div>

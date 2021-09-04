@@ -5,14 +5,13 @@ import api from "../../config/api";
 import { useHistory } from "react-router";
 import { toastTrigger } from "../../helper/toast";
 import "./signin.scss";
-import useLoggin from "../../helper/useLoggin";
 
-const SignIn = ({ setDataUser, setMyUserId, setAdmin }) => {
+const SignIn = ({ setDataUser, setIsLoggedin, isLoggedin, setMyUserId, setAdmin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [valueError, setValueError] = useState("");
   const history = useHistory();
-  const loggin = useLoggin();
+
   const onChangeEmail = (e) => {
     setEmail(e.target.value);
     setValueError("");
@@ -32,7 +31,7 @@ const SignIn = ({ setDataUser, setMyUserId, setAdmin }) => {
       });
       token = response.data.token;
       sessionStorage.setItem("groupomaniaToken", response.data.token);
-      loggin.onLoggin();
+      setIsLoggedin(true);
 
       try {
         const response = await api({

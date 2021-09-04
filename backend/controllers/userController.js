@@ -895,6 +895,10 @@ module.exports = {
 
     let { username } = req.body;
     username = username.trim();
+    if (username.length >= 13 || username.length <= 3) {
+      return res.status(400).json({ error: "the nickname must be between 4 and 12 characters" });
+    }
+
     asyncLib.waterfall(
       [
         function (done) {

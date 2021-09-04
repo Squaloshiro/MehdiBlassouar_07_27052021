@@ -2,6 +2,14 @@
   width: 100%;
   margin-top: 13em;
 }
+.color_red_username {
+  color: red;
+  font-size: 16px;
+}
+.color-green_username {
+  color: green;
+  font-size: 16px;
+}
 .error-position {
   display: flex;
   flex-direction: column;
@@ -23,7 +31,9 @@
   background-color: white;
   border-radius: 30px;
 }
-
+.usernam-page-profil {
+  word-break: break-all;
+}
 .flex-msg {
   width: 100%;
 }
@@ -58,8 +68,6 @@
 .identity-user {
   width: 50%;
 }
-.pen {
-}
 
 .size-picturs {
   width: 30%;
@@ -67,6 +75,7 @@
   border: gray 1px solid;
   border-bottom: none;
   border-radius: 50%;
+  cursor: pointer;
 }
 
 .size-police {

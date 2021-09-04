@@ -1,3 +1,81 @@
+html {
+  --primary: #9356dc;
+  --secondary: #ff79da;
+  --tertiary: #99e2d0;
+}
+.loadcontent {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  background-color: rgb(235, 235, 235);
+  animation-name: loader1;
+  opacity: 0;
+  animation: loader1 3s linear;
+  animation-fill-mode: none;
+}
+
+.imgloader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 3em;
+}
+
+.load {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  background: linear-Gradient(var(--secondary), var(--primary));
+  background: linear-gradient(var(--secondary), var(--primary));
+  background: -moz-linear-gradient(bottom, var(--secondary), var(--primary));
+  background: -o-linear-gradient(bottom, var(--secondary), var(--primary));
+  background: linear-Gradient(to bottom, var(--secondary), var(--primary));
+  border-radius: 50%;
+  box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.6);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(0deg);
+  animation: loader 3s linear infinite;
+}
+.logoSpinner {
+  display: flex;
+  background-color: rgb(235, 235, 235);
+  width: 90%;
+  height: 90%;
+  border-radius: 50%;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+@keyframes loader {
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes loader1 {
+  1% {
+    opacity: 1;
+    z-index: 5000;
+  }
+
+  99% {
+    opacity: 1;
+    z-index: 5000;
+  }
+
+  /*100% {
+      opacity: 0;
+      z-index: 999;
+  }*/
+}
+
 .eror-position {
   position: absolute;
   height: 100%;

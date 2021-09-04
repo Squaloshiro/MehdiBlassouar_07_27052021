@@ -96,7 +96,10 @@
 .size-police-photo-2 {
   font-size: 1.5em;
 }
-
+.username-positon-update {
+  display: flex;
+  flex-direction: column;
+}
 .email-2 {
   margin-top: 1em;
   margin-bottom: 1em;
@@ -104,6 +107,7 @@
 
 .margin-bio-2 {
   margin-bottom: 1em;
+  word-break: break-all;
 }
 @media screen and (max-width: 800px) {
   .size-profil-2 {

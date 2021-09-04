@@ -126,6 +126,7 @@ const MessageImage = ({ postMessage }) => {
   return (
     <div className="post-cadre">
       <div className="post">
+        <div>Exprimez-vous !</div>
         <Input onChange={onChangeTitle} label="Titre" value={title} />
         {compteurTitle > 0 && (
           <div className={classNameTitle}>

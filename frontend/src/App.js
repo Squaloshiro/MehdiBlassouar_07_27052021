@@ -16,10 +16,8 @@ import { ToastContainer } from "react-toastify";
 import { toastTrigger } from "./helper/toast";
 import AdminDashboard from "./pages/AdminDashBord/AdminDashboard";
 import Error404 from "./componants/Error404/Error404";
-import useLoggin from "./helper/useLoggin";
 
 const App = () => {
-  const loggin = useLoggin();
   const [checkLogin, setCheckLogin] = useState(false);
   const [admin, setAdmin] = useState(false);
   const [myUserId, setMyUserId] = useState("");
@@ -28,11 +26,11 @@ const App = () => {
   const [dataUser, setDataUser] = useState([]);
   const [messages, setMessages] = useState([]);
   const [profil, setProfil] = useState([]);
-
+  const [isLoggedin, setIsLoggedin] = useState(false);
   useEffect(() => {
     const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
 
-    if (!loggin.isLoggedin && token) {
+    if (!isLoggedin && token) {
       const getUser = async () => {
         try {
           const response = await api({
@@ -53,7 +51,7 @@ const App = () => {
           setAdmin(response.data.isAdmin);
           setMyUserId(response.data.id);
           setAvatar(response.data.avatar);
-          loggin.onLoggin();
+          setIsLoggedin(true);
           setCheckLogin(true);
         } catch (error) {
           setCheckLogin(true);
@@ -63,11 +61,13 @@ const App = () => {
     } else {
       setCheckLogin(true);
     }
-  }, [loggin]);
+  }, [isLoggedin]);
 
   return (
     <Router>
       <Header
+        isLoggedin={isLoggedin}
+        setIsLoggedin={setIsLoggedin}
         setAvatar={setAvatar}
         dataUser={dataUser}
         setDataUser={setDataUser}
@@ -85,6 +85,9 @@ const App = () => {
             exact
             path="/"
             componant={LandingPage}
+            isLoggedin={isLoggedin}
+            setIsLoggedin={setIsLoggedin}
+            setDataUser={setDataUser}
             messages={messages}
             setMessages={setMessages}
             avatar={avatar}
@@ -98,7 +101,10 @@ const App = () => {
             exact
             path="/profil"
             avatar={avatar}
+            isLoggedin={isLoggedin}
+            setIsLoggedin={setIsLoggedin}
             admin={admin}
+            setDataUser={setDataUser}
             componant={ProfilPage}
             setUserNewName={setUserNewName}
             setAvatar={setAvatar}
@@ -110,6 +116,8 @@ const App = () => {
             exact
             path="/users/profils"
             componant={ProfilUser}
+            isLoggedin={isLoggedin}
+            setIsLoggedin={setIsLoggedin}
             avatar={avatar}
             setAvatar={setAvatar}
             setDataUser={setDataUser}
@@ -126,10 +134,16 @@ const App = () => {
           exact
           path="/connexion"
           render={() =>
-            loggin.isLoggedin ? (
+            isLoggedin ? (
               <Redirect to="/" />
             ) : (
-              <SignIn setDataUser={setDataUser} setAdmin={setAdmin} setMyUserId={setMyUserId} />
+              <SignIn
+                isLoggedin={isLoggedin}
+                setIsLoggedin={setIsLoggedin}
+                setDataUser={setDataUser}
+                setAdmin={setAdmin}
+                setMyUserId={setMyUserId}
+              />
             )
           }
         ></Route>
@@ -138,10 +152,16 @@ const App = () => {
           exact
           path="/inscription"
           render={() =>
-            loggin.isLoggedin ? (
+            isLoggedin ? (
               <Redirect to="/" />
             ) : (
-              <SignUp setDataUser={setDataUser} setAdmin={setAdmin} setMyUserId={setMyUserId} />
+              <SignUp
+                isLoggedin={isLoggedin}
+                setIsLoggedin={setIsLoggedin}
+                setDataUser={setDataUser}
+                setAdmin={setAdmin}
+                setMyUserId={setMyUserId}
+              />
             )
           }
         ></Route>
@@ -149,10 +169,16 @@ const App = () => {
           exact
           path="/admin"
           render={() =>
-            loggin.isLoggedin ? (
+            isLoggedin ? (
               <Redirect to="/" />
             ) : (
-              <AdminDashboard setDataUser={setDataUser} setAdmin={setAdmin} setMyUserId={setMyUserId} />
+              <AdminDashboard
+                isLoggedin={isLoggedin}
+                setIsLoggedin={setIsLoggedin}
+                setDataUser={setDataUser}
+                setAdmin={setAdmin}
+                setMyUserId={setMyUserId}
+              />
             )
           }
         ></Route>

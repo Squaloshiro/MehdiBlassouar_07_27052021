@@ -5,8 +5,8 @@ import api from "../../config/api";
 import { useHistory } from "react-router";
 import { toastTrigger } from "../../helper/toast";
 import "./admindashboard.scss";
-import useLoggin from "../../helper/useLoggin";
-const AdminDashboard = ({ setMyUserId, setDataUser, setAdmin }) => {
+
+const AdminDashboard = ({ setMyUserId, isLoggedin, setIsLoggedin, setDataUser, setAdmin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
@@ -30,7 +30,7 @@ const AdminDashboard = ({ setMyUserId, setDataUser, setAdmin }) => {
   const history = useHistory();
   const [verifGroupo, setVerifGroupo] = useState("");
   const [classNameGroupo, setClassNameGroupo] = useState("");
-  const loggin = useLoggin();
+
   const handleClickOutside = (e) => {
     if (!clickOutSide.current?.contains(e.target)) {
       setActiveUppercase(false);
@@ -186,7 +186,7 @@ const AdminDashboard = ({ setMyUserId, setDataUser, setAdmin }) => {
       });
       token = response.data.token;
       sessionStorage.setItem("groupomaniaToken", response.data.token);
-      loggin.onLoggin();
+      setIsLoggedin(true);
       try {
         const response = await api({
           url: "/users/me",

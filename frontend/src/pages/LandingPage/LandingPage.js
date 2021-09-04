@@ -31,6 +31,7 @@ const LandingPage = ({ setMessages, messages, myUserId, admin, avatar }) => {
             url: "/messages",
             headers: { Authorization: `Bearer ${token}` },
           });
+
           setMessages(response.data);
         } catch (error) {
           //rajouter un button en cas d'echec de chargement des messages

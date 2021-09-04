@@ -4,10 +4,10 @@ import { useState } from "react";
 import Button from "../Button/Button";
 import { toastTrigger } from "../../helper/toast";
 import "./dropaccount.scss";
-import useLoggin from "../../helper/useLoggin";
-const DropAccount = ({ userId, admin, setDataUser }) => {
+
+const DropAccount = ({ userId, isLoggedin, admin, setIsLoggedin, setDataUser }) => {
   const history = useHistory();
-  const loggin = useLoggin();
+
   const [active, setActive] = useState(false);
 
   const handleActive = () => {
@@ -44,7 +44,7 @@ const DropAccount = ({ userId, admin, setDataUser }) => {
       } else {
         sessionStorage.removeItem("groupomaniaToken");
         history.push("/connexion");
-        loggin.onLoggOut();
+        setIsLoggedin(false);
         toastTrigger("success", "Compte supprimé");
       }
     } catch (error) {

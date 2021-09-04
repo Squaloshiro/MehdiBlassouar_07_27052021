@@ -12,7 +12,8 @@ const ProfilUser = ({
   setMessages,
   myUserId,
   admin,
-
+  isLoggedin,
+  setIsLoggedin,
   setCheckLogin,
   setDataUser,
   setAvatar,
@@ -94,6 +95,8 @@ const ProfilUser = ({
                     </div>
                     <div className="admin-control-drop">
                       <DropAccount
+                        isLoggedin={isLoggedin}
+                        setIsLoggedin={setIsLoggedin}
                         setDataUser={setDataUser}
                         admin={admin}
                         setCheckLogin={setCheckLogin}

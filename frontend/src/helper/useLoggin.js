@@ -1,7 +1,10 @@
 import createPersistedState from "use-persisted-state";
 const useLogginState = createPersistedState(false);
 
-const useLoggin = () => {
+const useLoggin = (test) => {
+  console.log("-------------test-----------------------");
+  console.log(test);
+  console.log("------------------------------------");
   const [isLoggedin, setIsLoggedin] = useLogginState("");
 
   return {

@@ -1,12 +1,30 @@
+import { useState, useEffect } from "react";
 import { useHistory } from "react-router";
 import "./error404.scss";
 import error404 from "../../assets/erreur-page-404.png";
 import Button from "../Button/Button";
-
+import logo from "../../assets/logos/mon_icon_4.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const Error404 = () => {
   const history = useHistory();
-
-  return (
+  const [show404, setShow404] = useState(true);
+  useEffect(() => {
+    setTimeout(() => {
+      setShow404(false);
+    }, 3000);
+  }, [show404]);
+  return show404 ? (
+    <div className="loadcontent">
+      <div className="imgloader">
+        <img src={logo} alt="images du logo de oh my food" />
+      </div>
+      <div className="load">
+        <div className="logoSpinner">
+          <FontAwesomeIcon color="black" icon={["fas", "spinner"]} size="3x" />
+        </div>
+      </div>
+    </div>
+  ) : (
     <div>
       <div className="eror-position">
         <img height="100%" width="100%" alt="img" src={error404} />
