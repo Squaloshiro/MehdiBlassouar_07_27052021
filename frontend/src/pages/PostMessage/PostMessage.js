@@ -1,7 +1,7 @@
 import Input from "../../componants/Input/Input";
 import InputFile from "../../componants/InputFile/InputFile";
 import Button from "../../componants/Button/Button";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import api from "../../config/api";
 import { useHistory } from "react-router";
 import FormData from "form-data";
@@ -22,6 +22,7 @@ const MessageImage = ({ postMessage }) => {
   const [classNameContent, setClassNameContent] = useState("color-green");
   const [maxTitle, setmaxTitle] = useState("");
   const [maxContent, setmaxContent] = useState("");
+  const [activeImage, setActiveImage] = useState(false);
   const send = <FontAwesomeIcon icon={["fas", "paper-plane"]} />;
 
   useEffect(() => {
@@ -39,10 +40,36 @@ const MessageImage = ({ postMessage }) => {
       setClassNameContent("color-green");
       setmaxContent("");
     }
-  }, [compteurTitle, compteurContent]);
+    if (file === undefined) {
+      setActiveImage(false);
+      toastTrigger("success", "Image retirée");
+    }
+  }, [compteurTitle, compteurContent, file]);
+
+  const myRef = useRef();
+
+  const handleClickOutside = (e) => {
+    if (!myRef.current.contains(e.target)) {
+      if (activeImage || compteurContent || compteurTitle) {
+        setActiveImage(false);
+        setFile("");
+        setContent("");
+        setTitle("");
+        setCompteurTitle(0);
+        setCompteurContent(0);
+      }
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  });
 
   const handleOnUploadFile = (e) => {
     setFile(e.target.files[0]);
+
+    setActiveImage(true);
   };
 
   const onChangeTitle = (e) => {
@@ -65,11 +92,11 @@ const MessageImage = ({ postMessage }) => {
     formData.append("image", file);
     formData.append("message", json);
     if (compteurTitle > 255) {
-      toastTrigger("error", "une erreur est survenu");
+      toastTrigger("error", "une erreur est survenue");
       return;
     }
     if (compteurContent > 2550) {
-      toastTrigger("error", "une erreur est survenu");
+      toastTrigger("error", "une erreur est survenue");
       return;
     } else {
       if (title && content) {
@@ -93,6 +120,7 @@ const MessageImage = ({ postMessage }) => {
             setContent("");
             setCompteurContent(0);
             setFile("");
+            setActiveImage(false);
 
             setTheInputKey(Math.random().toString(36));
             history.push("/");
@@ -114,17 +142,17 @@ const MessageImage = ({ postMessage }) => {
             toastTrigger("success", "Publication postée");
           }
         } catch (error) {
-          toastTrigger("error", "une erreur est survenu");
+          toastTrigger("error", "une erreur est survenue");
         }
       } else {
-        toastTrigger("error", "une erreur est survenu");
+        toastTrigger("error", "une erreur est survenue");
         return;
       }
     }
   };
 
   return (
-    <div className="post-cadre">
+    <div ref={myRef} className="post-cadre">
       <div className="post">
         <div>Exprimez-vous !</div>
         <Input onChange={onChangeTitle} label="Titre" value={title} />
@@ -154,6 +182,7 @@ const MessageImage = ({ postMessage }) => {
           <InputFile onChange={handleOnUploadFile} theInputKey={theInputKey} />
           <Button size="small" onClick={onSubmitMessageImg} title={send} />
         </div>
+        {activeImage && <div className="img-file">{file?.name}</div>}
       </div>
     </div>
   );

@@ -174,7 +174,7 @@ const UpdadePassword = () => {
       setActive(false);
       toastTrigger("success", "Mots de passe modifié");
     } catch (error) {
-      toastTrigger("error", "une erreur est survenu");
+      toastTrigger("error", "une erreur est survenue");
       setValueError(error.response.data.error);
     }
   };

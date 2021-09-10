@@ -11,34 +11,75 @@ import Button from "../../componants/Button/Button";
 import TextArea from "../../componants/TextArea/InputTextArea";
 import { toastTrigger } from "../../helper/toast";
 import { useHistory } from "react-router";
-const ProfilPage = ({ admin, isLoggedin, setIsLoggedin, myUserId, setDataUser, setAvatar, setUserNewName, avatar }) => {
+const ProfilPage = ({
+  admin,
+  isLoggedin,
+  setIsLoggedin,
+  myUserId,
+  setDataUser,
+  setAvatar,
+  setFirstNewName,
+  setLastNewName,
+  setNewEmail,
+  avatar,
+}) => {
   const [profil, setProfil] = useState({});
   const [bio, setBio] = useState("");
 
-  const [username, setUserName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
   const [active, setActive] = useState(false);
   const [activeUser, setActiveUser] = useState(false);
+  const [activeLastName, setActiveLastName] = useState(false);
+  const [activeEmail, setActiveEmail] = useState(false);
   const [activeBio, setActiveBio] = useState(false);
   const [activeError, setActiveError] = useState("");
   const [compteurBio, setCompteurBio] = useState(0);
-  const [compteurUserName, setCompteurUserName] = useState(0);
+  const [compteurFirstName, setCompteurFirstName] = useState(0);
+  const [compteurLastName, setCompteurLastName] = useState(0);
   const [maxBio, setmaxBio] = useState("");
   const [classNameBio, setClassNameBio] = useState("color-green");
-  const [classNameUserName, setClassNameUserName] = useState("color-green-username");
+  const [classNameFirstName, setClassNameFirstName] = useState("color-green-username");
+  const [classNameLastName, setClassNameLastName] = useState("color-green-username");
+  const [verifGroupo, setVerifGroupo] = useState("");
+  const [classNameGroupo, setClassNameGroupo] = useState("");
   const clickOutSide = useRef();
+  const clickOutSideLastName = useRef();
+  const clickOutSideEmail = useRef();
   const clickOutSideBio = useRef();
   const history = useHistory();
   const handleClickOutside = (e) => {
     if (!clickOutSide.current?.contains(e.target)) {
       setActiveUser(false);
       setActiveError("");
-      setUserName("");
-      setCompteurUserName(0);
+      setFirstName("");
+      setCompteurFirstName(0);
     }
   };
+  const handleClickOutsideLastName = (e) => {
+    if (!clickOutSideLastName.current?.contains(e.target)) {
+      setActiveLastName(false);
+      setActiveError("");
+      setLastName("");
+      setCompteurLastName(0);
+    }
+  };
+  const handleClickOutsideEmail = (e) => {
+    if (!clickOutSideEmail.current?.contains(e.target)) {
+      setActiveEmail(false);
+      setActiveError("");
+      setEmail("");
+
+      setVerifGroupo("");
+    }
+  };
+
   const handleClickOutsideBio = (e) => {
     if (!clickOutSideBio.current?.contains(e.target)) {
       setActiveBio(false);
+      setCompteurBio(0);
+      setBio("");
     }
   };
 
@@ -50,18 +91,40 @@ const ProfilPage = ({ admin, isLoggedin, setIsLoggedin, myUserId, setDataUser, s
       setClassNameBio("color-green");
       setmaxBio("");
     }
-    if (compteurUserName < 4 || compteurUserName > 12) {
-      setClassNameUserName("color_red_username");
+    if (compteurFirstName < 4 || compteurFirstName > 12) {
+      setClassNameFirstName("color_red_username");
     } else {
-      setClassNameUserName("color-green_username");
+      setClassNameFirstName("color-green_username");
     }
-  }, [compteurBio, compteurUserName]);
+    if (compteurLastName < 4 || compteurLastName > 12) {
+      setClassNameLastName("color_red_username");
+    } else {
+      setClassNameLastName("color-green_username");
+    }
+
+    if (verifGroupo) {
+      let matchGroupo = verifGroupo.split("@");
+
+      if (matchGroupo[1] !== "groupomania.com") {
+        setClassNameGroupo("color-red");
+      } else {
+        setClassNameGroupo("color-green");
+      }
+    }
+  }, [compteurBio, compteurFirstName, compteurLastName, verifGroupo]);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   });
-
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutsideLastName);
+    return () => document.removeEventListener("mousedown", handleClickOutsideLastName);
+  });
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutsideEmail);
+    return () => document.removeEventListener("mousedown", handleClickOutsideEmail);
+  });
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutsideBio);
     return () => document.removeEventListener("mousedown", handleClickOutsideBio);
@@ -71,10 +134,21 @@ const ProfilPage = ({ admin, isLoggedin, setIsLoggedin, myUserId, setDataUser, s
     setAvatar(newAvatar.avatar);
     setProfil(newAvatar);
   };
-  const onChangeUserName = (e) => {
+  const onChangeFirstName = (e) => {
     setActiveError("");
-    setCompteurUserName(e.target.value.length);
-    setUserName(e.target.value);
+    setCompteurFirstName(e.target.value.length);
+    setFirstName(e.target.value);
+  };
+  const onChangeLastName = (e) => {
+    setActiveError("");
+    setCompteurLastName(e.target.value.length);
+    setLastName(e.target.value);
+  };
+  const onChangeEmail = (e) => {
+    setVerifGroupo(e.target.value);
+
+    setEmail(e.target.value);
+    setActiveError("");
   };
   const onChangeBio = (e) => {
     setCompteurBio(e.target.value.length);
@@ -82,6 +156,12 @@ const ProfilPage = ({ admin, isLoggedin, setIsLoggedin, myUserId, setDataUser, s
   };
   const clickModifUser = () => {
     setActiveUser(true);
+  };
+  const clickModifLastName = () => {
+    setActiveLastName(true);
+  };
+  const clickModifEmail = () => {
+    setActiveEmail(true);
   };
   const clickModifBio = () => {
     setActiveBio(true);
@@ -119,7 +199,7 @@ const ProfilPage = ({ admin, isLoggedin, setIsLoggedin, myUserId, setDataUser, s
       return;
     }
     if (compteurBio > 2550) {
-      toastTrigger("error", "une erreur est survenu");
+      toastTrigger("error", "une erreur est survenue");
       return;
     }
     try {
@@ -137,46 +217,109 @@ const ProfilPage = ({ admin, isLoggedin, setIsLoggedin, myUserId, setDataUser, s
     } catch (error) {}
   };
 
-  const updateProfilUsername = async () => {
-    const obj = { username };
-    if (username === "") {
+  const updateProfilFirstName = async () => {
+    const obj = { firstName };
+    if (firstName === "") {
       setActiveUser(false);
-      setUserName("");
-      setCompteurUserName(0);
+      setFirstName("");
+      setCompteurFirstName(0);
 
       return;
     }
 
-    if (compteurUserName < 4 || compteurUserName > 12) {
-      toastTrigger("error", "une erreur est survenu");
+    if (compteurFirstName < 4 || compteurFirstName > 12) {
+      toastTrigger("error", "une erreur est survenue");
       return;
     }
     try {
       const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
       const response = await api({
         method: "put",
-        url: "/users/name/",
+        url: "/users/firstname/",
         data: obj,
         headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
       });
-      try {
-        const response = await api({
-          method: "get",
-          url: "/users/all",
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setDataUser(response.data);
-      } catch (error) {
-        toastTrigger("error", "une erreur est survenu");
-      }
-      setUserName("");
+
       setActiveUser(false);
       setProfil(response.data);
-      setUserName("");
-      setCompteurUserName(0);
-      setUserNewName(response.data.username);
+      setFirstName("");
+      setCompteurFirstName(0);
+      setFirstNewName(response.data.firstName);
+
+      toastTrigger("success", "Prénom modifié");
     } catch (error) {
-      setUserName("");
+      setFirstName("");
+      setActiveError(error.response.data.error);
+    }
+  };
+
+  const updateProfilLastName = async () => {
+    const obj = { lastName };
+    if (lastName === "") {
+      setActiveLastName(false);
+      setFirstName("");
+      setCompteurFirstName(0);
+
+      return;
+    }
+
+    if (compteurLastName < 4 || compteurLastName > 12) {
+      toastTrigger("error", "une erreur est survenue");
+      return;
+    }
+    try {
+      const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
+      const response = await api({
+        method: "put",
+        url: "/users/lastname/",
+        data: obj,
+        headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+      });
+
+      setActiveLastName(false);
+      setProfil(response.data);
+      setLastName("");
+      setCompteurLastName(0);
+
+      setLastNewName(response.data.lastName);
+      toastTrigger("success", "Nom modifié");
+    } catch (error) {
+      setLastName("");
+      setActiveError(error.response.data.error);
+    }
+  };
+
+  const updateProfilEmail = async () => {
+    const obj = { email };
+
+    if (verifGroupo) {
+      let matchGroupo = verifGroupo.split("@");
+
+      if (matchGroupo[1] !== "groupomania.com") {
+        setActiveEmail(true);
+        return;
+      }
+    }
+    try {
+      const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
+      const response = await api({
+        method: "put",
+        url: "/users/email/",
+        data: obj,
+        headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+      });
+
+      setActiveEmail(false);
+      setProfil(response.data);
+      setActiveError("");
+      setEmail("");
+
+      setVerifGroupo("");
+      setNewEmail(response.data.email);
+
+      toastTrigger("success", "Email modifié");
+    } catch (error) {
+      setEmail("");
       setActiveError(error.response.data.error);
     }
   };
@@ -189,7 +332,7 @@ const ProfilPage = ({ admin, isLoggedin, setIsLoggedin, myUserId, setDataUser, s
             <div className="flex-picturs">
               <img alt="img" className="size-picturs" onClick={openModal} src={profil.avatar} />
 
-              <Button onClick={openModal} title="selecte" />
+              <Button onClick={openModal} title="select" />
 
               {active && (
                 <Modal onClick={closeModal} setActive={setActive} active={active}>
@@ -200,7 +343,7 @@ const ProfilPage = ({ admin, isLoggedin, setIsLoggedin, myUserId, setDataUser, s
             <div className="identity-user">
               {!activeUser ? (
                 <div className="bor-username">
-                  <div className="usernam-page-profil">{profil.username}</div>
+                  <div className="usernam-page-profil">{profil.firstName}</div>
                   <div className="pen">
                     <FontAwesomeIcon onClick={clickModifUser} color="blue" icon={["fas", "pen"]} />
                   </div>
@@ -212,24 +355,77 @@ const ProfilPage = ({ admin, isLoggedin, setIsLoggedin, myUserId, setDataUser, s
                       <TextArea
                         variant="outlined"
                         rows={1}
-                        onChange={onChangeUserName}
-                        value={username}
-                        label={profil.username}
+                        onChange={onChangeFirstName}
+                        value={firstName}
+                        label={profil.firstName}
                       />
-                      {compteurUserName > 0 && (
-                        <div className={classNameUserName}>Limite de caractère : {compteurUserName}/12</div>
+                      {compteurFirstName > 0 && (
+                        <div className={classNameFirstName}>Limite de caractère : {compteurFirstName}/12</div>
                       )}
                     </div>
 
-                    <Button onClick={updateProfilUsername} color="primary" title="Modifier" />
+                    <Button onClick={updateProfilFirstName} color="primary" title="Modifier" />
                   </div>
                   {activeError && <div className="color_red">{activeError}</div>}
                 </div>
               )}
-              <div className="email">
-                <div className="size-police">E-mail :</div>
-                <div>{profil.email}</div>
-              </div>
+              {!activeLastName ? (
+                <div className="bor-username">
+                  <div className="usernam-page-profil">{profil.lastName}</div>
+                  <div className="pen">
+                    <FontAwesomeIcon onClick={clickModifLastName} color="blue" icon={["fas", "pen"]} />
+                  </div>
+                </div>
+              ) : (
+                <div className="error-position">
+                  <div ref={clickOutSideLastName} className="bor-username">
+                    <div className="username-positon-update">
+                      <TextArea
+                        variant="outlined"
+                        rows={1}
+                        onChange={onChangeLastName}
+                        value={lastName}
+                        label={profil.lastName}
+                      />
+                      {compteurLastName > 0 && (
+                        <div className={classNameLastName}>Limite de caractère : {compteurLastName}/12</div>
+                      )}
+                    </div>
+
+                    <Button onClick={updateProfilLastName} color="primary" title="Modifier" />
+                  </div>
+                  {activeError && <div className="color_red">{activeError}</div>}
+                </div>
+              )}
+              {!activeEmail ? (
+                <div className="email">
+                  <div className="size-police">E-mail :</div>
+                  <div>{profil.email}</div>
+                  <div className="pen">
+                    <FontAwesomeIcon onClick={clickModifEmail} color="blue" icon={["fas", "pen"]} />
+                  </div>
+                </div>
+              ) : (
+                <div className="error-position">
+                  <div ref={clickOutSideEmail} className="bor-username">
+                    <div className="username-positon-update">
+                      <TextArea
+                        variant="outlined"
+                        rows={1}
+                        onChange={onChangeEmail}
+                        value={email}
+                        label={profil.email}
+                      />
+                      <div>
+                        {verifGroupo && <div className={classNameGroupo}>Doit finir par "@groupomania.com" </div>}
+                      </div>
+                    </div>
+
+                    <Button onClick={updateProfilEmail} color="primary" title="Modifier" />
+                  </div>
+                  {activeError && <div className="color_red">{activeError}</div>}
+                </div>
+              )}
             </div>
           </div>
           <div className="flex-elt-profil">
@@ -249,7 +445,7 @@ const ProfilPage = ({ admin, isLoggedin, setIsLoggedin, myUserId, setDataUser, s
                       <FontAwesomeIcon onClick={clickModifBio} color="blue" icon={["fas", "pen"]} />
                     </div>
                   ) : (
-                    <div>
+                    <div className="size-text-area-page-profil">
                       <div ref={clickOutSideBio} className="flex-bio">
                         <textarea
                           className="textarea"
@@ -285,7 +481,8 @@ const ProfilPage = ({ admin, isLoggedin, setIsLoggedin, myUserId, setDataUser, s
           <MessageUserMe
             avatarAdmin={avatar}
             admin={admin}
-            username={profil.username}
+            firstName={profil.firstName}
+            lastName={profil.lastName}
             avatar={profil.avatar}
             myUserId={profil.id}
           />

@@ -39,7 +39,7 @@ const CommentUpdate = ({ setPopUpIsOpen, setcomments, setActive, element, close 
     const obj = { content };
     if (content === "" || content === element.content) {
       setActive(false);
-      toastTrigger("error", "une erreur est survenu");
+      toastTrigger("error", "une erreur est survenue");
       return;
     }
     try {
@@ -55,7 +55,7 @@ const CommentUpdate = ({ setPopUpIsOpen, setcomments, setActive, element, close 
       close();
       toastTrigger("success", "Commentair modfié");
     } catch (error) {
-      toastTrigger("error", "une erreur est survenu");
+      toastTrigger("error", "une erreur est survenue");
     }
   };
 
@@ -66,7 +66,8 @@ const CommentUpdate = ({ setPopUpIsOpen, setcomments, setActive, element, close 
           <div className="options"></div>
           <img className="co-logo-update" alt="img" src={element.User.avatar} />
           <div className="co-name">
-            <div>{element.User.username}</div>
+            <div>{element.User.firstName}</div>
+            <div>{element.User.lastName}</div>
             {element.User.isAdmin === true ? <div>Administrateur</div> : <></>}
           </div>
           <div className="time">

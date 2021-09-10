@@ -37,11 +37,11 @@ const PostComment = ({ myUserId, admin, messageId, deleteOneComment, newComments
     const obj = { content };
 
     if (!content) {
-      toastTrigger("error", "une erreur est survenu");
+      toastTrigger("error", "une erreur est survenue");
       return;
     }
     if (compteurContent > 1000) {
-      toastTrigger("error", "une erreur est survenu");
+      toastTrigger("error", "une erreur est survenue");
     } else {
       try {
         const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
@@ -65,11 +65,11 @@ const PostComment = ({ myUserId, admin, messageId, deleteOneComment, newComments
 
           postComment(response.data);
         } catch (error) {
-          toastTrigger("error", "une erreur est survenu");
+          toastTrigger("error", "une erreur est survenue");
         }
         // history.push("/");
       } catch (error) {
-        toastTrigger("error", "une erreur est survenu");
+        toastTrigger("error", "une erreur est survenue");
       }
     }
   };

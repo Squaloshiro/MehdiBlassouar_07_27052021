@@ -14,20 +14,23 @@ const password_regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s
 module.exports = {
   register: function (req, res) {
     //Params
-    let { email, username, password, bio } = req.body;
+    let { email, lastName, firstName, password, bio } = req.body;
 
     let avatar = "/static/media/1.a2541ca9.jpg";
 
-    if (!email || !username || !password) {
-      return res.status(400).json({ error: "missing params" });
+    if (!email || !lastName || !firstName || !password) {
+      return res.status(400).json({ error: "paramaitre manquant" });
     }
 
-    if (username.length >= 13 || username.length <= 3) {
-      return res.status(400).json({ error: "the nickname must be between 4 and 12 characters" });
+    if (lastName.length >= 13 || lastName.length <= 3) {
+      return res.status(400).json({ error: "le nom doit être compris entre 4 et 5 lettres" });
+    }
+    if (firstName.length >= 13 || firstName.length <= 3) {
+      return res.status(400).json({ error: "le prénom doit être compris entre 4 et 5 lettres" });
     }
 
     if (!email_regex.test(email)) {
-      return res.status(400).json({ error: "email invalid" });
+      return res.status(400).json({ error: "email invalide" });
     }
     const endOfEmail = email.split("@");
 
@@ -42,7 +45,8 @@ module.exports = {
       });
     }
     email = email.trim();
-    username = username.trim();
+    lastName = lastName.trim();
+    firstName = firstName.trim();
 
     asyncLib.waterfall(
       [
@@ -55,7 +59,7 @@ module.exports = {
               done(null, userFound);
             })
             .catch(function (err) {
-              return res.status(500).json({ error: "user add problem" });
+              return res.status(500).json({ error: "Problème utilisateur" });
             });
         },
         function (userFound, done) {
@@ -64,32 +68,46 @@ module.exports = {
               done(null, userFound, bcryptePassword);
             });
           } else {
-            return res.status(409).json({ error: "email allready existing" });
+            return res.status(409).json({ error: "email déjà éxistant" });
           }
         },
+
         function (userFound, bcryptePassword, done) {
           models.User.findOne({
-            attributes: ["username"],
-            where: { username },
+            attributes: ["lastName"],
+            where: { lastName },
           })
-            .then(function (userNameFound) {
-              done(null, userFound, bcryptePassword, userNameFound);
+            .then(function (lastNameFound) {
+              done(null, userFound, bcryptePassword, lastNameFound);
             })
             .catch(function (err) {
-              return res.status(500).json({ error: "user add problem" });
+              return res.status(500).json({ error: "Problème utilisateur" });
             });
         },
-        function (userFound, bcryptePassword, userNameFound, done) {
-          if (!userNameFound) {
-            done(null, userFound, bcryptePassword, userNameFound);
+        function (userFound, bcryptePassword, lastNameFound, done) {
+          models.User.findOne({
+            attributes: ["firstName"],
+            where: { firstName },
+          })
+            .then(function (firstNameFound) {
+              done(null, userFound, bcryptePassword, lastNameFound, firstNameFound);
+            })
+            .catch(function (err) {
+              return res.status(500).json({ error: "Problème utilisateur" });
+            });
+        },
+        /*function (userFound, bcryptePassword, lastNameFound, firstNameFound, done) {
+          if (!lastNameFound) {
+            done(null, userFound, bcryptePassword, lastNameFound, firstNameFound);
           } else {
             return res.status(409).json({ error: "user allready existing" });
           }
-        },
-        function (userFound, bcryptePassword, userNameFound, done) {
+        },*/
+        function (userFound, bcryptePassword, lastNameFound, firstNameFound, done) {
           let newUser = models.User.create({
             email: email,
-            username: username,
+            lastName: lastName,
+            firstName: firstName,
             password: bcryptePassword,
             bio: bio,
             avatar: avatar,
@@ -99,7 +117,7 @@ module.exports = {
               done(newUser);
             })
             .catch(function (err) {
-              return res.status(500).json({ error: "user cannot be added" });
+              return res.status(500).json({ error: "une erreur est survenue lors de la création du compte" });
             });
         },
       ],
@@ -116,147 +134,19 @@ module.exports = {
             ),
           });
         } else {
-          return res.status(500).json({ error: "user add problem" });
+          return res.status(500).json({ error: "Problème utilisateur" });
         }
       }
     );
   },
 
-  registerAdmin: function (req, res) {
-    //Params
-    let { email, username, password, bio } = req.body;
-
-    let avatar = "/static/media/39.9c2365c2.jpg";
-
-    if (!email || !username || !password) {
-      return res.status(400).json({ error: "missing params" });
-    }
-
-    if (username.length >= 13 || username.length <= 3) {
-      return res.status(400).json({ error: "the nickname must be between 4 and 12 characters" });
-    }
-
-    if (!email_regex.test(email)) {
-      return res.status(400).json({ error: "email invalid" });
-    }
-    const endOfEmail = email.split("@");
-
-    if (endOfEmail[1] !== "groupomania.com") {
-      return res.status(400).json({ error: "votre email doit terminer par @groupomania.com" });
-    }
-
-    if (!password_regex.test(password)) {
-      return res.status(400).json({
-        error:
-          "mot de passe non valide, 8 caractères minimum, contenant au moins une lettre minuscule, une lettre majuscule, un chiffre numérique et un caractère spécial",
-      });
-    }
-    email = email.trim();
-    username = username.trim();
-
-    asyncLib.waterfall(
-      [
-        function (done) {
-          models.User.findOne({
-            attributes: ["email"],
-            where: { email },
-          })
-            .then(function (userFound) {
-              done(null, userFound);
-            })
-            .catch(function (err) {
-              return res.status(500).json({ error: "user add problem" });
-            });
-        },
-        function (userFound, done) {
-          if (!userFound) {
-            bcrypt.hash(password, 5, function (err, bcryptePassword) {
-              done(null, userFound, bcryptePassword);
-            });
-          } else {
-            return res.status(409).json({ error: "email allready existing" });
-          }
-        },
-        function (userFound, bcryptePassword, done) {
-          models.User.findOne({
-            attributes: ["username"],
-            where: { username },
-          })
-            .then(function (userNameFound) {
-              done(null, userFound, bcryptePassword, userNameFound);
-            })
-            .catch(function (err) {
-              return res.status(500).json({ error: "user add problem" });
-            });
-        },
-        function (userFound, bcryptePassword, userNameFound, done) {
-          if (!userNameFound) {
-            done(null, userFound, bcryptePassword, userNameFound);
-          } else {
-            return res.status(409).json({ error: "user allready existing" });
-          }
-        },
-        function (userFound, bcryptePassword, userNameFound, done) {
-          models.User.findOne({
-            attributes: ["isAdmin"],
-            where: { isAdmin: true },
-          })
-            .then(function (userAdminFind) {
-              done(null, userFound, bcryptePassword, userNameFound, userAdminFind);
-            })
-            .catch(function (err) {
-              return res.status(500).json({ error: "admin add problem" });
-            });
-        },
-        function (userFound, bcryptePassword, userNameFound, userAdminFind, done) {
-          if (!userAdminFind) {
-            done(null, userFound, bcryptePassword, userNameFound, userAdminFind);
-          } else {
-            return res.status(409).json({ error: "admin allready existing" });
-          }
-        },
-        function (userFound, bcryptePassword, userNameFound, userAdminFind, done) {
-          let newUser = models.User.create({
-            email: email,
-            username: username,
-            password: bcryptePassword,
-            bio: bio,
-            avatar: avatar,
-            isAdmin: true,
-          })
-            .then(function (newUser) {
-              done(newUser);
-            })
-            .catch(function (err) {
-              return res.status(500).json({ error: "user cannot be added" });
-            });
-        },
-      ],
-      function (newUser) {
-        if (newUser) {
-          return res.status(200).json({
-            token: jwt.sign(
-              {
-                userId: newUser.id,
-                isAdmin: newUser.isAdmin,
-              },
-              process.env.TOKEN,
-              { expiresIn: "24h" }
-            ),
-          });
-        } else {
-          return res.status(500).json({ error: "user add problem" });
-        }
-      }
-    );
-  },
   login: function (req, res) {
     //params
     let email = req.body.email;
     let password = req.body.password;
 
     if (email == null || password == null) {
-      return res.status(400).json({ error: "missing parameter" });
+      return res.status(400).json({ error: "paramaitre manquant" });
     }
 
     asyncLib.waterfall(
@@ -269,7 +159,7 @@ module.exports = {
               done(null, userFound);
             })
             .catch(function (err) {
-              return res.status(500).json({ error: "unable to verify user" });
+              return res.status(500).json({ error: "impossible de vérifier l'email" });
             });
         },
         function (userFound, done) {
@@ -278,14 +168,14 @@ module.exports = {
               done(null, userFound, resBycrypt);
             });
           } else {
-            return res.status(404).json({ error: "Email ou password incorect" });
+            return res.status(404).json({ error: "Email ou mot de passe incorect" });
           }
         },
         function (userFound, resBycrypt, done) {
           if (resBycrypt) {
             done(userFound);
           } else {
-            return res.status(403).json({ error: "Email ou password incorect" });
+            return res.status(403).json({ error: "Email ou mot de passe incorect" });
           }
         },
       ],
@@ -302,7 +192,7 @@ module.exports = {
             ),
           });
         } else {
-          return res.status(500).json({ error: "check your login information" });
+          return res.status(500).json({ error: "Vérifier vos information de connexion" });
         }
       }
     );
@@ -314,18 +204,18 @@ module.exports = {
     const userId = decodedToken.userId;
 
     models.User.findOne({
-      attributes: ["id", "email", "username", "bio", "avatar", "isAdmin"],
+      attributes: ["id", "email", "lastName", "firstName", "bio", "avatar", "isAdmin"],
       where: { id: userId },
     })
       .then(function (user) {
         if (user) {
           res.status(201).json(user);
         } else {
-          res.status(404).json({ error: "user not found" });
+          res.status(404).json({ error: "Problème utilisateur" });
         }
       })
       .catch(function (err) {
-        res.status(500).json({ error: "unable to retrieve user" });
+        res.status(500).json({ error: "impossible de récupérer l'utilisateur" });
       });
   },
   getAllUserProfile: function (req, res) {
@@ -345,7 +235,7 @@ module.exports = {
 
     models.User.findAll({
       order: [order != null ? order.split(":") : ["createdAt", "DESC"]],
-      attributes: fields !== "*" && fields != null ? fields.split(",") : null,
+      attributes: ["id", "email", "lastName", "firstName", "avatar", "isAdmin"],
       limit: !isNaN(limit) ? limit : null,
       offset: !isNaN(offset) ? offset : null,
     })
@@ -353,24 +243,24 @@ module.exports = {
         if (user) {
           res.status(201).json(user);
         } else {
-          res.status(404).json({ error: "user not found" });
+          res.status(404).json({ error: "Problème utilisateur" });
         }
       })
       .catch(function (err) {
-        res.status(500).json({ error: "unable to retrieve user" });
+        res.status(500).json({ error: "impossible de récupérer l'utilisateur" });
       });
   },
   getUserData: function (req, res) {
-    models.User.findByPk(req.params.id, { attributes: ["username", "email", "bio", "avatar", "isAdmin"] })
+    models.User.findByPk(req.params.id, { attributes: ["lastName", "firstName", "email", "bio", "avatar", "isAdmin"] })
       .then(function (user) {
         if (user) {
           res.status(201).json(user);
         } else {
-          res.status(404).json({ error: "user not found" });
+          res.status(404).json({ error: "Problème utilisateur" });
         }
       })
       .catch(function (err) {
-        res.status(500).json({ error: "unable to retrieve user" });
+        res.status(500).json({ error: "impossible de récupérer l'utilisateur" });
       });
   },
   deleteUserProfile: function (req, res) {
@@ -393,7 +283,7 @@ module.exports = {
                   done(null, userFound);
                 })
                 .catch(function (err) {
-                  return res.status(500).json({ error: "unable to verify user" });
+                  return res.status(500).json({ error: "impossible de récupérer l'utilisateur" });
                 });
             },
             function (userFound, done) {
@@ -404,7 +294,7 @@ module.exports = {
                   done(null, userFound, userAdminFound);
                 })
                 .catch(function (err) {
-                  return res.status(500).json({ error: "unable to verify user" });
+                  return res.status(500).json({ error: "impossible de récupérer l'utilisateur" });
                 });
             },
             function (userFound, userAdminFound, done) {
@@ -419,7 +309,7 @@ module.exports = {
                   done(null, userFound, userAdminFound, messageIdTab);
                 })
                 .catch(function (err) {
-                  return res.status(500).json({ error: "unable to verify all messages" });
+                  return res.status(500).json({ error: "impossible de vérifier tous les messages" });
                 });
             },
 
@@ -432,7 +322,7 @@ module.exports = {
                   done(null, userFound, userAdminFound, messageIdTab, allLikeFoundDislike);
                 })
                 .catch(function (err) {
-                  return res.status(500).json({ error: "unable to verify all userDislike" });
+                  return res.status(500).json({ error: "impossible de vérifier tous les dislikes" });
                 });
             },
 
@@ -445,7 +335,7 @@ module.exports = {
                   done(null, userFound, userAdminFound, messageIdTab, allLikeFoundDislike, allLikeFoundLike);
                 })
                 .catch(function (err) {
-                  return res.status(500).json({ error: "unable to verify all userLike" });
+                  return res.status(500).json({ error: "impossible de vérifier tous les likes" });
                 });
             },
 
@@ -484,7 +374,7 @@ module.exports = {
                   );
                 })
                 .catch(function (err) {
-                  return res.status(500).json({ error: "unable to verify all comment" });
+                  return res.status(500).json({ error: "impossible de vérifier tous les commentaires" });
                 });
             },
 
@@ -514,7 +404,7 @@ module.exports = {
                   );
                 })
                 .catch(function (err) {
-                  return res.status(500).json({ error: "unable to verify all comment userLike" });
+                  return res.status(500).json({ error: "impossible de vérifier tous les likes" });
                 });
             },
 
@@ -546,7 +436,7 @@ module.exports = {
                   );
                 })
                 .catch(function (err) {
-                  return res.status(500).json({ error: "unable to verify all comment userDisike" });
+                  return res.status(500).json({ error: "impossible de vérifier tous les dislikes" });
                 });
             },
             function (
@@ -614,11 +504,11 @@ module.exports = {
                         );
                       })
                       .catch((err) => {
-                        return res.status(500).json({ error: "unable to delet  likes" });
+                        return res.status(500).json({ error: "impossible de supprimer les likes" });
                       });
                   });
               } else {
-                return res.status(500).json({ error: "you do not have permission" });
+                return res.status(500).json({ error: "vous avez pas la permission" });
               }
             },
 
@@ -689,12 +579,12 @@ module.exports = {
                             done(null, userFound, userAdminFound, userMessageComment, messageToDelete);
                           })
                           .catch((err) => {
-                            return res.status(500).json({ error: "unable to delet comments" });
+                            return res.status(500).json({ error: "impossible de supprimer les commantaire" });
                           });
                       });
                   });
               } else {
-                return res.status(500).json({ error: "you do not have permission" });
+                return res.status(500).json({ error: "vous avez pas la permission" });
               }
             },
 
@@ -747,14 +637,14 @@ module.exports = {
                           done(null, userFound, userAdminFound);
                         })
                         .catch((err) => {
-                          return res.status(500).json({ error: "unable to delet commentlikes" });
+                          return res.status(500).json({ error: "impossible de supprimer les likes des commentaires" });
                         });
                     } else {
                       done(null, userFound);
                     }
                   });
               } else {
-                return res.status(500).json({ error: "you do not have permission" });
+                return res.status(500).json({ error: "vous avez pas la permission" });
               }
             },
 
@@ -797,7 +687,7 @@ module.exports = {
                             done(null, userFound, userAdminFound);
                           })
                           .catch((err) => {
-                            return res.status(500).json({ error: "unable to delet messages" });
+                            return res.status(500).json({ error: "une erreur est survenue lors de la suppréssion" });
                           });
                       }
                     });
@@ -809,12 +699,12 @@ module.exports = {
                         done(null, userFound, userAdminFound);
                       })
                       .catch((err) => {
-                        return res.status(500).json({ error: "unable to delet messages" });
+                        return res.status(500).json({ error: "une erreur est survenue lors de la suppréssion" });
                       });
                   }
                 });
               } else {
-                return res.status(500).json({ error: "you do not have permission" });
+                return res.status(500).json({ error: "vous avez pas la permission" });
               }
             },
 
@@ -825,10 +715,10 @@ module.exports = {
                     where: { userId: userFound.id },
                   })
                   .then(() => {
-                    return res.status(201).json("delete your account successfully");
+                    return res.status(201).json("compte supprimer");
                   });
               } else {
-                return res.status(500).json({ error: "you do not have permission" });
+                return res.status(500).json({ error: "vous avez pas la permission" });
               }
             },
           ]);
@@ -856,7 +746,7 @@ module.exports = {
               done(null, userFound);
             })
             .catch(function (err) {
-              return res.status(500).json({ error: "unable to verify user" });
+              return res.status(500).json({ error: "une erreur est survenu" });
             });
         },
 
@@ -871,10 +761,10 @@ module.exports = {
                 done(userFound);
               })
               .catch(function (err) {
-                res.status(500).json({ error: "unable to modify" });
+                res.status(500).json({ error: "une erreur est survenue lors de la modification" });
               });
           } else {
-            res.status(404).json({ error: "user not found" });
+            res.status(404).json({ error: "une erreur est survenu" });
           }
         },
       ],
@@ -882,21 +772,21 @@ module.exports = {
         if (userFound) {
           return res.status(201).json(userFound);
         } else {
-          return res.status(500).json({ error: "unable to modify users account" });
+          return res.status(500).json({ error: "une erreur est survenue lors de la modification de votre compte" });
         }
       }
     );
   },
 
-  updateUserNameProfile: function (req, res) {
+  updateFirstNameProfile: function (req, res) {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, process.env.TOKEN);
     const userId = decodedToken.userId;
 
-    let { username } = req.body;
-    username = username.trim();
-    if (username.length >= 13 || username.length <= 3) {
-      return res.status(400).json({ error: "the nickname must be between 4 and 12 characters" });
+    let { firstName } = req.body;
+    firstName = firstName.trim();
+    if (firstName.length >= 13 || firstName.length <= 3) {
+      return res.status(400).json({ error: "le prénom doit être compris entre 4 et 5 lettres" });
     }
 
     asyncLib.waterfall(
@@ -910,45 +800,42 @@ module.exports = {
               done(null, userFound);
             })
             .catch(function (err) {
-              return res.status(500).json({ error: "unable to verify user" });
+              return res.status(500).json({ error: "une erreur est survenu" });
             });
         },
         function (userFound, done) {
           models.User.findOne({
-            attributes: ["username", "id"],
-            where: { username },
+            attributes: ["firstName", "id"],
+            where: { firstName },
           })
-            .then(function (userNameFound) {
-              done(null, userFound, userNameFound);
+            .then(function () {
+              done(null, userFound);
             })
             .catch(function (err) {
-              console.log("-------------errxv-----------------------");
-              console.log(err);
-              console.log("------------------------------------");
-              return res.status(500).json({ error: "user add problem" });
+              return res.status(500).json({ error: "une erreur est survenu" });
             });
         },
-        function (userFound, userNameFound, done) {
-          if (!userNameFound || (userNameFound && userNameFound.id === userId)) {
+        /* function (userFound, userFirstNameFound, done) {
+          if (!userFirstNameFound || (userFirstNameFound && userFirstNameFound.id === userId)) {
             done(null, userFound);
           } else {
             return res.status(409).json({ error: "user allready existing" });
           }
-        },
+        },*/
         function (userFound, done) {
           if (userFound) {
             userFound
               .update({
-                username: username ? username : userFound.username,
+                firstName: firstName ? firstName : userFound.firstName,
               })
               .then(function () {
                 done(userFound);
               })
               .catch(function (err) {
-                res.status(500).json({ error: "unable to modify" });
+                res.status(500).json({ error: "une erreur est survenu lors de la modification" });
               });
           } else {
-            res.status(404).json({ error: "user not found" });
+            res.status(404).json({ error: "une erreur est survenu" });
           }
         },
       ],
@@ -956,7 +843,157 @@ module.exports = {
         if (userFound) {
           return res.status(201).json(userFound);
         } else {
-          return res.status(500).json({ error: "unable to modify users account" });
+          return res.status(500).json({ error: "une erreur est survenu lors de la modification du compte" });
+        }
+      }
+    );
+  },
+  updateLastNameProfile: function (req, res) {
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, process.env.TOKEN);
+    const userId = decodedToken.userId;
+
+    let { lastName } = req.body;
+    lastName = lastName.trim();
+    if (lastName.length >= 13 || lastName.length <= 3) {
+      return res.status(400).json({ error: "le nom doit être compris entre 4 et 5 lettres" });
+    }
+
+    asyncLib.waterfall(
+      [
+        function (done) {
+          models.User.findOne({
+            //attributes: ["id", "bio"],
+            where: { id: userId },
+          })
+            .then(function (userFound) {
+              done(null, userFound);
+            })
+            .catch(function (err) {
+              return res.status(500).json({ error: "une erreur est survenu" });
+            });
+        },
+        function (userFound, done) {
+          models.User.findOne({
+            attributes: ["lastName", "id"],
+            where: { lastName },
+          })
+            .then(function (userLastNameFound) {
+              done(null, userFound, userLastNameFound);
+            })
+            .catch(function (err) {
+              return res.status(500).json({ error: "une erreur est survenu" });
+            });
+        },
+        /*function (userFound, userLastNameFound, done) {
+          if (!userLastNameFound || (userLastNameFound && userLastNameFound.id === userId)) {
+            done(null, userFound);
+          } else {
+            return res.status(409).json({ error: "user allready existing" });
+          }
+        },*/
+        function (userFound, done) {
+          if (userFound) {
+            userFound
+              .update({
+                lastName: lastName ? lastName : userFound.lastName,
+              })
+              .then(function () {
+                done(userFound);
+              })
+              .catch(function (err) {
+                res.status(500).json({ error: "une erreur est survenu lors de la modification" });
+              });
+          } else {
+            res.status(404).json({ error: "une erreur est survenu" });
+          }
+        },
+      ],
+      function (userFound) {
+        if (userFound) {
+          return res.status(201).json(userFound);
+        } else {
+          return res.status(500).json({ error: "une erreur est survenu lors de la modification de votre compte" });
+        }
+      }
+    );
+  },
+
+  updateEmail: function (req, res) {
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, process.env.TOKEN);
+    const userId = decodedToken.userId;
+
+    let { email } = req.body;
+    email = email.trim();
+    if (!email) {
+      return res.status(400).json({ error: "paramètre manquant" });
+    }
+
+    if (!email_regex.test(email)) {
+      return res.status(400).json({ error: "email invalid" });
+    }
+    const endOfEmail = email.split("@");
+
+    if (endOfEmail[1] !== "groupomania.com") {
+      return res.status(400).json({ error: "votre email doit terminer par @groupomania.com" });
+    }
+
+    asyncLib.waterfall(
+      [
+        function (done) {
+          models.User.findOne({
+            //attributes: ["id", "bio"],
+            where: { id: userId },
+          })
+            .then(function (userFound) {
+              done(null, userFound);
+            })
+            .catch(function (err) {
+              return res.status(500).json({ error: "impossible de vérifier vos information" });
+            });
+        },
+        function (userFound, done) {
+          models.User.findOne({
+            attributes: ["email", "id"],
+            where: { email },
+          })
+            .then(function (emailFound) {
+              done(null, userFound, emailFound);
+            })
+            .catch(function (err) {
+              return res.status(500).json({ error: "impossible de vérifier vos information" });
+            });
+        },
+        function (userFound, emailFound, done) {
+          if (!emailFound || (emailFound && emailFound.id === userId)) {
+            done(null, userFound);
+          } else {
+            return res.status(409).json({ error: "email déjà éxistant" });
+          }
+        },
+        function (userFound, done) {
+          if (userFound) {
+            userFound
+              .update({
+                email: email ? email : userFound.email,
+              })
+              .then(function () {
+                done(userFound);
+              })
+              .catch(function (err) {
+                res.status(500).json({ error: "une erreur est survenu" });
+              });
+          } else {
+            res.status(404).json({ error: "une erreur est survenu" });
+          }
+        },
+      ],
+      function (userFound) {
+        if (userFound) {
+          return res.status(201).json(userFound);
+        } else {
+          return res.status(500).json({ error: "une erreur est survenu lors de la modification du compte" });
         }
       }
     );
@@ -985,7 +1022,7 @@ module.exports = {
             done(null, userFound);
           })
           .catch(function (err) {
-            return res.status(500).json({ error: "unable to verify user" });
+            return res.status(500).json({ error: "une erreur est survenu" });
           });
       },
       function (userFound, done) {
@@ -994,7 +1031,7 @@ module.exports = {
             done(null, userFound, resBycrypt);
           });
         } else {
-          return res.status(404).json({ error: "user not found in data base" });
+          return res.status(404).json({ error: "utilisateur introuvable" });
         }
       },
       function (userFound, resBycrypt, done) {
@@ -1003,7 +1040,7 @@ module.exports = {
             done(null, userFound, bcryptePassword);
           });
         } else {
-          return res.status(404).json({ error: "user not found in data base" });
+          return res.status(404).json({ error: "utilisateur introuvable" });
         }
       },
       function (userFound, bcryptePassword, done) {
@@ -1034,7 +1071,7 @@ module.exports = {
               done(null, userfound);
             })
             .catch(function (err) {
-              return res.status(500).json({ error: "unable to verify user" });
+              return res.status(500).json({ error: "une erreur est survenu" });
             });
         },
         function (userfound, done) {
@@ -1045,7 +1082,7 @@ module.exports = {
               done(null, userfound, userAdminFound);
             })
             .catch(function (err) {
-              return res.status(500).json({ error: "unable to verify admin" });
+              return res.status(500).json({ error: "une erreur est survenu" });
             });
         },
 
@@ -1071,7 +1108,7 @@ module.exports = {
                 });
             }
           } else {
-            return res.status(500).json({ error: "you have not permission" });
+            return res.status(500).json({ error: "vous n'avez pas la permission" });
           }
         },
       ],
@@ -1079,7 +1116,7 @@ module.exports = {
         if (userFound) {
           return res.status(201).json(userFound);
         } else {
-          return res.status(500).json({ error: "unable to modify users account" });
+          return res.status(500).json({ error: "une erreur est survenu lors de la suppression du compte" });
         }
       }
     );

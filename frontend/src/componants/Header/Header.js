@@ -6,6 +6,7 @@ import Button from "../Button/Button";
 import { useHistory, useLocation } from "react-router-dom";
 import SearchBar from "../SearchBar/SearchBar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { toastTrigger } from "../../helper/toast";
 
 const Header = ({
   setAvatar,
@@ -16,7 +17,9 @@ const Header = ({
   setMyUserId,
   avatar,
   setAdmin,
-  userNewName,
+  firstNewName,
+  newEmail,
+  lastNewName,
   setDataUser,
   dataUser,
 }) => {
@@ -65,6 +68,7 @@ const Header = ({
     setMyUserId("");
     setAdmin(false);
     setAvatar("");
+    toastTrigger("success", `Au revoir ${firstNewName}`);
     history.push("/connexion");
   };
 
@@ -90,7 +94,9 @@ const Header = ({
           className="search-bar-header"
           setDataUser={setDataUser}
           dataUser={dataUser}
-          userNewName={userNewName}
+          firstNewName={firstNewName}
+          newEmail={newEmail}
+          lastNewName={lastNewName}
           avatar={avatar}
           myUserId={myUserId}
         />

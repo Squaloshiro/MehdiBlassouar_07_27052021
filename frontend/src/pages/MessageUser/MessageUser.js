@@ -28,7 +28,7 @@ const MessageUser = ({ id, messagesUser, setMessagesUser, myUserId, admin, isAdm
         });
         setMessagesUser(response.data);
       } catch (error) {
-        toastTrigger("error", "une erreur est survenu");
+        toastTrigger("error", "une erreur est survenue");
       }
     };
     getMessageUserApi();
@@ -44,7 +44,7 @@ const MessageUser = ({ id, messagesUser, setMessagesUser, myUserId, admin, isAdm
       });
       setMessagesUser(response.data);
     } catch (error) {
-      toastTrigger("error", "une erreur est survenu");
+      toastTrigger("error", "une erreur est survenue");
     }
   };
 
@@ -160,7 +160,8 @@ const MessageUser = ({ id, messagesUser, setMessagesUser, myUserId, admin, isAdm
                     <img height="100%" width="100%" className="co-logo" alt="img" src={element.User.avatar} />
                   </div>
                   <div className="co-name">
-                    <div>{element.User.username}</div>
+                    <div>{element.User.firstName}</div>
+                    <div>{element.User.lastName}</div>
                     {isAdmin === true ? <div>Administrateur</div> : <></>}
                   </div>
                   <div className="time">

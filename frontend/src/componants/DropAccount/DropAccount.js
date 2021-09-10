@@ -37,7 +37,7 @@ const DropAccount = ({ userId, isLoggedin, admin, setIsLoggedin, setDataUser }) 
           });
           setDataUser(response.data);
         } catch (error) {
-          toastTrigger("error", "une erreur est survenu");
+          toastTrigger("error", "une erreur est survenue");
         }
         history.push("/");
         toastTrigger("success", "Compte supprimé");
@@ -53,7 +53,7 @@ const DropAccount = ({ userId, isLoggedin, admin, setIsLoggedin, setDataUser }) 
         toastTrigger("error", error.response.data.error);
       } else {
         setActive(false);
-        toastTrigger("error", "une erreur est survenu");
+        toastTrigger("error", "une erreur est survenue");
       }
     }
   };
@@ -65,8 +65,8 @@ const DropAccount = ({ userId, isLoggedin, admin, setIsLoggedin, setDataUser }) 
           <Button onClick={handleActive} title="Supprimer" />
         </div>
       ) : (
-        <div>
-          <div>Voulez-vous supprimé votre compte, cette action est définitive.</div>
+        <div className="select-choise-drop-account">
+          <div className="style-size-drop">Voulez-vous supprimé votre compte, cette action est définitive.</div>
           <div>
             <Button onClick={dropProfil} title="Oui" />
             <Button onClick={handleClose} title="Non" />

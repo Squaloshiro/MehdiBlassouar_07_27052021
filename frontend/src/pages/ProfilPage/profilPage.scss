@@ -10,6 +10,9 @@
   color: green;
   font-size: 16px;
 }
+.size-text-area-page-profil {
+  width: 100%;
+}
 .error-position {
   display: flex;
   flex-direction: column;
@@ -261,5 +264,12 @@
   }
   .drop-account {
     width: 100%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .email {
+    display: flex;
+    flex-direction: column;
   }
 }

@@ -22,11 +22,11 @@ module.exports = {
     const { title, content } = formMessage;
 
     if (title === "" || content === "" || req.file === "") {
-      return res.status(400).json({ error: "missing parameters" });
+      return res.status(400).json({ error: "paramaitre manquant" });
     }
 
     if (title.length <= TITLE_LIMIT || content.length <= CONTENT_LIMIT) {
-      return res.status(400).json({ error: "invalid parameters" });
+      return res.status(400).json({ error: "invalid paramaitre" });
     }
     asyncLib.waterfall(
       [
@@ -38,7 +38,7 @@ module.exports = {
               done(null, userFound);
             })
             .catch(function (err) {
-              return res.status(500).json({ error: "unable to verify user" });
+              return res.status(500).json({ error: "Problème utilisateur" });
             });
         },
         function (userFound, done) {
@@ -55,7 +55,7 @@ module.exports = {
               done(newMessage);
             });
           } else {
-            res.status(404).json({ error: "user not found" });
+            res.status(404).json({ error: "utilisateur introuvable" });
           }
         },
       ],
@@ -73,7 +73,7 @@ module.exports = {
             include: [
               {
                 model: models.User,
-                attributes: ["username", "avatar", "isAdmin"],
+                attributes: ["lastName", "firstName", "avatar", "isAdmin"],
               },
             ],
           }).then(function (allMessageFound) {
@@ -94,7 +94,7 @@ module.exports = {
             }
           });
         } else {
-          return res.status(500).json({ error: "cannot post message" });
+          return res.status(500).json({ error: "impossible de poster ce message" });
         }
       }
     );
@@ -114,11 +114,11 @@ module.exports = {
     var content = req.body.content;
 
     if (title === "" || content === "") {
-      return res.status(400).json({ error: "missing parameters" });
+      return res.status(400).json({ error: "paramaitre manquant" });
     }
 
     if (title.length <= TITLE_LIMIT || content.length <= CONTENT_LIMIT) {
-      return res.status(400).json({ error: "invalid parameters" });
+      return res.status(400).json({ error: "invalide paramaitre" });
     }
 
     asyncLib.waterfall(
@@ -131,7 +131,7 @@ module.exports = {
               done(null, userFound);
             })
             .catch(function (err) {
-              return res.status(500).json({ error: "unable to verify user" });
+              return res.status(500).json({ error: "Problème utilisateur" });
             });
         },
         function (userFound, done) {
@@ -147,7 +147,7 @@ module.exports = {
               done(newMessage);
             });
           } else {
-            res.status(404).json({ error: "user not found" });
+            res.status(404).json({ error: "utilisateur introuvable" });
           }
         },
       ],
@@ -165,7 +165,7 @@ module.exports = {
             include: [
               {
                 model: models.User,
-                attributes: ["username", "avatar", "isAdmin"],
+                attributes: ["lastName", "firstName", "avatar", "isAdmin"],
               },
             ],
           }).then(function (allMessageFound) {
@@ -186,7 +186,7 @@ module.exports = {
             }
           });
         } else {
-          return res.status(500).json({ error: "cannot post message" });
+          return res.status(500).json({ error: "impossible de poster ce message" });
         }
       }
     );
@@ -209,7 +209,7 @@ module.exports = {
       include: [
         {
           model: models.User,
-          attributes: ["username", "avatar", "isAdmin"],
+          attributes: ["lastName", "firstName", "avatar", "isAdmin"],
         },
         {
           model: models.Like,
@@ -231,12 +231,12 @@ module.exports = {
 
           res.status(200).json(messagesFormated);
         } else {
-          res.status(404).json({ error: "no messages found" });
+          res.status(404).json({ error: "message introuvable" });
         }
       })
       .catch(function (err) {
         console.log(err);
-        res.status(500).json({ error: "invalid fields" });
+        res.status(500).json({ error: "une erreur est survenu" });
       });
   },
   listMessagesUser: function (req, res) {
@@ -259,7 +259,7 @@ module.exports = {
       include: [
         {
           model: models.User,
-          attributes: ["username", "avatar", "isAdmin"],
+          attributes: ["lastName", "firstName", "avatar", "isAdmin"],
         },
         {
           model: models.Like,
@@ -284,12 +284,12 @@ module.exports = {
             return res.status(201).json(messagesFormated);
           }
         } else {
-          res.status(404).json({ error: "no messages found" });
+          res.status(404).json({ error: "message introuvable" });
         }
       })
       .catch(function (err) {
         console.log(err);
-        res.status(500).json({ error: "invalid fields" });
+        res.status(500).json({ error: "une erreur est survenu" });
       });
   },
 
@@ -300,7 +300,7 @@ module.exports = {
       })
       .catch((err) => {
         console.log(err);
-        res.status(500).json({ error: "this message does not exist" });
+        res.status(500).json({ error: "ce message éxiste pas" });
       });
   },
   modifyMessage: function (req, res) {
@@ -318,7 +318,7 @@ module.exports = {
               done(null, messageFound);
             })
             .catch(function (err) {
-              return res.status(500).json({ error: "unable to verify message" });
+              return res.status(500).json({ error: "vérification du message impossible" });
             });
         },
         function (messageFound, done) {
@@ -330,10 +330,10 @@ module.exports = {
                 done(null, messageFound, userFound);
               })
               .catch(function (err) {
-                return res.status(500).json({ error: "unable to verify user" });
+                return res.status(500).json({ error: "vérification utilisateur impossible" });
               });
           } else {
-            return res.status(500).json({ error: "message does not exist" });
+            return res.status(500).json({ error: "message introuvable" });
           }
         },
         function (messageFound, userFound, done) {
@@ -348,7 +348,7 @@ module.exports = {
               done(null, messageFound, userFound);
             })
             .catch(function (err) {
-              return res.status(500).json({ error: "unable to find message" });
+              return res.status(500).json({ error: "message introuvable" });
             });
         },
         function (messageFound, userFound, done) {
@@ -359,7 +359,7 @@ module.exports = {
               done(null, messageFound, userFound, userAdminfound);
             })
             .catch(function (err) {
-              res.status(500).json({ error: "admin not found" });
+              res.status(500).json({ error: "admin introuvable" });
             });
         },
         function (messageFound, userFound, userAdminfound, done) {
@@ -374,13 +374,13 @@ module.exports = {
                   done(newMessage);
                 })
                 .catch(function (err) {
-                  res.status(500).json({ error: "unable to update message" });
+                  res.status(500).json({ error: "mofification impossible" });
                 });
             } else {
-              res.status(500).json({ error: "this publication does not belong to you" });
+              res.status(500).json({ error: "une erreur et survenu" });
             }
           } else {
-            res.status(404).json({ error: "message not found" });
+            res.status(404).json({ error: "message introuvable" });
           }
         },
       ],
@@ -398,7 +398,7 @@ module.exports = {
             include: [
               {
                 model: models.User,
-                attributes: ["username", "avatar", "isAdmin"],
+                attributes: ["lastName", "firstName", "avatar", "isAdmin"],
               },
             ],
           }).then(function (allMessageFound) {
@@ -419,7 +419,7 @@ module.exports = {
             }
           });
         } else {
-          return res.status(500).json({ error: "cannot post message" });
+          return res.status(500).json({ error: "publication impossible" });
         }
       }
     );
@@ -446,7 +446,7 @@ module.exports = {
             done(null, commentIds);
           })
           .catch(function (err) {
-            res.status(500).json({ error: "unable to verify comment" });
+            res.status(500).json({ error: "vérification impossible" });
           });
       },
       function (commentIds, done) {
@@ -457,7 +457,7 @@ module.exports = {
             done(null);
           })
           .catch(function (err) {
-            res.status(500).json({ error: "unable to delet comment likes" });
+            res.status(500).json({ error: "supréssion impossible" });
           });
       },
       function (done) {
@@ -471,7 +471,7 @@ module.exports = {
             done(null);
           })
           .catch((err) => {
-            return res.status(500).json({ error: "unable to delete comment or like" });
+            return res.status(500).json({ error: "une erreur est survenu" });
           });
       },
       function (done) {
@@ -482,7 +482,7 @@ module.exports = {
             done(null, messageFound);
           })
           .catch(function (err) {
-            res.status(500).json({ error: "unable to verify message" });
+            res.status(500).json({ error: "vérification impossible" });
           });
       },
       function (messageFound, done) {
@@ -493,7 +493,7 @@ module.exports = {
             done(null, messageFound, userAdminfound);
           })
           .catch(function (err) {
-            res.status(500).json({ error: "admin not found" });
+            res.status(500).json({ error: "admin non trouvé" });
           });
       },
       function (messageFound, userAdminfound, done) {
@@ -507,7 +507,7 @@ module.exports = {
                 return res.status(201).json(destroyMessageFound);
               })
               .catch(function (err) {
-                res.status(500).json({ error: "unable to delete message" });
+                res.status(500).json({ error: "suppression impossible" });
               });
           } else {
             const filename = messageFound.attachment.split("/images/")[1];
@@ -519,11 +519,11 @@ module.exports = {
                   return res.status(201).json(destroyMessageFoundImg);
                 })
                 .catch(function (err) {
-                  res.status(500).json({ error: "unable to delete message" });
+                  res.status(500).json({ error: "suppression impossible" });
                 });
             });
           }
-        } else return res.status(500).json({ error: "this publication does not belong to you" });
+        } else return res.status(500).json({ error: "une erreur est survenu" });
       },
     ]);
   },

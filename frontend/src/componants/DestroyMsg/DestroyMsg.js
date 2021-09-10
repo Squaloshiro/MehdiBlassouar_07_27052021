@@ -26,7 +26,7 @@ const MessageDestroy = ({ messageId, setActive, deleteOneMessage, onClick, setPo
       onClick();
       toastTrigger("success", "Publication supprimée");
     } catch (error) {
-      toastTrigger("error", "une erreur est survenu");
+      toastTrigger("error", "une erreur est survenue");
     }
   };
 

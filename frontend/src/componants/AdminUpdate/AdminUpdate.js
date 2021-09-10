@@ -47,7 +47,7 @@ const AdminUpdate = ({
 
           setProfil(response.data);
         } catch (error) {
-          toastTrigger("error", "une erreur est survenu");
+          toastTrigger("error", "une erreur est survenue");
         }
       } else {
         history.push("/");
@@ -60,7 +60,7 @@ const AdminUpdate = ({
         });
         setMessagesUser(response.data);
       } catch (error) {
-        toastTrigger("error", "une erreur est survenu");
+        toastTrigger("error", "une erreur est survenue");
       }
       try {
         const response = await api({
@@ -70,7 +70,7 @@ const AdminUpdate = ({
         });
         setDataUser(response.data);
       } catch (error) {
-        toastTrigger("error", "une erreur est survenu");
+        toastTrigger("error", "une erreur est survenue");
       }
       if (response.data.isAdmin === true) {
         toastTrigger("success", "Admin créée");
@@ -78,7 +78,7 @@ const AdminUpdate = ({
         toastTrigger("success", "Admin sup");
       }
     } catch (error) {
-      toastTrigger("error", "une erreur est survenu");
+      toastTrigger("error", "une erreur est survenue");
     }
   };
 

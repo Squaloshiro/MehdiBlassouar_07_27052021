@@ -5,7 +5,6 @@ import Footer from "./componants/Footer/Footer";
 import SignIn from "./pages/SignIn/SignIn";
 import SignUp from "./pages/SignUp/SignUp";
 import LandingPage from "./pages/LandingPage/LandingPage";
-
 import "./componants/Header/header.scss";
 import PrivateRoute from "./pages/PrivateRoute/PrivateRoute";
 import api from "./config/api";
@@ -14,7 +13,7 @@ import ProfilPage from "./pages/ProfilPage/ProfilPage";
 import ProfilUser from "./pages/ProfilUser/ProfiUser";
 import { ToastContainer } from "react-toastify";
 import { toastTrigger } from "./helper/toast";
-import AdminDashboard from "./pages/AdminDashBord/AdminDashboard";
+
 import Error404 from "./componants/Error404/Error404";
 
 const App = () => {
@@ -22,7 +21,9 @@ const App = () => {
   const [admin, setAdmin] = useState(false);
   const [myUserId, setMyUserId] = useState("");
   const [avatar, setAvatar] = useState("");
-  const [userNewName, setUserNewName] = useState("");
+  const [firstNewName, setFirstNewName] = useState("");
+  const [lastNewName, setLastNewName] = useState("");
+  const [newEmail, setNewEmail] = useState("");
   const [dataUser, setDataUser] = useState([]);
   const [messages, setMessages] = useState([]);
   const [profil, setProfil] = useState([]);
@@ -38,15 +39,17 @@ const App = () => {
             method: "get",
             headers: { Authorization: `Bearer ${token}` },
           });
+
           try {
             const response = await api({
               method: "get",
               url: "/users/all",
               headers: { Authorization: `Bearer ${token}` },
             });
+
             setDataUser(response.data);
           } catch (error) {
-            toastTrigger("error", "une erreur est survenu");
+            toastTrigger("error", "une erreur est survenue");
           }
           setAdmin(response.data.isAdmin);
           setMyUserId(response.data.id);
@@ -72,7 +75,9 @@ const App = () => {
         dataUser={dataUser}
         setDataUser={setDataUser}
         setAdmin={setAdmin}
-        userNewName={userNewName}
+        firstNewName={firstNewName}
+        lastNewName={lastNewName}
+        newEmail={newEmail}
         avatar={avatar}
         myUserId={myUserId}
         setMyUserId={setMyUserId}
@@ -106,7 +111,9 @@ const App = () => {
             admin={admin}
             setDataUser={setDataUser}
             componant={ProfilPage}
-            setUserNewName={setUserNewName}
+            setFirstNewName={setFirstNewName}
+            setLastNewName={setLastNewName}
+            setNewEmail={setNewEmail}
             setAvatar={setAvatar}
             myUserId={myUserId}
           />
@@ -138,6 +145,9 @@ const App = () => {
               <Redirect to="/" />
             ) : (
               <SignIn
+                setFirstNewName={setFirstNewName}
+                setLastNewName={setLastNewName}
+                setNewEmail={setNewEmail}
                 isLoggedin={isLoggedin}
                 setIsLoggedin={setIsLoggedin}
                 setDataUser={setDataUser}
@@ -156,6 +166,9 @@ const App = () => {
               <Redirect to="/" />
             ) : (
               <SignUp
+                setFirstNewName={setFirstNewName}
+                setLastNewName={setLastNewName}
+                setNewEmail={setNewEmail}
                 isLoggedin={isLoggedin}
                 setIsLoggedin={setIsLoggedin}
                 setDataUser={setDataUser}
@@ -165,23 +178,7 @@ const App = () => {
             )
           }
         ></Route>
-        <Route
-          exact
-          path="/admin"
-          render={() =>
-            isLoggedin ? (
-              <Redirect to="/" />
-            ) : (
-              <AdminDashboard
-                isLoggedin={isLoggedin}
-                setIsLoggedin={setIsLoggedin}
-                setDataUser={setDataUser}
-                setAdmin={setAdmin}
-                setMyUserId={setMyUserId}
-              />
-            )
-          }
-        ></Route>
+
         <Route path="*">
           <Error404 />
         </Route>

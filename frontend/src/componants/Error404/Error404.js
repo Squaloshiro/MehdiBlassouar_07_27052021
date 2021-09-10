@@ -9,10 +9,10 @@ const Error404 = () => {
   const history = useHistory();
   const [show404, setShow404] = useState(true);
   useEffect(() => {
-    const id = setTimeout(() => {
+    const error = setTimeout(() => {
       setShow404(false);
     }, 3000);
-    return () => clearTimeout(id);
+    return () => clearTimeout(error);
   }, [show404, setShow404]);
   return show404 ? (
     <div className="loadcontent">

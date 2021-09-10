@@ -39,7 +39,7 @@ const DestroyComment = ({
       close();
       toastTrigger("success", "Commantaire supprimé");
     } catch (error) {
-      toastTrigger("error", "une erreur est survenu");
+      toastTrigger("error", "une erreur est survenue");
     }
   };
 

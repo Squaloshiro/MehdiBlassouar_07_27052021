@@ -9,8 +9,9 @@ const PrivateRoute = ({
   avatar,
   setCheckLogin,
   setAvatar,
-  setUserNewName,
-
+  setFirstNewName,
+  setNewEmail,
+  setLastNewName,
   messages,
   setMessages,
   profil,
@@ -31,7 +32,9 @@ const PrivateRoute = ({
             setDataUser={setDataUser}
             messages={messages}
             setMessages={setMessages}
-            setUserNewName={setUserNewName}
+            setFirstNewName={setFirstNewName}
+            setLastNewName={setLastNewName}
+            setNewEmail={setNewEmail}
             setAvatar={setAvatar}
             setCheckLogin={setCheckLogin}
             myUserId={myUserId}

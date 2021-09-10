@@ -21,7 +21,11 @@
   height: 1px;
   background: #333;
 }
+.not-comment {
+  text-align: center;
 
+  width: 100%;
+}
 .accordion__icon::before {
   position: absolute;
   content: "";

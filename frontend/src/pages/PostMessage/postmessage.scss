@@ -14,7 +14,12 @@
   align-items: center;
   justify-content: center;
 }
-
+.img-file {
+  text-align: center;
+  word-break: break-all;
+  color: green;
+  padding: 1em;
+}
 .post {
   display: flex;
   flex-direction: column;

@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import "./searchbar.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const SearchBar = ({ myUserId, avatar, userNewName, dataUser }) => {
+const SearchBar = ({ myUserId, avatar, firstNewName, newEmail, lastNewName, dataUser }) => {
   const [active, setActive] = useState(false);
   const history = useHistory();
   const clickOutSide = useRef();
@@ -72,20 +72,34 @@ const SearchBar = ({ myUserId, avatar, userNewName, dataUser }) => {
     dataUser.filter((elt) => {
       if (elt.id === myUserId) {
         elt.avatar = avatar;
-        elt.userName = userNewName;
       }
       return elt;
     });
   }
-  if (userNewName) {
+  if (firstNewName) {
     dataUser.filter((elt) => {
       if (elt.id === myUserId) {
-        elt.username = userNewName;
+        elt.firstName = firstNewName;
       }
       return elt;
     });
   }
-
+  if (lastNewName) {
+    dataUser.filter((elt) => {
+      if (elt.id === myUserId) {
+        elt.lastName = lastNewName;
+      }
+      return elt;
+    });
+  }
+  if (newEmail) {
+    dataUser.filter((elt) => {
+      if (elt.id === myUserId) {
+        elt.email = newEmail;
+      }
+      return elt;
+    });
+  }
   return (
     <div className="search_flex">
       <div className="search">
@@ -111,7 +125,7 @@ const SearchBar = ({ myUserId, avatar, userNewName, dataUser }) => {
             {dataUser &&
               dataUser
                 .filter((element) => {
-                  return element.username.toLowerCase().includes(valueSearchBar.toLowerCase());
+                  return element.lastName.toLowerCase().includes(valueSearchBar.toLowerCase());
                 })
                 .map((element) => {
                   return (
@@ -120,7 +134,8 @@ const SearchBar = ({ myUserId, avatar, userNewName, dataUser }) => {
                         <img className="search_avatar" alt="img" src={element.avatar} />
                       </div>
                       <div className="search_charactere">
-                        <div>{element.username}</div>
+                        <div>{element.firstName}</div>
+                        <div>{element.lastName}</div>
                         <div>{element.email}</div>
                         {element.isAdmin === true ? <div>Administrateur</div> : <></>}
                       </div>

@@ -198,7 +198,8 @@ const LandingPage = ({ setMessages, messages, myUserId, admin, avatar }) => {
                     />
                   </div>
                   <div className="co-name">
-                    <div onClick={() => redirectToUserProfil(element.UserId)}>{element.User.username}</div>
+                    <div onClick={() => redirectToUserProfil(element.UserId)}>{element.User.firstName}</div>
+                    <div onClick={() => redirectToUserProfil(element.UserId)}>{element.User.lastName}</div>
                     {element.User.isAdmin === true ? <div>Administrateur</div> : <></>}
                   </div>
                   <div className="time">

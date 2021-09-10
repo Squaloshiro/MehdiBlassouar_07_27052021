@@ -89,6 +89,7 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
     setActiveHide(true);
     setActive(true);
   };
+
   return (
     <div className={`accordion ${open && "active"}`}>
       {active && messageInModal && (
@@ -139,7 +140,7 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
       </div>
       <div className="accordion__content">
         <div className="flex-position-comment">
-          {comments &&
+          {comments[0] !== undefined ? (
             comments.map((element) => {
               const messageCommentLikeByCurrentUser = element?.Commentlikes?.filter((elt) => myUserId === elt.userId);
 
@@ -149,7 +150,8 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
                     <div className="header-comment">
                       <img className="co-logo-comment" alt="img" src={element.User.avatar} />
                       <div className="co-name-comment">
-                        <div onClick={() => redirectToUserProfil(element.UserId)}>{element.User.username}</div>
+                        <div onClick={() => redirectToUserProfil(element.UserId)}>{element.User.firstName}</div>
+                        <div onClick={() => redirectToUserProfil(element.UserId)}>{element.User.lastName}</div>
                         {element.User.isAdmin === true ? (
                           <div onClick={() => redirectToUserProfil(element.UserId)}>Administrateur</div>
                         ) : (
@@ -217,7 +219,10 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
                   </div>
                 </div>
               );
-            })}
+            })
+          ) : (
+            <div className="not-comment">Pas de commentaire</div>
+          )}
         </div>
       </div>
     </div>

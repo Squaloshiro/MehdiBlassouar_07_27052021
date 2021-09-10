@@ -6,10 +6,20 @@ import { useHistory } from "react-router";
 import { toastTrigger } from "../../helper/toast";
 import "./signup.scss";
 
-const SignUp = ({ setMyUserId, isLoggedin, setDataUser, setIsLoggedin, setAdmin }) => {
+const SignUp = ({
+  setMyUserId,
+  isLoggedin,
+  setFirstNewName,
+  setNewEmail,
+  setLastNewName,
+  setDataUser,
+  setIsLoggedin,
+  setAdmin,
+}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [valueError, setValueError] = useState("");
   const [compteurNewPassword, setCompteurNewPassword] = useState(0);
   const [classNameNewPassWord, setClassNameNewPassWord] = useState("");
@@ -21,8 +31,11 @@ const SignUp = ({ setMyUserId, isLoggedin, setDataUser, setIsLoggedin, setAdmin 
   const [classNameNumber, setClassNameNumber] = useState("");
   const [compteurCharacter, setCompteurCharacter] = useState(0);
   const [classNameCharacter, setClassNameCharacter] = useState("");
-  const [compteurUserName, setCompteurUserName] = useState(0);
-  const [classNameUserName, setClassNameUserName] = useState("");
+  const [compteurFirstName, setCompteurFirstName] = useState(0);
+  const [compteurLastName, setCompteurLastName] = useState(0);
+  const [classNameFirstName, setClassNameFirstName] = useState("color-green-username");
+  const [classNameLastName, setClassNameLastName] = useState("color-green-username");
+
   const [activeUppercase, setActiveUppercase] = useState(false);
   const [active, setActive] = useState(false);
   const clickOutSide = useRef();
@@ -79,10 +92,15 @@ const SignUp = ({ setMyUserId, isLoggedin, setDataUser, setIsLoggedin, setAdmin 
     } else {
       setClassNameCharacter("color-green");
     }
-    if (compteurUserName < 4 || compteurUserName > 12) {
-      setClassNameUserName("color-red");
+    if (compteurFirstName < 4 || compteurFirstName > 12) {
+      setClassNameFirstName("color_red_username");
     } else {
-      setClassNameUserName("color-green");
+      setClassNameFirstName("color-green_username");
+    }
+    if (compteurLastName < 4 || compteurLastName > 12) {
+      setClassNameLastName("color_red_username");
+    } else {
+      setClassNameLastName("color-green_username");
     }
     if (verifGroupo) {
       let matchGroupo = verifGroupo.split("@");
@@ -99,7 +117,8 @@ const SignUp = ({ setMyUserId, isLoggedin, setDataUser, setIsLoggedin, setAdmin 
     compteurLowercase,
     compteurNumber,
     compteurCharacter,
-    compteurUserName,
+    compteurFirstName,
+    compteurLastName,
     verifGroupo,
   ]);
 
@@ -141,10 +160,15 @@ const SignUp = ({ setMyUserId, isLoggedin, setDataUser, setIsLoggedin, setAdmin 
     setValueError("");
   };
 
-  const onChangeUsername = (e) => {
-    setCompteurUserName(e.target.value.length);
-    setUsername(e.target.value);
+  const onChangeFirstName = (e) => {
     setValueError("");
+    setCompteurFirstName(e.target.value.length);
+    setFirstName(e.target.value);
+  };
+  const onChangeLastName = (e) => {
+    setValueError("");
+    setCompteurLastName(e.target.value.length);
+    setLastName(e.target.value);
   };
 
   const onSignUp = async () => {
@@ -174,7 +198,12 @@ const SignUp = ({ setMyUserId, isLoggedin, setDataUser, setIsLoggedin, setAdmin 
       setActive(true);
       return;
     }
-    if (compteurUserName < 4 || compteurUserName > 12) {
+    if (compteurFirstName < 4 || compteurFirstName > 12) {
+      setActiveUppercase(false);
+      setActive(true);
+      return;
+    }
+    if (compteurLastName < 4 || compteurLastName > 12) {
       setActiveUppercase(false);
       setActive(true);
       return;
@@ -191,7 +220,8 @@ const SignUp = ({ setMyUserId, isLoggedin, setDataUser, setIsLoggedin, setAdmin 
       const response = await api.post("/users/register", {
         email,
         password,
-        username,
+        firstName,
+        lastName,
       });
       token = response.data.token;
       sessionStorage.setItem("groupomaniaToken", response.data.token);
@@ -204,6 +234,10 @@ const SignUp = ({ setMyUserId, isLoggedin, setDataUser, setIsLoggedin, setAdmin 
         });
         setAdmin(response.data.isAdmin);
         setMyUserId(response.data.id);
+        setFirstNewName(response.data.firstName);
+        setLastNewName(response.data.lastName);
+        setNewEmail(response.data.email);
+        toastTrigger("success", `Bonjour ${response.data.firstName}`);
       } catch (error) {}
       try {
         const response = await api({
@@ -213,9 +247,10 @@ const SignUp = ({ setMyUserId, isLoggedin, setDataUser, setIsLoggedin, setAdmin 
         });
         setDataUser(response.data);
       } catch (error) {
-        toastTrigger("error", "une erreur est survenu");
+        toastTrigger("error", "une erreur est survenue");
       }
-      setCompteurUserName(0);
+      setCompteurFirstName(0);
+      setCompteurLastName(0);
       setCompteurUppercase(0);
       setCompteurNumber(0);
       setCompteurLowercase(0);
@@ -258,10 +293,18 @@ const SignUp = ({ setMyUserId, isLoggedin, setDataUser, setIsLoggedin, setAdmin 
             <div>{activeUppercase && <div className={classNameCharacter}>Minimum 1 charatère spécial </div>}</div>
           </div>
           <div className="element-marge  element-size">
-            <Input style={{ width: "100%" }} onChange={onChangeUsername} value={username} label="Username" />
+            <Input style={{ width: "100%" }} onChange={onChangeFirstName} value={firstName} label="Firstname" />
             <div>
-              {compteurUserName > 0 && (
-                <div className={classNameUserName}>Minimum de caratère : {compteurUserName}/4</div>
+              {compteurFirstName > 0 && (
+                <div className={classNameFirstName}>Minimum de caratère : {compteurFirstName}/4</div>
+              )}
+            </div>
+          </div>
+          <div className="element-marge  element-size">
+            <Input style={{ width: "100%" }} onChange={onChangeLastName} value={lastName} label="LastName" />
+            <div>
+              {compteurLastName > 0 && (
+                <div className={classNameLastName}>Minimum de caratère : {compteurLastName}/4</div>
               )}
             </div>
           </div>

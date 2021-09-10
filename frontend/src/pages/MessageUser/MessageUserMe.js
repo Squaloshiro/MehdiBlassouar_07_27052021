@@ -11,7 +11,7 @@ import PostComment from "../../componants/PostComment/PostComment";
 import Modal from "../../componants/Modal/Modal";
 import MessageUpdate from "../../componants/MessageUpdat/MessageUpdate";
 import MessageDestroy from "../../componants/DestroyMsg/DestroyMsg";
-const MessageUserMe = ({ avatar, username, myUserId, admin, avatarAdmin }) => {
+const MessageUserMe = ({ avatar, firstName, lastName, myUserId, admin, avatarAdmin }) => {
   const [messagesUser, setMessagesUser] = useState([]);
   const [activeHide, setActiveHide] = useState(false);
   const [active, setActive] = useState(false);
@@ -32,7 +32,7 @@ const MessageUserMe = ({ avatar, username, myUserId, admin, avatarAdmin }) => {
 
         setMessagesUser(response.data);
       } catch (error) {
-        toastTrigger("error", "une erreur est survenu");
+        toastTrigger("error", "une erreur est survenue");
       }
     };
     getMessageUserApi();
@@ -48,7 +48,7 @@ const MessageUserMe = ({ avatar, username, myUserId, admin, avatarAdmin }) => {
       });
       setMessagesUser(response.data);
     } catch (error) {
-      toastTrigger("error", "une erreur est survenu");
+      toastTrigger("error", "une erreur est survenue");
     }
   };
 
@@ -142,7 +142,7 @@ const MessageUserMe = ({ avatar, username, myUserId, admin, avatarAdmin }) => {
       )}
       {messagesUser &&
         messagesUser.map((element) => {
-          const messageLikeByCurrentUser = element?.Likes?.filter((elt) => myUserId === elt.UserId);
+          const messageLikeByCurrentUser = element?.Likes?.filter((elt) => myUserId === elt.userId);
 
           return (
             <div key={element.id} className="card-position">
@@ -169,7 +169,8 @@ const MessageUserMe = ({ avatar, username, myUserId, admin, avatarAdmin }) => {
                     <img height="100%" width="100%" className="co-logo" alt="img" src={avatar} />
                   </div>
                   <div className="co-name">
-                    {username ? <div>{username}</div> : <div>{element.User.username}</div>}
+                    {firstName ? <div>{firstName}</div> : <div>{element.User.firstName}</div>}
+                    {lastName ? <div>{lastName}</div> : <div>{element.User.lastName}</div>}
 
                     {element.User.isAdmin === true ? <div>Administrateur</div> : <></>}
                   </div>

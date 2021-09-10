@@ -65,7 +65,7 @@ const MessageUpdate = ({
     const obj = { title, content };
     if (title === "" || content === "" || (title === element.title && content === element.content)) {
       onClick();
-      toastTrigger("error", "une erreur est survenu");
+      toastTrigger("error", "une erreur est survenue");
       return;
     }
     try {
@@ -90,7 +90,7 @@ const MessageUpdate = ({
 
           setMessagesUser(response.data);
         } catch (error) {
-          toastTrigger("error", "une erreur est survenu");
+          toastTrigger("error", "une erreur est survenue");
         }
         onClick();
         toastTrigger("success", "Publication modifiée");
@@ -100,7 +100,7 @@ const MessageUpdate = ({
         toastTrigger("success", "Publication modifiée");
       }
     } catch (error) {
-      toastTrigger("error", "une erreur est survenu");
+      toastTrigger("error", "une erreur est survenue");
     }
   };
 
@@ -112,7 +112,8 @@ const MessageUpdate = ({
             <img height="100%" width="100%" className="co-logo-update" alt="img" src={element.User.avatar} />
           </div>
           <div className="co-name">
-            <div>{element.User.username}</div>
+            <div>{element.User.firstName}</div>
+            <div>{element.User.lastName}</div>
             {element.User.isAdmin === true ? <div>Administrateur</div> : <></>}
           </div>
           <div className="time">

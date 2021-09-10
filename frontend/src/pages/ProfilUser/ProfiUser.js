@@ -40,7 +40,7 @@ const ProfilUser = ({
 
           setProfil(response.data);
         } catch (error) {
-          toastTrigger("error", "une erreur est survenu");
+          toastTrigger("error", "une erreur est survenue");
         }
       };
       getProfilUser();
@@ -60,7 +60,10 @@ const ProfilUser = ({
               <img alt="img" className="size-picturs-2" src={profil.avatar} />
             </div>
             <div className="bor-username-2">
-              <div>{profil.username}</div>
+              <div>{profil.firstName}</div>
+            </div>
+            <div className="bor-username-2">
+              <div>{profil.lastName}</div>
             </div>
           </div>
 
