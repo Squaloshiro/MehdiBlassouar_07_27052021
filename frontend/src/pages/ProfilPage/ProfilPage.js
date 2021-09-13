@@ -342,7 +342,8 @@ const ProfilPage = ({
             </div>
             <div className="identity-user">
               {!activeUser ? (
-                <div className="bor-username">
+                <div className="firstname-content">
+                  <div className="size-police">Prénom :</div>
                   <div className="usernam-page-profil">{profil.firstName}</div>
                   <div className="pen">
                     <FontAwesomeIcon onClick={clickModifUser} color="blue" icon={["fas", "pen"]} />
@@ -353,6 +354,7 @@ const ProfilPage = ({
                   <div ref={clickOutSide} className="bor-username">
                     <div className="username-positon-update">
                       <TextArea
+                        style={{ width: "100%" }}
                         variant="outlined"
                         rows={1}
                         onChange={onChangeFirstName}
@@ -363,14 +365,21 @@ const ProfilPage = ({
                         <div className={classNameFirstName}>Limite de caractère : {compteurFirstName}/12</div>
                       )}
                     </div>
-
-                    <Button onClick={updateProfilFirstName} color="primary" title="Modifier" />
+                    <div className="button-position-page-profil">
+                      <Button
+                        style={{ width: "100%" }}
+                        onClick={updateProfilFirstName}
+                        color="primary"
+                        title="Modifier"
+                      />
+                    </div>
                   </div>
                   {activeError && <div className="color_red">{activeError}</div>}
                 </div>
               )}
               {!activeLastName ? (
-                <div className="bor-username">
+                <div className="lastname-content">
+                  <div className="size-police">Nom :</div>
                   <div className="usernam-page-profil">{profil.lastName}</div>
                   <div className="pen">
                     <FontAwesomeIcon onClick={clickModifLastName} color="blue" icon={["fas", "pen"]} />
@@ -381,6 +390,7 @@ const ProfilPage = ({
                   <div ref={clickOutSideLastName} className="bor-username">
                     <div className="username-positon-update">
                       <TextArea
+                        style={{ width: "100%" }}
                         variant="outlined"
                         rows={1}
                         onChange={onChangeLastName}
@@ -391,8 +401,14 @@ const ProfilPage = ({
                         <div className={classNameLastName}>Limite de caractère : {compteurLastName}/12</div>
                       )}
                     </div>
-
-                    <Button onClick={updateProfilLastName} color="primary" title="Modifier" />
+                    <div className="button-position-page-profil">
+                      <Button
+                        style={{ width: "100%" }}
+                        onClick={updateProfilLastName}
+                        color="primary"
+                        title="Modifier"
+                      />
+                    </div>
                   </div>
                   {activeError && <div className="color_red">{activeError}</div>}
                 </div>
@@ -410,6 +426,7 @@ const ProfilPage = ({
                   <div ref={clickOutSideEmail} className="bor-username">
                     <div className="username-positon-update">
                       <TextArea
+                        style={{ width: "100%" }}
                         variant="outlined"
                         rows={1}
                         onChange={onChangeEmail}
@@ -420,8 +437,9 @@ const ProfilPage = ({
                         {verifGroupo && <div className={classNameGroupo}>Doit finir par "@groupomania.com" </div>}
                       </div>
                     </div>
-
-                    <Button onClick={updateProfilEmail} color="primary" title="Modifier" />
+                    <div className="button-position-page-profil">
+                      <Button style={{ width: "100%" }} onClick={updateProfilEmail} color="primary" title="Modifier" />
+                    </div>
                   </div>
                   {activeError && <div className="color_red">{activeError}</div>}
                 </div>
