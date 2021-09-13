@@ -61,8 +61,6 @@ const ProfilUser = ({
             </div>
             <div className="bor-username-2">
               <div>{profil.firstName}</div>
-            </div>
-            <div className="bor-username-2">
               <div>{profil.lastName}</div>
             </div>
           </div>

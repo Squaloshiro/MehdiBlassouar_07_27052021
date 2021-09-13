@@ -54,6 +54,7 @@ const App = () => {
           setAdmin(response.data.isAdmin);
           setMyUserId(response.data.id);
           setAvatar(response.data.avatar);
+          setFirstNewName(response.data.firstName);
           setIsLoggedin(true);
           setCheckLogin(true);
         } catch (error) {
