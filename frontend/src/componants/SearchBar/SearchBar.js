@@ -125,17 +125,19 @@ const SearchBar = ({ myUserId, avatar, firstNewName, newEmail, lastNewName, data
             {dataUser &&
               dataUser
                 .filter((element) => {
-                  return element.lastName.toLowerCase().includes(valueSearchBar.toLowerCase());
+                  const searchLastnameFirstname = element.lastName + element.firstName;
+                  return searchLastnameFirstname.toLowerCase().includes(valueSearchBar.toLowerCase());
                 })
                 .map((element) => {
+                  const lastnameFirstname = element.lastName + " " + element.firstName;
+
                   return (
                     <div onClick={() => redirectToUserProfil(element.id)} className="search_card" key={element.id}>
                       <div className="search_avatar_flex">
                         <img className="search_avatar" alt="img" src={element.avatar} />
                       </div>
                       <div className="search_charactere">
-                        <div>{element.firstName}</div>
-                        <div>{element.lastName}</div>
+                        <div>{lastnameFirstname}</div>
                         <div>{element.email}</div>
                         {element.isAdmin === true ? <div>Administrateur</div> : <></>}
                       </div>

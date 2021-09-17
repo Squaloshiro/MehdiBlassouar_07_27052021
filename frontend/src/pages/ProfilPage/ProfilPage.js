@@ -91,12 +91,12 @@ const ProfilPage = ({
       setClassNameBio("color-green");
       setmaxBio("");
     }
-    if (compteurFirstName < 4 || compteurFirstName > 12) {
+    if (compteurFirstName < 1 || compteurFirstName > 12) {
       setClassNameFirstName("color_red_username");
     } else {
       setClassNameFirstName("color-green_username");
     }
-    if (compteurLastName < 4 || compteurLastName > 12) {
+    if (compteurLastName < 1 || compteurLastName > 12) {
       setClassNameLastName("color_red_username");
     } else {
       setClassNameLastName("color-green_username");
@@ -227,7 +227,7 @@ const ProfilPage = ({
       return;
     }
 
-    if (compteurFirstName < 4 || compteurFirstName > 12) {
+    if (compteurFirstName < 1 || compteurFirstName > 12) {
       toastTrigger("error", "une erreur est survenue");
       return;
     }
@@ -263,7 +263,7 @@ const ProfilPage = ({
       return;
     }
 
-    if (compteurLastName < 4 || compteurLastName > 12) {
+    if (compteurLastName < 1 || compteurLastName > 12) {
       toastTrigger("error", "une erreur est survenue");
       return;
     }
@@ -341,42 +341,6 @@ const ProfilPage = ({
               )}
             </div>
             <div className="identity-user">
-              {!activeUser ? (
-                <div className="firstname-content">
-                  <div className="size-police">Prénom :</div>
-                  <div className="usernam-page-profil">{profil.firstName}</div>
-                  <div className="pen">
-                    <FontAwesomeIcon onClick={clickModifUser} color="blue" icon={["fas", "pen"]} />
-                  </div>
-                </div>
-              ) : (
-                <div className="error-position">
-                  <div ref={clickOutSide} className="bor-username">
-                    <div className="username-positon-update">
-                      <TextArea
-                        style={{ width: "100%" }}
-                        variant="outlined"
-                        rows={1}
-                        onChange={onChangeFirstName}
-                        value={firstName}
-                        label={profil.firstName}
-                      />
-                      {compteurFirstName > 0 && (
-                        <div className={classNameFirstName}>Limite de caractère : {compteurFirstName}/12</div>
-                      )}
-                    </div>
-                    <div className="button-position-page-profil">
-                      <Button
-                        style={{ width: "100%" }}
-                        onClick={updateProfilFirstName}
-                        color="primary"
-                        title="Modifier"
-                      />
-                    </div>
-                  </div>
-                  {activeError && <div className="color_red">{activeError}</div>}
-                </div>
-              )}
               {!activeLastName ? (
                 <div className="lastname-content">
                   <div className="size-police">Nom :</div>
@@ -405,6 +369,42 @@ const ProfilPage = ({
                       <Button
                         style={{ width: "100%" }}
                         onClick={updateProfilLastName}
+                        color="primary"
+                        title="Modifier"
+                      />
+                    </div>
+                  </div>
+                  {activeError && <div className="color_red">{activeError}</div>}
+                </div>
+              )}
+              {!activeUser ? (
+                <div className="firstname-content">
+                  <div className="size-police">Prénom :</div>
+                  <div className="usernam-page-profil">{profil.firstName}</div>
+                  <div className="pen">
+                    <FontAwesomeIcon onClick={clickModifUser} color="blue" icon={["fas", "pen"]} />
+                  </div>
+                </div>
+              ) : (
+                <div className="error-position">
+                  <div ref={clickOutSide} className="bor-username">
+                    <div className="username-positon-update">
+                      <TextArea
+                        style={{ width: "100%" }}
+                        variant="outlined"
+                        rows={1}
+                        onChange={onChangeFirstName}
+                        value={firstName}
+                        label={profil.firstName}
+                      />
+                      {compteurFirstName > 0 && (
+                        <div className={classNameFirstName}>Limite de caractère : {compteurFirstName}/12</div>
+                      )}
+                    </div>
+                    <div className="button-position-page-profil">
+                      <Button
+                        style={{ width: "100%" }}
+                        onClick={updateProfilFirstName}
                         color="primary"
                         title="Modifier"
                       />

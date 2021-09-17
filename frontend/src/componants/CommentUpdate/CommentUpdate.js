@@ -7,13 +7,15 @@ import api from "../../config/api";
 import { useState, useEffect } from "react";
 import { toastTrigger } from "../../helper/toast";
 import TextArea from "../TextArea/InputTextArea";
-
+import moment from "moment";
+import "moment/locale/fr";
 const CommentUpdate = ({ setPopUpIsOpen, setcomments, setActive, element, close }) => {
   const [content, setContent] = useState(element.content);
   const [compteurContent, setCompteurContent] = useState(0);
   const [maxContent, setmaxContent] = useState("");
   const [classNameContent, setClassNameContent] = useState("color-green");
   const send = <FontAwesomeIcon icon={["fas", "paper-plane"]} />;
+  const lastNameFirstName = element.User.lastName + " " + element.User.firstName;
 
   useEffect(() => {
     if (compteurContent > 1000) {
@@ -66,8 +68,8 @@ const CommentUpdate = ({ setPopUpIsOpen, setcomments, setActive, element, close 
           <div className="options"></div>
           <img className="co-logo-update" alt="img" src={element.User.avatar} />
           <div className="co-name">
-            <div>{element.User.firstName}</div>
-            <div>{element.User.lastName}</div>
+            <div>{lastNameFirstName}</div>
+
             {element.User.isAdmin === true ? <div>Administrateur</div> : <></>}
           </div>
           <div className="time">
@@ -75,15 +77,13 @@ const CommentUpdate = ({ setPopUpIsOpen, setcomments, setActive, element, close 
               <div>
                 <div>
                   {" "}
-                  Le {element.createdAt} <FontAwesomeIcon icon={["fas", "globe"]} />
+                  Postée {moment(new Date(element.createdAt)).fromNow()} <FontAwesomeIcon icon={["fas", "globe"]} />
                 </div>
               </div>
             ) : (
               <div>
-                <div>
-                  {" "}
-                  Modifié le {element.updatedAt} <FontAwesomeIcon icon={["fas", "globe"]} />
-                </div>
+                {" "}
+                Modifié {moment(new Date(element.updatedAt)).fromNow()} <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
               </div>
             )}
           </div>

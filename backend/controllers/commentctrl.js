@@ -93,12 +93,12 @@ module.exports = {
 
             if (allCommentFound) {
               const commentsFormated = allCommentFoundParsed.map((element) => {
-                const date = moment(element.createdAt).local().format("LL");
-                const hour = moment(element.createdAt).local().format("LT");
-                element.createdAt = `${date} à ${hour}`;
-                const modifdate = moment(element.updatedAt).local().format("LL");
-                const modifhour = moment(element.updatedAt).local().format("LT");
-                element.updatedAt = `${modifdate} à ${modifhour}`;
+                const date = moment(element.createdAt).local().format("MMMM Do YYYY, h:mm:ss a");
+
+                element.createdAt = date;
+                const modifdate = moment(element.updatedAt).local().format("MMMM Do YYYY, h:mm:ss a");
+
+                element.updatedAt = modifdate;
                 return element;
               });
 
@@ -141,12 +141,12 @@ module.exports = {
 
         if (comment) {
           const commentsFormated = allCommentFoundParsed.map((element) => {
-            const date = moment(element.createdAt).local().format("LL");
-            const hour = moment(element.createdAt).local().format("LT");
-            element.createdAt = `${date} à ${hour}`;
-            const modifdate = moment(element.updatedAt).local().format("LL");
-            const modifhour = moment(element.updatedAt).local().format("LT");
-            element.updatedAt = `${modifdate} à ${modifhour}`;
+            const date = moment(element.createdAt).local().format("MMMM Do YYYY, h:mm:ss a");
+
+            element.createdAt = date;
+            const modifdate = moment(element.updatedAt).local().format("MMMM Do YYYY, h:mm:ss a");
+
+            element.updatedAt = modifdate;
             return element;
           });
 
@@ -245,12 +245,12 @@ module.exports = {
 
             if (comment) {
               const commentsFormated = allCommentFoundParsed.map((element) => {
-                const date = moment(element.createdAt).local().format("LL");
-                const hour = moment(element.createdAt).local().format("LT");
-                element.createdAt = `${date} à ${hour}`;
-                const modifdate = moment(element.updatedAt).local().format("LL");
-                const modifhour = moment(element.updatedAt).local().format("LT");
-                element.updatedAt = `${modifdate} à ${modifhour}`;
+                const date = moment(element.createdAt).local().format("MMMM Do YYYY, h:mm:ss a");
+
+                element.createdAt = date;
+                const modifdate = moment(element.updatedAt).local().format("MMMM Do YYYY, h:mm:ss a");
+
+                element.updatedAt = modifdate;
                 return element;
               });
 
@@ -391,12 +391,12 @@ module.exports = {
 
             if (comment) {
               const commentsFormated = allCommentFoundParsed.map((element) => {
-                const date = moment(element.createdAt).local().format("LL");
-                const hour = moment(element.createdAt).local().format("LT");
-                element.createdAt = `${date} à ${hour}`;
-                const modifdate = moment(element.updatedAt).local().format("LL");
-                const modifhour = moment(element.updatedAt).local().format("LT");
-                element.updatedAt = `${modifdate} à ${modifhour}`;
+                const date = moment(element.createdAt).local().format("MMMM Do YYYY, h:mm:ss a");
+
+                element.createdAt = date;
+                const modifdate = moment(element.updatedAt).local().format("MMMM Do YYYY, h:mm:ss a");
+
+                element.updatedAt = modifdate;
                 return element;
               });
 

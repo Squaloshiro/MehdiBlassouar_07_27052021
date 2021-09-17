@@ -23,6 +23,7 @@ const MessageImage = ({ postMessage }) => {
   const [maxTitle, setmaxTitle] = useState("");
   const [maxContent, setmaxContent] = useState("");
   const [activeImage, setActiveImage] = useState(false);
+  const [activeError, setActiveError] = useState(false);
   const send = <FontAwesomeIcon icon={["fas", "paper-plane"]} />;
 
   useEffect(() => {
@@ -50,7 +51,8 @@ const MessageImage = ({ postMessage }) => {
 
   const handleClickOutside = (e) => {
     if (!myRef.current.contains(e.target)) {
-      if (activeImage || compteurContent || compteurTitle) {
+      if (activeImage || compteurContent || compteurTitle || activeError) {
+        setActiveError(false);
         setActiveImage(false);
         setFile("");
         setContent("");
@@ -99,7 +101,7 @@ const MessageImage = ({ postMessage }) => {
       toastTrigger("error", "une erreur est survenue");
       return;
     } else {
-      if (title && content) {
+      if (title) {
         try {
           if (file) {
             const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
@@ -142,9 +144,16 @@ const MessageImage = ({ postMessage }) => {
             toastTrigger("success", "Publication postée");
           }
         } catch (error) {
+          if (!content && !file) {
+            setActiveError(true);
+          }
+          console.log("---------------error---------------------");
+          console.log(error);
+          console.log("------------------------------------");
           toastTrigger("error", "une erreur est survenue");
         }
       } else {
+        setActiveError(true);
         toastTrigger("error", "une erreur est survenue");
         return;
       }
@@ -183,6 +192,9 @@ const MessageImage = ({ postMessage }) => {
           <Button size="small" onClick={onSubmitMessageImg} title={send} />
         </div>
         {activeImage && <div className="img-file">{file?.name}</div>}
+        {activeError && (
+          <div className="error-call">* Un titre obligatoire et (une description ou une image ou les deux)</div>
+        )}
       </div>
     </div>
   );

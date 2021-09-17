@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../../pages/LandingPage/landingpage.scss";
 import "../../componants/MessageUpdat/update.scss";
 import api from "../../config/api";
+import moment from "moment";
+import "moment/locale/fr";
 import { useState, useEffect } from "react";
 import { toastTrigger } from "../../helper/toast";
 import { useLocation } from "react-router";
@@ -28,6 +30,7 @@ const MessageUpdate = ({
   const [compteurTitle, setCompteurTitle] = useState(0);
   const [maxTitle, setmaxTitle] = useState("");
   const [maxContent, setmaxContent] = useState("");
+  const lastNameFirstName = element.User.lastName + " " + element.User.firstName;
 
   useEffect(() => {
     if (compteurTitle > 255) {
@@ -59,15 +62,29 @@ const MessageUpdate = ({
   const onChangeContent = (e) => {
     setCompteurContent(e.target.value.length);
     setContent(e.target.value);
+    if (!e.target?.value) {
+      setContent("");
+    }
   };
 
   const updateMessage = async () => {
-    const obj = { title, content };
-    if (title === "" || content === "" || (title === element.title && content === element.content)) {
+    let file = element.attachment;
+
+    const obj = { title, content, file };
+    if (title === "" || (title === element.title && content === element.content)) {
       onClick();
       toastTrigger("error", "une erreur est survenue");
       return;
     }
+    if (
+      element.attachment === null &&
+      (title === "" || content === "" || (title === element.title && content === element.content))
+    ) {
+      onClick();
+      toastTrigger("error", "une erreur est survenue");
+      return;
+    }
+
     try {
       const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
       const response = await api({
@@ -78,6 +95,7 @@ const MessageUpdate = ({
       });
       setCompteurTitle(0);
       setCompteurContent(0);
+
       if (location.pathname === "/profil" || location.pathname === "/users/profils") {
         const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
 
@@ -112,24 +130,20 @@ const MessageUpdate = ({
             <img height="100%" width="100%" className="co-logo-update" alt="img" src={element.User.avatar} />
           </div>
           <div className="co-name">
-            <div>{element.User.firstName}</div>
-            <div>{element.User.lastName}</div>
+            <div>{lastNameFirstName}</div>
+
             {element.User.isAdmin === true ? <div>Administrateur</div> : <></>}
           </div>
           <div className="time">
             {element.createdAt === element.updatedAt ? (
               <div>
-                <div>
-                  {" "}
-                  Le {element.createdAt} <FontAwesomeIcon icon={["fas", "globe"]} />
-                </div>
+                {" "}
+                Postée {moment(new Date(element.createdAt)).fromNow()} <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
               </div>
             ) : (
               <div>
-                <div>
-                  {" "}
-                  Modifié le {element.updatedAt} <FontAwesomeIcon icon={["fas", "globe"]} />
-                </div>
+                {" "}
+                Modifié {moment(new Date(element.updatedAt)).fromNow()} <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
               </div>
             )}
           </div>

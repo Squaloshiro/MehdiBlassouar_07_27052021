@@ -18,6 +18,7 @@ const SignUp = ({
 }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmePassword, setConfirmePassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [valueError, setValueError] = useState("");
@@ -92,12 +93,12 @@ const SignUp = ({
     } else {
       setClassNameCharacter("color-green");
     }
-    if (compteurFirstName < 4 || compteurFirstName > 12) {
+    if (compteurFirstName < 1 || compteurFirstName > 12) {
       setClassNameFirstName("color_red_username");
     } else {
       setClassNameFirstName("color-green_username");
     }
-    if (compteurLastName < 4 || compteurLastName > 12) {
+    if (compteurLastName < 1 || compteurLastName > 12) {
       setClassNameLastName("color_red_username");
     } else {
       setClassNameLastName("color-green_username");
@@ -159,6 +160,11 @@ const SignUp = ({
     setActiveUppercase(true);
     setValueError("");
   };
+  const onChangeConfirmPassword = (e) => {
+    setConfirmePassword(e.target.value);
+
+    setValueError("");
+  };
 
   const onChangeFirstName = (e) => {
     setValueError("");
@@ -172,7 +178,7 @@ const SignUp = ({
   };
 
   const onSignUp = async () => {
-    let token;
+    //let token;
     if (compteurNewPassword < 8) {
       setActiveUppercase(false);
       setActive(true);
@@ -198,12 +204,12 @@ const SignUp = ({
       setActive(true);
       return;
     }
-    if (compteurFirstName < 4 || compteurFirstName > 12) {
+    if (compteurFirstName < 1 || compteurFirstName > 12) {
       setActiveUppercase(false);
       setActive(true);
       return;
     }
-    if (compteurLastName < 4 || compteurLastName > 12) {
+    if (compteurLastName < 1 || compteurLastName > 12) {
       setActiveUppercase(false);
       setActive(true);
       return;
@@ -216,17 +222,24 @@ const SignUp = ({
         return;
       }
     }
+
+    if (confirmePassword !== password) {
+      toastTrigger("error", "une erreur est survenue");
+      setValueError("Vous n'avez pas saisie les même mots de passe");
+    }
+
     try {
-      const response = await api.post("/users/register", {
+      await api.post("/users/register", {
         email,
         password,
         firstName,
         lastName,
+        confirmePassword,
       });
-      token = response.data.token;
-      sessionStorage.setItem("groupomaniaToken", response.data.token);
-      setIsLoggedin(true);
-      try {
+      // token = response.data.token;
+      //  sessionStorage.setItem("groupomaniaToken", response.data.token);
+      // setIsLoggedin(true);
+      /* try {
         const response = await api({
           url: "/users/me",
           method: "get",
@@ -237,9 +250,9 @@ const SignUp = ({
         setFirstNewName(response.data.firstName);
         setLastNewName(response.data.lastName);
         setNewEmail(response.data.email);
-        toastTrigger("success", `Bonjour ${response.data.firstName}`);
-      } catch (error) {}
-      try {
+        toastTrigger("success", `Bonjour ${response.data.lastName + " " + response.data.firstName}`);
+      } catch (error) {}*/
+      /* try {
         const response = await api({
           method: "get",
           url: "/users/all",
@@ -248,7 +261,7 @@ const SignUp = ({
         setDataUser(response.data);
       } catch (error) {
         toastTrigger("error", "une erreur est survenue");
-      }
+      }*/
       setCompteurFirstName(0);
       setCompteurLastName(0);
       setCompteurUppercase(0);
@@ -259,7 +272,8 @@ const SignUp = ({
       setVerifGroupo("");
       setActiveUppercase(false);
       setActive(false);
-      history.push("/");
+
+      history.push("/connexion");
     } catch (error) {
       setValueError(error.response.data.error);
     }
@@ -293,10 +307,19 @@ const SignUp = ({
             <div>{activeUppercase && <div className={classNameCharacter}>Minimum 1 charatère spécial </div>}</div>
           </div>
           <div className="element-marge  element-size">
+            <Input
+              style={{ width: "100%" }}
+              onChange={onChangeConfirmPassword}
+              value={confirmePassword}
+              label="Confirm password"
+              type="password"
+            />
+          </div>
+          <div className="element-marge  element-size">
             <Input style={{ width: "100%" }} onChange={onChangeFirstName} value={firstName} label="Firstname" />
             <div>
               {compteurFirstName > 0 && (
-                <div className={classNameFirstName}>Minimum de caratère : {compteurFirstName}/4</div>
+                <div className={classNameFirstName}>Minimum de caratère : {compteurFirstName}/1</div>
               )}
             </div>
           </div>
@@ -304,11 +327,11 @@ const SignUp = ({
             <Input style={{ width: "100%" }} onChange={onChangeLastName} value={lastName} label="LastName" />
             <div>
               {compteurLastName > 0 && (
-                <div className={classNameLastName}>Minimum de caratère : {compteurLastName}/4</div>
+                <div className={classNameLastName}>Minimum de caratère : {compteurLastName}/1</div>
               )}
             </div>
           </div>
-          {valueError && <div>{valueError}</div>}
+          {valueError && <div className="color-red">{valueError}</div>}
           <div className="element-marge">
             <Button onClick={onSignUp} title="Valider" />
           </div>

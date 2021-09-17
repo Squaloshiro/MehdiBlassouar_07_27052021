@@ -9,12 +9,13 @@ const fs = require("fs");
 const email_regex =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const password_regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/;
-
+const regexCharacter = /^([A-zàâäçéèêëîïôùûüÿæœÀÂÄÇÉÈÊËÎÏÔÙÛÜŸÆŒ]*[ ]?[A-zàâäçéèêëîïôùûüÿæœÀÂÄÇÉÈÊËÎÏÔÙÛÜŸÆŒ]+$)$/;
+const regexCharacter1 = /^([A-zàâäçéèêëîïôùûüÿæœÀÂÄÇÉÈÊËÎÏÔÙÛÜŸÆŒ]*-?[A-zàâäçéèêëîïôùûüÿæœÀÂÄÇÉÈÊËÎÏÔÙÛÜŸÆŒ]+$)$/;
 //Controller
 module.exports = {
   register: function (req, res) {
     //Params
-    let { email, lastName, firstName, password, bio } = req.body;
+    let { email, lastName, firstName, password, confirmePassword, bio } = req.body;
 
     let avatar = "/static/media/1.a2541ca9.jpg";
 
@@ -22,11 +23,18 @@ module.exports = {
       return res.status(400).json({ error: "paramaitre manquant" });
     }
 
-    if (lastName.length >= 13 || lastName.length <= 3) {
-      return res.status(400).json({ error: "le nom doit être compris entre 4 et 5 lettres" });
+    if (!regexCharacter.test(lastName) && !regexCharacter1.test(lastName)) {
+      return res.status(400).json({ error: " 1doit pas contenir des caractères spéciaux est des nombres" });
     }
-    if (firstName.length >= 13 || firstName.length <= 3) {
-      return res.status(400).json({ error: "le prénom doit être compris entre 4 et 5 lettres" });
+
+    if (!regexCharacter.test(firstName) && !regexCharacter1.test(firstName)) {
+      return res.status(400).json({ error: "ne doit pas contenir des caractères spéciaux est des nombres" });
+    }
+    if (lastName.length >= 13 || lastName.length < 0) {
+      return res.status(400).json({ error: "le nom doit être compris entre 1 et 12 lettres" });
+    }
+    if (firstName.length >= 13 || firstName.length < 0) {
+      return res.status(400).json({ error: "le prénom doit être compris entre 1 et 12 lettres" });
     }
 
     if (!email_regex.test(email)) {
@@ -44,10 +52,13 @@ module.exports = {
           "mot de passe non valide, 8 caractères minimum, contenant au moins une lettre minuscule, une lettre majuscule, un chiffre numérique et un caractère spécial",
       });
     }
+    if (confirmePassword !== password) {
+      return res.status(400).json({ error: "vous n'avez pas saisie les mêmes mots de passe" });
+    }
     email = email.trim();
     lastName = lastName.trim();
     firstName = firstName.trim();
-
+    confirmePassword = confirmePassword.trim();
     asyncLib.waterfall(
       [
         function (done) {
@@ -123,7 +134,8 @@ module.exports = {
       ],
       function (newUser) {
         if (newUser) {
-          return res.status(200).json({
+          return res.status(200).json({ succes: "compte créé" });
+          /* return res.status(200).json({
             token: jwt.sign(
               {
                 userId: newUser.id,
@@ -132,7 +144,7 @@ module.exports = {
               process.env.TOKEN,
               { expiresIn: "24h" }
             ),
-          });
+          });*/
         } else {
           return res.status(500).json({ error: "Problème utilisateur" });
         }
@@ -784,9 +796,14 @@ module.exports = {
     const userId = decodedToken.userId;
 
     let { firstName } = req.body;
+    const regexCharacter = /^([A-zàâäçéèêëîïôùûüÿæœÀÂÄÇÉÈÊËÎÏÔÙÛÜŸÆŒ]*[ ]?[A-zàâäçéèêëîïôùûüÿæœÀÂÄÇÉÈÊËÎÏÔÙÛÜŸÆŒ]+$)$/;
+    const regexCharacter1 = /^([A-zàâäçéèêëîïôùûüÿæœÀÂÄÇÉÈÊËÎÏÔÙÛÜŸÆŒ]*-?[A-zàâäçéèêëîïôùûüÿæœÀÂÄÇÉÈÊËÎÏÔÙÛÜŸÆŒ]+$)$/;
+    if (!regexCharacter.test(firstName) && !regexCharacter1.test(firstName)) {
+      return res.status(400).json({ error: "ne doit pas contenir des caractères spéciaux est des nombres" });
+    }
     firstName = firstName.trim();
-    if (firstName.length >= 13 || firstName.length <= 3) {
-      return res.status(400).json({ error: "le prénom doit être compris entre 4 et 5 lettres" });
+    if (firstName.length >= 13 || firstName.length < 0) {
+      return res.status(400).json({ error: "le prénom doit être compris entre 1 et 12 lettres" });
     }
 
     asyncLib.waterfall(
@@ -854,9 +871,14 @@ module.exports = {
     const userId = decodedToken.userId;
 
     let { lastName } = req.body;
+    const regexCharacter = /^([A-zàâäçéèêëîïôùûüÿæœÀÂÄÇÉÈÊËÎÏÔÙÛÜŸÆŒ]*[ ]?[A-zàâäçéèêëîïôùûüÿæœÀÂÄÇÉÈÊËÎÏÔÙÛÜŸÆŒ]+$)$/;
+    const regexCharacter1 = /^([A-zàâäçéèêëîïôùûüÿæœÀÂÄÇÉÈÊËÎÏÔÙÛÜŸÆŒ]*-?[A-zàâäçéèêëîïôùûüÿæœÀÂÄÇÉÈÊËÎÏÔÙÛÜŸÆŒ]+$)$/;
+    if (!regexCharacter.test(lastName) && !regexCharacter1.test(lastName)) {
+      return res.status(400).json({ error: "ne doit pas contenir des caractères spéciaux est des nombres" });
+    }
     lastName = lastName.trim();
-    if (lastName.length >= 13 || lastName.length <= 3) {
-      return res.status(400).json({ error: "le nom doit être compris entre 4 et 5 lettres" });
+    if (lastName.length >= 13 || lastName.length < 0) {
+      return res.status(400).json({ error: "le nom doit être compris entre 30000 et 12 lettres" });
     }
 
     asyncLib.waterfall(
@@ -878,8 +900,8 @@ module.exports = {
             attributes: ["lastName", "id"],
             where: { lastName },
           })
-            .then(function (userLastNameFound) {
-              done(null, userFound, userLastNameFound);
+            .then(function () {
+              done(null, userFound);
             })
             .catch(function (err) {
               return res.status(500).json({ error: "une erreur est survenu" });

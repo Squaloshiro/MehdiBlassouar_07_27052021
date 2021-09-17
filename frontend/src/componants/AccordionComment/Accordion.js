@@ -8,7 +8,8 @@ import CommentUpdate from "../CommentUpdate/CommentUpdate";
 import CommentLike from "../CommentLike/Commentlike";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Modal from "../../componants/Modal/Modal";
-
+import moment from "moment";
+import "moment/locale/fr";
 const Accordion = ({ title, comments, setcomments, messageId, modifyComment, newComments, myUserId, admin }) => {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(false);
@@ -143,6 +144,7 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
           {comments[0] !== undefined ? (
             comments.map((element) => {
               const messageCommentLikeByCurrentUser = element?.Commentlikes?.filter((elt) => myUserId === elt.userId);
+              const lastNameFirstName = element.User.lastName + " " + element.User.firstName;
 
               return (
                 <div key={element.id} className="card-position-comment">
@@ -150,8 +152,8 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
                     <div className="header-comment">
                       <img className="co-logo-comment" alt="img" src={element.User.avatar} />
                       <div className="co-name-comment">
-                        <div onClick={() => redirectToUserProfil(element.UserId)}>{element.User.firstName}</div>
-                        <div onClick={() => redirectToUserProfil(element.UserId)}>{element.User.lastName}</div>
+                        <div onClick={() => redirectToUserProfil(element.UserId)}>{lastNameFirstName}</div>
+
                         {element.User.isAdmin === true ? (
                           <div onClick={() => redirectToUserProfil(element.UserId)}>Administrateur</div>
                         ) : (
@@ -163,14 +165,16 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
                           <div>
                             <div>
                               {" "}
-                              Le {element.createdAt} <FontAwesomeIcon icon={["fas", "globe"]} />
+                              Postée {moment(new Date(element.createdAt)).fromNow()}{" "}
+                              <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
                             </div>
                           </div>
                         ) : (
                           <div>
                             <div>
                               {" "}
-                              Modifié le {element.updatedAt} <FontAwesomeIcon icon={["fas", "globe"]} />
+                              Modifié {moment(new Date(element.updatedAt)).fromNow()}{" "}
+                              <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
                             </div>
                           </div>
                         )}

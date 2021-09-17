@@ -12,20 +12,18 @@ module.exports = {
     const decodedToken = jwt.verify(token, process.env.TOKEN);
     const userId = decodedToken.userId;
 
-    const TITLE_LIMIT = 2;
-    const CONTENT_LIMIT = 4;
-    const ITEMS_LIMIT = 50;
+    const TITLE_LIMIT = 0;
 
     // Params
 
     const formMessage = JSON.parse(req.body.message);
     const { title, content } = formMessage;
 
-    if (title === "" || content === "" || req.file === "") {
+    if (title === "") {
       return res.status(400).json({ error: "paramaitre manquant" });
     }
 
-    if (title.length <= TITLE_LIMIT || content.length <= CONTENT_LIMIT) {
+    if (title.length < TITLE_LIMIT) {
       return res.status(400).json({ error: "invalid paramaitre" });
     }
     asyncLib.waterfall(
@@ -81,12 +79,12 @@ module.exports = {
 
             if (allMessageFound) {
               const messagesFormated = allMessageFoundParsed.map((element) => {
-                const date = moment(element.createdAt).local().format("LL");
-                const hour = moment(element.createdAt).local().format("LT");
-                element.createdAt = `${date} à ${hour}`;
-                const modifdate = moment(element.updatedAt).local().format("LL");
-                const modifhour = moment(element.updatedAt).local().format("LT");
-                element.updatedAt = `${modifdate} à ${modifhour}`;
+                const date = moment(element.createdAt).local().format("MMMM Do YYYY, h:mm:ss a");
+
+                element.createdAt = date;
+                const modifdate = moment(element.updatedAt).local().format("MMMM Do YYYY, h:mm:ss a");
+
+                element.updatedAt = modifdate;
                 return element;
               });
 
@@ -105,8 +103,8 @@ module.exports = {
     const decodedToken = jwt.verify(token, process.env.TOKEN);
     const userId = decodedToken.userId;
 
-    const TITLE_LIMIT = 2;
-    const CONTENT_LIMIT = 4;
+    const TITLE_LIMIT = 0;
+    const CONTENT_LIMIT = 0;
     const ITEMS_LIMIT = 50;
 
     // Params
@@ -117,7 +115,7 @@ module.exports = {
       return res.status(400).json({ error: "paramaitre manquant" });
     }
 
-    if (title.length <= TITLE_LIMIT || content.length <= CONTENT_LIMIT) {
+    if (title.length < TITLE_LIMIT || content.length < CONTENT_LIMIT) {
       return res.status(400).json({ error: "invalide paramaitre" });
     }
 
@@ -173,12 +171,12 @@ module.exports = {
 
             if (allMessageFound) {
               const messagesFormated = allMessageFoundParsed.map((element) => {
-                const date = moment(element.createdAt).local().format("LL");
-                const hour = moment(element.createdAt).local().format("LT");
-                element.createdAt = `${date} à ${hour}`;
-                const modifdate = moment(element.updatedAt).local().format("LL");
-                const modifhour = moment(element.updatedAt).local().format("LT");
-                element.updatedAt = `${modifdate} à ${modifhour}`;
+                const date = moment(element.createdAt).local().format("MMMM Do YYYY, h:mm:ss a");
+
+                element.createdAt = date;
+                const modifdate = moment(element.updatedAt).local().format("MMMM Do YYYY, h:mm:ss a");
+
+                element.updatedAt = modifdate;
                 return element;
               });
 
@@ -220,12 +218,12 @@ module.exports = {
         const messagesParsed = JSON.parse(JSON.stringify(messages));
         if (messages) {
           const messagesFormated = messagesParsed.map((element) => {
-            const date = moment(element.createdAt).local().format("LL");
-            const hour = moment(element.createdAt).local().format("LT");
-            element.createdAt = `${date} à ${hour}`;
-            const modifdate = moment(element.updatedAt).local().format("LL");
-            const modifhour = moment(element.updatedAt).local().format("LT");
-            element.updatedAt = `${modifdate} à ${modifhour}`;
+            const date = moment(element.createdAt).local().format("MMMM Do YYYY, h:mm:ss a");
+
+            element.createdAt = date;
+            const modifdate = moment(element.updatedAt).local().format("MMMM Do YYYY, h:mm:ss a");
+
+            element.updatedAt = modifdate;
             return element;
           });
 
@@ -272,12 +270,12 @@ module.exports = {
 
           if (messages) {
             const messagesFormated = allMessageFoundParsed.map((element) => {
-              const date = moment(element.createdAt).local().format("LL");
-              const hour = moment(element.createdAt).local().format("LT");
-              element.createdAt = `${date} à ${hour}`;
-              const modifdate = moment(element.updatedAt).local().format("LL");
-              const modifhour = moment(element.updatedAt).local().format("LT");
-              element.updatedAt = `${modifdate} à ${modifhour}`;
+              const date = moment(element.createdAt).local().format("MMMM Do YYYY, h:mm:ss a");
+
+              element.createdAt = date;
+              const modifdate = moment(element.updatedAt).local().format("MMMM Do YYYY, h:mm:ss a");
+
+              element.updatedAt = modifdate;
               return element;
             });
 
@@ -310,6 +308,12 @@ module.exports = {
 
     let content = req.body.content;
     let title = req.body.title;
+
+    let file = req.body.file;
+    if (file === null && (title === "" || content === "")) {
+      return res.status(500).json({ error: "Modification impossible" });
+    }
+
     asyncLib.waterfall(
       [
         function (done) {
@@ -367,7 +371,7 @@ module.exports = {
             if (messageFound.UserId === userFound.id || (userAdminfound.isAdmin && userAdminfound.id === userId)) {
               messageFound
                 .update({
-                  content: content ? content : messageFound.content,
+                  content: content,
                   title: title ? title : messageFound.title,
                 })
                 .then(function (newMessage) {
@@ -406,12 +410,12 @@ module.exports = {
 
             if (allMessageFound) {
               const messagesFormated = allMessageFoundParsed.map((element) => {
-                const date = moment(element.createdAt).local().format("LL");
-                const hour = moment(element.createdAt).local().format("LT");
-                element.createdAt = `${date} à ${hour}`;
-                const modifdate = moment(element.updatedAt).local().format("LL");
-                const modifhour = moment(element.updatedAt).local().format("LT");
-                element.updatedAt = `${modifdate} à ${modifhour}`;
+                const date = moment(element.createdAt).local().format("MMMM Do YYYY, h:mm:ss a");
+
+                element.createdAt = date;
+                const modifdate = moment(element.updatedAt).local().format("MMMM Do YYYY, h:mm:ss a");
+
+                element.updatedAt = modifdate;
                 return element;
               });
 

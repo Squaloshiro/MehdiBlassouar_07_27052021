@@ -1,46 +1,48 @@
-'use strict';
+"use strict";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Commentlikes', {
+    await queryInterface.createTable("Commentlikes", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       commentId: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'Comments',
-          key: 'id'
-        }
+          model: "Comments",
+          key: "id",
+        },
+        onDelete: "CASCADE",
       },
       userId: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'Users',
-          key: 'id'
-        }
+          model: "Users",
+          key: "id",
+        },
+        onDelete: "CASCADE",
       },
       userLike: {
         allowNull: false,
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
       },
       userDislike: {
         allowNull: false,
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Commentlikes');
-  }
+    await queryInterface.dropTable("Commentlikes");
+  },
 };

@@ -5,7 +5,8 @@ import Menu from "../../componants/Menu/Menu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MessageLike from "../../componants/MessageLike/MessageLike";
 import "./messageuser.scss";
-
+import moment from "moment";
+import "moment/locale/fr";
 import { toastTrigger } from "../../helper/toast";
 import PostComment from "../../componants/PostComment/PostComment";
 import Modal from "../../componants/Modal/Modal";
@@ -18,7 +19,7 @@ const MessageUserMe = ({ avatar, firstName, lastName, myUserId, admin, avatarAdm
   const [messageInModal, setMessageInModal] = useState(null);
   const [popUpIsOpen, setPopUpIsOpen] = useState(false);
   const [messageInModalDestroy, setMessageInModalDestroy] = useState(null);
-
+  const oldLastNameFirstName = lastName + " " + firstName;
   useEffect(() => {
     const getMessageUserApi = async () => {
       const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
@@ -143,6 +144,7 @@ const MessageUserMe = ({ avatar, firstName, lastName, myUserId, admin, avatarAdm
       {messagesUser &&
         messagesUser.map((element) => {
           const messageLikeByCurrentUser = element?.Likes?.filter((elt) => myUserId === elt.userId);
+          const lastNameFirstName = element.User.lastName + " " + element.User.firstName;
 
           return (
             <div key={element.id} className="card-position">
@@ -169,8 +171,7 @@ const MessageUserMe = ({ avatar, firstName, lastName, myUserId, admin, avatarAdm
                     <img height="100%" width="100%" className="co-logo" alt="img" src={avatar} />
                   </div>
                   <div className="co-name">
-                    {firstName ? <div>{firstName}</div> : <div>{element.User.firstName}</div>}
-                    {lastName ? <div>{lastName}</div> : <div>{element.User.lastName}</div>}
+                    {oldLastNameFirstName ? <div>{oldLastNameFirstName}</div> : <div>{lastNameFirstName}</div>}
 
                     {element.User.isAdmin === true ? <div>Administrateur</div> : <></>}
                   </div>
@@ -178,13 +179,17 @@ const MessageUserMe = ({ avatar, firstName, lastName, myUserId, admin, avatarAdm
                     {element.createdAt === element.updatedAt ? (
                       <div>
                         <div>
-                          Le {element.createdAt} <FontAwesomeIcon icon={["fas", "globe"]} />
+                          {" "}
+                          Postée {moment(new Date(element.createdAt)).fromNow()}{" "}
+                          <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
                         </div>
                       </div>
                     ) : (
                       <div>
                         <div>
-                          Modifié le {element.updatedAt} <FontAwesomeIcon icon={["fas", "globe"]} />
+                          {" "}
+                          Modifié {moment(new Date(element.updatedAt)).fromNow()}{" "}
+                          <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
                         </div>
                       </div>
                     )}

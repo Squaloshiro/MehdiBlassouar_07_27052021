@@ -34,6 +34,7 @@ const Header = ({
   const [signUpPage, setSignUpPage] = useState(false);
   const [pointorActive, setPointorActive] = useState(false);
   const location = useLocation();
+  const lastnameFirstname = lastNewName + " " + firstNewName;
 
   useEffect(() => {
     if (location.pathname === "/profil") {
@@ -68,7 +69,7 @@ const Header = ({
     setMyUserId("");
     setAdmin(false);
     setAvatar("");
-    toastTrigger("success", `Au revoir ${firstNewName}`);
+    toastTrigger("success", `Au revoir ${lastnameFirstname}`);
     history.push("/connexion");
   };
 

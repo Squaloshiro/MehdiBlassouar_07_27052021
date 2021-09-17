@@ -55,7 +55,7 @@ const SignIn = ({
         setFirstNewName(response.data.firstName);
         setLastNewName(response.data.lastName);
         setNewEmail(response.data.email);
-        toastTrigger("success", `Bonjour ${response.data.firstName}`);
+        toastTrigger("success", `Bonjour ${response.data.lastName + " " + response.data.firstName}`);
       } catch (error) {}
       try {
         const response = await api({
@@ -93,7 +93,7 @@ const SignIn = ({
                 type="password"
               />
             </div>
-            {valueError && <div>{valueError}</div>}
+            {valueError && <div className="color-red">{valueError}</div>}
 
             <div className="element-marge">
               <Button onClick={onSignIn} title="Valider" />

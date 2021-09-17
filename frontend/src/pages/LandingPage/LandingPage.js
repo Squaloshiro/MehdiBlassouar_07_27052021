@@ -6,6 +6,8 @@ import Menu from "../../componants/Menu/Menu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MessageLike from "../../componants/MessageLike/MessageLike";
 import MessageImage from "../PostMessage/PostMessage";
+import moment from "moment";
+import "moment/locale/fr";
 
 import PostComment from "../../componants/PostComment/PostComment";
 import Modal from "../../componants/Modal/Modal";
@@ -20,6 +22,7 @@ const LandingPage = ({ setMessages, messages, myUserId, admin, avatar }) => {
   const [messageInModalDestroy, setMessageInModalDestroy] = useState(null);
   const [popUpIsOpen, setPopUpIsOpen] = useState(false);
   const [activeHide, setActiveHide] = useState(false);
+
   useEffect(() => {
     if (sessionStorage.getItem("groupomaniaToken")) {
       const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
@@ -168,6 +171,7 @@ const LandingPage = ({ setMessages, messages, myUserId, admin, avatar }) => {
       {messages &&
         messages.map((element) => {
           const messageLikeByCurrentUser = element?.Likes?.filter((elt) => myUserId === elt.userId);
+          const lastNameFirstName = element.User.lastName + " " + element.User.firstName;
 
           return (
             <div key={element.id} className="card-position">
@@ -198,8 +202,7 @@ const LandingPage = ({ setMessages, messages, myUserId, admin, avatar }) => {
                     />
                   </div>
                   <div className="co-name">
-                    <div onClick={() => redirectToUserProfil(element.UserId)}>{element.User.firstName}</div>
-                    <div onClick={() => redirectToUserProfil(element.UserId)}>{element.User.lastName}</div>
+                    <div onClick={() => redirectToUserProfil(element.UserId)}>{lastNameFirstName}</div>
                     {element.User.isAdmin === true ? <div>Administrateur</div> : <></>}
                   </div>
                   <div className="time">
@@ -207,14 +210,16 @@ const LandingPage = ({ setMessages, messages, myUserId, admin, avatar }) => {
                       <div>
                         <div>
                           {" "}
-                          Le {element.createdAt} <FontAwesomeIcon icon={["fas", "globe"]} />
+                          Postée {moment(new Date(element.createdAt)).fromNow()}{" "}
+                          <FontAwesomeIcon icon={["fas", "globe"]} />
                         </div>
                       </div>
                     ) : (
                       <div>
                         <div>
                           {" "}
-                          Modifié le {element.updatedAt} <FontAwesomeIcon icon={["fas", "globe"]} />
+                          Modifié {moment(new Date(element.updatedAt)).fromNow()}{" "}
+                          <FontAwesomeIcon icon={["fas", "globe"]} />
                         </div>
                       </div>
                     )}

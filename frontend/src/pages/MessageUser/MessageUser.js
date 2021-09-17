@@ -7,7 +7,8 @@ import { toastTrigger } from "../../helper/toast";
 import PostComment from "../../componants/PostComment/PostComment";
 import Modal from "../../componants/Modal/Modal";
 import MessageUpdate from "../../componants/MessageUpdat/MessageUpdate";
-
+import moment from "moment";
+import "moment/locale/fr";
 import "./messageuser.scss";
 import MessageDestroy from "../../componants/DestroyMsg/DestroyMsg";
 const MessageUser = ({ id, messagesUser, setMessagesUser, myUserId, admin, isAdmin, avatar }) => {
@@ -135,6 +136,8 @@ const MessageUser = ({ id, messagesUser, setMessagesUser, myUserId, admin, isAdm
       )}
       {messagesUser &&
         messagesUser.map((element) => {
+          const lastNameFirstName = element.User.lastName + " " + element.User.firstName;
+
           const messageLikeByCurrentUser = element?.Likes?.filter((elt) => myUserId === elt.userId);
           return (
             <div key={element.id} className="card-position">
@@ -160,8 +163,8 @@ const MessageUser = ({ id, messagesUser, setMessagesUser, myUserId, admin, isAdm
                     <img height="100%" width="100%" className="co-logo" alt="img" src={element.User.avatar} />
                   </div>
                   <div className="co-name">
-                    <div>{element.User.firstName}</div>
-                    <div>{element.User.lastName}</div>
+                    <div>{lastNameFirstName}</div>
+
                     {isAdmin === true ? <div>Administrateur</div> : <></>}
                   </div>
                   <div className="time">
@@ -169,14 +172,16 @@ const MessageUser = ({ id, messagesUser, setMessagesUser, myUserId, admin, isAdm
                       <div>
                         <div>
                           {" "}
-                          Le {element.createdAt} <FontAwesomeIcon icon={["fas", "globe"]} />
+                          Postée {moment(new Date(element.createdAt)).fromNow()}{" "}
+                          <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
                         </div>
                       </div>
                     ) : (
                       <div>
                         <div>
                           {" "}
-                          Modifié le {element.updatedAt} <FontAwesomeIcon icon={["fas", "globe"]} />
+                          Modifié {moment(new Date(element.updatedAt)).fromNow()}{" "}
+                          <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
                         </div>
                       </div>
                     )}

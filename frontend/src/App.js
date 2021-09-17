@@ -55,6 +55,7 @@ const App = () => {
           setMyUserId(response.data.id);
           setAvatar(response.data.avatar);
           setFirstNewName(response.data.firstName);
+          setLastNewName(response.data.lastName);
           setIsLoggedin(true);
           setCheckLogin(true);
         } catch (error) {
