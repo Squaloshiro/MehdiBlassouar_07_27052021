@@ -27,6 +27,8 @@ Installer les dépendences en quelques étapes :
 
 4eme étapes : 
 
+Entrer la commande : npx sequelize init
+
 Modifier le fichier config.json
 
 1 : changer le user 
@@ -40,7 +42,7 @@ Créer la base de donnée du projet via ces commandes :
 1 : dans un terminal placez-vous dans le dossier backend
 
 entrer les commandes suivantes : 
-2 : npx sequelize db:create databaseGroupomaniaSql
+2 : npx sequelize db:create 
 3 : npx sequelize db:migrate
 4 : npx sequelize-cli db:seed:all
 
