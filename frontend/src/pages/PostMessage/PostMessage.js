@@ -3,7 +3,7 @@ import InputFile from "../../componants/InputFile/InputFile";
 import Button from "../../componants/Button/Button";
 import { useState, useEffect, useRef } from "react";
 import api from "../../config/api";
-import { useHistory } from "react-router";
+
 import FormData from "form-data";
 import TextArea from "../../componants/TextArea/InputTextArea";
 import { toastTrigger } from "../../helper/toast";
@@ -11,7 +11,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./postmessage.scss";
 
 const MessageImage = ({ postMessage }) => {
-  const history = useHistory();
   const [compteurContent, setCompteurContent] = useState(0);
   const [compteurTitle, setCompteurTitle] = useState(0);
   const [file, setFile] = useState("");
@@ -123,9 +122,9 @@ const MessageImage = ({ postMessage }) => {
             setCompteurContent(0);
             setFile("");
             setActiveImage(false);
-
+            setActiveError(false);
             setTheInputKey(Math.random().toString(36));
-            history.push("/");
+
             toastTrigger("success", "Publication postée");
           } else {
             const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
@@ -140,16 +139,14 @@ const MessageImage = ({ postMessage }) => {
             setContent("");
             setCompteurContent(0);
             postMessage(response.data);
-            history.push("/");
+            setActiveError(false);
+
             toastTrigger("success", "Publication postée");
           }
         } catch (error) {
           if (!content && !file) {
             setActiveError(true);
           }
-          console.log("---------------error---------------------");
-          console.log(error);
-          console.log("------------------------------------");
           toastTrigger("error", "une erreur est survenue");
         }
       } else {
