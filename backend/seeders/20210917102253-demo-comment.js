@@ -11,7 +11,7 @@ module.exports = {
         likes: "0",
         dislikes: "1",
         createdAt: "2021-09-17 10:06:25",
-        updatedAt: "2021-09-17 10:07:27",
+        updatedAt: "2021-09-17 10:06:25",
       },
       {
         id: "2",
@@ -31,7 +31,7 @@ module.exports = {
         likes: "1",
         dislikes: "2",
         createdAt: "2021-09-17 10:08:32",
-        updatedAt: "2021-09-17 10:13:24",
+        updatedAt: "2021-09-17 10:08:32",
       },
       {
         id: "4",
@@ -41,7 +41,7 @@ module.exports = {
         likes: "2",
         dislikes: "0",
         createdAt: "2021-09-17 10:10:10",
-        updatedAt: "2021-09-17 10:13:22",
+        updatedAt: "2021-09-17 10:10:10",
       },
       {
         id: "5",
@@ -51,7 +51,7 @@ module.exports = {
         likes: "1",
         dislikes: "0",
         createdAt: "2021-09-17 10:13:17",
-        updatedAt: "2021-09-17 10:13:25",
+        updatedAt: "2021-09-17 10:13:17",
       },
     ]);
   },

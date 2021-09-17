@@ -9,7 +9,7 @@ import CommentLike from "../CommentLike/Commentlike";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Modal from "../../componants/Modal/Modal";
 import moment from "moment";
-import "moment/locale/fr";
+
 const Accordion = ({ title, comments, setcomments, messageId, modifyComment, newComments, myUserId, admin }) => {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(false);
@@ -171,6 +171,11 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
                           </div>
                         ) : (
                           <div>
+                            <div>
+                              {" "}
+                              Postée {moment(new Date(element.createdAt)).fromNow()}{" "}
+                              <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
+                            </div>
                             <div>
                               {" "}
                               Modifié {moment(new Date(element.updatedAt)).fromNow()}{" "}

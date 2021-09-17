@@ -6,7 +6,7 @@ import "../../pages/LandingPage/landingpage.scss";
 import "../../componants/MessageUpdat/update.scss";
 import api from "../../config/api";
 import moment from "moment";
-import "moment/locale/fr";
+
 import { useState, useEffect } from "react";
 import { toastTrigger } from "../../helper/toast";
 import { useLocation } from "react-router";
@@ -142,8 +142,14 @@ const MessageUpdate = ({
               </div>
             ) : (
               <div>
-                {" "}
-                Modifié {moment(new Date(element.updatedAt)).fromNow()} <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
+                <div>
+                  {" "}
+                  Postée {moment(new Date(element.createdAt)).fromNow()} <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
+                </div>
+                <div>
+                  {" "}
+                  Modifié {moment(new Date(element.updatedAt)).fromNow()} <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
+                </div>
               </div>
             )}
           </div>

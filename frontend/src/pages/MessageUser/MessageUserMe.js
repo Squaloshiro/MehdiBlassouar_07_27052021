@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MessageLike from "../../componants/MessageLike/MessageLike";
 import "./messageuser.scss";
 import moment from "moment";
-import "moment/locale/fr";
+
 import { toastTrigger } from "../../helper/toast";
 import PostComment from "../../componants/PostComment/PostComment";
 import Modal from "../../componants/Modal/Modal";
@@ -186,6 +186,11 @@ const MessageUserMe = ({ avatar, firstName, lastName, myUserId, admin, avatarAdm
                       </div>
                     ) : (
                       <div>
+                        <div>
+                          {" "}
+                          Postée {moment(new Date(element.createdAt)).fromNow()}{" "}
+                          <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
+                        </div>
                         <div>
                           {" "}
                           Modifié {moment(new Date(element.updatedAt)).fromNow()}{" "}

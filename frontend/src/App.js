@@ -13,7 +13,7 @@ import ProfilPage from "./pages/ProfilPage/ProfilPage";
 import ProfilUser from "./pages/ProfilUser/ProfiUser";
 import { ToastContainer } from "react-toastify";
 import { toastTrigger } from "./helper/toast";
-
+import "moment/locale/fr";
 import Error404 from "./componants/Error404/Error404";
 
 const App = () => {

@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 import { toastTrigger } from "../../helper/toast";
 import TextArea from "../TextArea/InputTextArea";
 import moment from "moment";
-import "moment/locale/fr";
+
 const CommentUpdate = ({ setPopUpIsOpen, setcomments, setActive, element, close }) => {
   const [content, setContent] = useState(element.content);
   const [compteurContent, setCompteurContent] = useState(0);
@@ -82,8 +82,14 @@ const CommentUpdate = ({ setPopUpIsOpen, setcomments, setActive, element, close 
               </div>
             ) : (
               <div>
-                {" "}
-                Modifié {moment(new Date(element.updatedAt)).fromNow()} <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
+                <div>
+                  {" "}
+                  Postée {moment(new Date(element.createdAt)).fromNow()} <FontAwesomeIcon icon={["fas", "globe"]} />
+                </div>
+                <div>
+                  {" "}
+                  Modifié {moment(new Date(element.updatedAt)).fromNow()} <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
+                </div>
               </div>
             )}
           </div>

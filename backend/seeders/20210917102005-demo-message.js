@@ -13,7 +13,7 @@ module.exports = {
         dislikes: "1",
         comments: "2",
         createdAt: "2021-09-17 09:53:03",
-        updatedAt: "2021-09-17 10:07:43",
+        updatedAt: "2021-09-17 09:53:03",
       },
       {
         id: "2",
@@ -25,7 +25,7 @@ module.exports = {
         dislikes: "0",
         comments: "3",
         createdAt: "2021-09-17 09:57:15",
-        updatedAt: "2021-09-17 10:13:17",
+        updatedAt: "2021-09-17 09:57:15",
       },
     ]);
   },

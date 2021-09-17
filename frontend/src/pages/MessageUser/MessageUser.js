@@ -8,7 +8,7 @@ import PostComment from "../../componants/PostComment/PostComment";
 import Modal from "../../componants/Modal/Modal";
 import MessageUpdate from "../../componants/MessageUpdat/MessageUpdate";
 import moment from "moment";
-import "moment/locale/fr";
+
 import "./messageuser.scss";
 import MessageDestroy from "../../componants/DestroyMsg/DestroyMsg";
 const MessageUser = ({ id, messagesUser, setMessagesUser, myUserId, admin, isAdmin, avatar }) => {
@@ -178,6 +178,11 @@ const MessageUser = ({ id, messagesUser, setMessagesUser, myUserId, admin, isAdm
                       </div>
                     ) : (
                       <div>
+                        <div>
+                          {" "}
+                          Postée {moment(new Date(element.createdAt)).fromNow()}{" "}
+                          <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
+                        </div>
                         <div>
                           {" "}
                           Modifié {moment(new Date(element.updatedAt)).fromNow()}{" "}

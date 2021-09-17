@@ -7,7 +7,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MessageLike from "../../componants/MessageLike/MessageLike";
 import MessageImage from "../PostMessage/PostMessage";
 import moment from "moment";
-import "moment/locale/fr";
 
 import PostComment from "../../componants/PostComment/PostComment";
 import Modal from "../../componants/Modal/Modal";
@@ -216,6 +215,11 @@ const LandingPage = ({ setMessages, messages, myUserId, admin, avatar }) => {
                       </div>
                     ) : (
                       <div>
+                        <div>
+                          {" "}
+                          Postée {moment(new Date(element.createdAt)).fromNow()}{" "}
+                          <FontAwesomeIcon icon={["fas", "globe"]} />
+                        </div>
                         <div>
                           {" "}
                           Modifié {moment(new Date(element.updatedAt)).fromNow()}{" "}
