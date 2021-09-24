@@ -491,7 +491,12 @@ const ProfilPage = ({
               <UpdadePassword />
             </div>
             <div className="drop-account">
-              <DropAccount isLoggedin={isLoggedin} setIsLoggedin={setIsLoggedin} userId={profil.id} />
+              <DropAccount
+                setAvatar={setAvatar}
+                isLoggedin={isLoggedin}
+                setIsLoggedin={setIsLoggedin}
+                userId={profil.id}
+              />
             </div>
           </div>
         </div>

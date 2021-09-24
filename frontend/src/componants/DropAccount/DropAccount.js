@@ -5,7 +5,7 @@ import Button from "../Button/Button";
 import { toastTrigger } from "../../helper/toast";
 import "./dropaccount.scss";
 
-const DropAccount = ({ userId, isLoggedin, admin, setIsLoggedin, setDataUser }) => {
+const DropAccount = ({ userId, setAvatar, isLoggedin, admin, setIsLoggedin, setDataUser }) => {
   const history = useHistory();
 
   const [active, setActive] = useState(false);
@@ -42,6 +42,7 @@ const DropAccount = ({ userId, isLoggedin, admin, setIsLoggedin, setDataUser }) 
         history.push("/");
         toastTrigger("success", "Compte supprimé");
       } else {
+        setAvatar("");
         sessionStorage.removeItem("groupomaniaToken");
         history.push("/connexion");
         setIsLoggedin(false);

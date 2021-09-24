@@ -2,7 +2,7 @@ import Button from "../Button/Button";
 import api from "../../config/api";
 import { toastTrigger } from "../../helper/toast";
 import "./adminupdate.scss";
-import { useHistory, useLocation } from "react-router";
+import { useHistory, useParams } from "react-router";
 const AdminUpdate = ({
   idUser,
   setDataUser,
@@ -14,7 +14,7 @@ const AdminUpdate = ({
   setIsAdmin,
   setAvatar,
 }) => {
-  const location = useLocation();
+  const params = useParams();
   const history = useHistory();
   const AdminClick = async () => {
     try {
@@ -37,11 +37,11 @@ const AdminUpdate = ({
       } catch (error) {
         //rajouter un button en cas d'echec de chargement des messages
       }
-      if (location?.state?.id) {
+      if (params?.id) {
         try {
           const response = await api({
             method: "get",
-            url: "/users/" + location.state.id,
+            url: "/users/" + params.id,
             headers: { Authorization: `Bearer ${token}` },
           });
 

@@ -71,6 +71,12 @@ const SearchBar = ({ myUserId, avatar, firstNewName, newEmail, lastNewName, data
   if (avatar) {
     dataUser.filter((elt) => {
       if (elt.id === myUserId) {
+        console.log("---------------elt.id---------------------");
+        console.log(elt.id);
+        console.log("------------------------------------");
+        console.log("-----------myUserId-------------------------");
+        console.log(myUserId);
+        console.log("------------------------------------");
         elt.avatar = avatar;
       }
       return elt;

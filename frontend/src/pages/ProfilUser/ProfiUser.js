@@ -99,6 +99,7 @@ const ProfilUser = ({
                     </div>
                     <div className="admin-control-drop">
                       <DropAccount
+                        setAvatar={setAvatar}
                         isLoggedin={isLoggedin}
                         setIsLoggedin={setIsLoggedin}
                         setDataUser={setDataUser}
