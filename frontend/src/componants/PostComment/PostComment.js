@@ -13,7 +13,7 @@ const PostComment = ({ myUserId, admin, messageId, deleteOneComment, newComments
   const [compteurContent, setCompteurContent] = useState(0);
   const [maxContent, setmaxContent] = useState("");
   const [classNameContent, setClassNameContent] = useState("color-green");
-  const send = <FontAwesomeIcon icon={["fas", "paper-plane"]} />;
+  const send = <FontAwesomeIcon title="Commantaire" aria-hidden="true" icon={["fas", "paper-plane"]} />;
 
   useEffect(() => {
     if (compteurContent > 1000) {
@@ -90,6 +90,7 @@ const PostComment = ({ myUserId, admin, messageId, deleteOneComment, newComments
       <div className="post-cadre-comment">
         <div className="post-cadre-comment-input">
           <TextArea
+            aria={{ "aria-label": "Text" }}
             style={{ width: "97.3%" }}
             label="Comment"
             rows={2}

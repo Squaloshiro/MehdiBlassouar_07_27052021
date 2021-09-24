@@ -106,9 +106,9 @@ const ProfilPage = ({
       let matchGroupo = verifGroupo.split("@");
 
       if (matchGroupo[1] !== "groupomania.com") {
-        setClassNameGroupo("color-red");
+        setClassNameGroupo("color_red_email");
       } else {
-        setClassNameGroupo("color-green");
+        setClassNameGroupo("color_green_email");
       }
     }
   }, [compteurBio, compteurFirstName, compteurLastName, verifGroupo]);

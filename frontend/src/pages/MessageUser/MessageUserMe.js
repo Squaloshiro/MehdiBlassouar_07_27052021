@@ -168,7 +168,7 @@ const MessageUserMe = ({ avatar, firstName, lastName, myUserId, admin, avatarAdm
                     )}
                   </div>
                   <div className="co-logo-size">
-                    <img height="100%" width="100%" className="co-logo" alt="img" src={avatar} />
+                    <img height="100%" width="100%" className="co-logo" alt="" src={avatar} />
                   </div>
                   <div className="co-name">
                     {oldLastNameFirstName ? <div>{oldLastNameFirstName}</div> : <div>{lastNameFirstName}</div>}
@@ -178,7 +178,7 @@ const MessageUserMe = ({ avatar, firstName, lastName, myUserId, admin, avatarAdm
                   <div className="time">
                     {element.createdAt === element.updatedAt ? (
                       <div>
-                        <div>
+                        <div className="post-color">
                           {" "}
                           Postée {moment(new Date(element.createdAt)).fromNow()}{" "}
                           <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
@@ -186,12 +186,12 @@ const MessageUserMe = ({ avatar, firstName, lastName, myUserId, admin, avatarAdm
                       </div>
                     ) : (
                       <div>
-                        <div>
+                        <div className="post-color">
                           {" "}
                           Postée {moment(new Date(element.createdAt)).fromNow()}{" "}
                           <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
                         </div>
-                        <div>
+                        <div className="post-color">
                           {" "}
                           Modifié {moment(new Date(element.updatedAt)).fromNow()}{" "}
                           <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
@@ -205,7 +205,7 @@ const MessageUserMe = ({ avatar, firstName, lastName, myUserId, admin, avatarAdm
                 </div>
                 {element.attachment ? (
                   <div className="reference">
-                    <img height="100%" width="100%" alt="img" className="reference-thumb" src={element.attachment} />
+                    <img height="100%" width="100%" alt="" className="reference-thumb" src={element.attachment} />
                     <div className="reference-content">
                       <div className="reference-subtitle">{element.content}</div>
                       <div className="reference-font">Groupomania</div>
@@ -233,7 +233,7 @@ const MessageUserMe = ({ avatar, firstName, lastName, myUserId, admin, avatarAdm
                         messageLikeByCurrentUser={messageLikeByCurrentUser}
                       />
                     </span>
-                    <span>
+                    <span className="post-color">
                       <FontAwesomeIcon icon={["far", "comment"]} />
                       {element.comments}
                     </span>

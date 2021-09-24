@@ -70,7 +70,7 @@ const LandingPage = ({ setMessages, messages, myUserId, admin, avatar }) => {
     if (id === myUserId) {
       history.push("/profil");
     } else {
-      history.push({ pathname: "/users/profils", state: { id } });
+      history.push({ pathname: `/users/profils/${id}` });
     }
   };
 
@@ -132,7 +132,8 @@ const LandingPage = ({ setMessages, messages, myUserId, admin, avatar }) => {
   };
 
   return (
-    <div className="flex-position">
+    <main className="flex-position">
+      <h1>Groupomania</h1>
       <MessageImage postMessage={postMessage} />
       {active && messageInModal && (
         <Modal onClick={closeMenu} popUpIsOpen={popUpIsOpen} setActive={setActive} active={active}>
@@ -196,7 +197,7 @@ const LandingPage = ({ setMessages, messages, myUserId, admin, avatar }) => {
                       height="100%"
                       width="100%"
                       className="co-logo logo-landing-page"
-                      alt="img"
+                      alt=""
                       src={element.User.avatar}
                     />
                   </div>
@@ -207,23 +208,23 @@ const LandingPage = ({ setMessages, messages, myUserId, admin, avatar }) => {
                   <div className="time">
                     {element.createdAt === element.updatedAt ? (
                       <div>
-                        <div>
+                        <div className="post-color">
                           {" "}
                           Postée {moment(new Date(element.createdAt)).fromNow()}{" "}
-                          <FontAwesomeIcon icon={["fas", "globe"]} />
+                          <FontAwesomeIcon title="glob" aria-hidden="true" icon={["fas", "globe"]} />
                         </div>
                       </div>
                     ) : (
                       <div>
-                        <div>
+                        <div className="post-color">
                           {" "}
                           Postée {moment(new Date(element.createdAt)).fromNow()}{" "}
-                          <FontAwesomeIcon icon={["fas", "globe"]} />
+                          <FontAwesomeIcon title="glob" aria-hidden="true" icon={["fas", "globe"]} />
                         </div>
-                        <div>
+                        <div className="post-color">
                           {" "}
                           Modifié {moment(new Date(element.updatedAt)).fromNow()}{" "}
-                          <FontAwesomeIcon icon={["fas", "globe"]} />
+                          <FontAwesomeIcon title="glob" aria-hidden="true" icon={["fas", "globe"]} />
                         </div>
                       </div>
                     )}
@@ -235,7 +236,7 @@ const LandingPage = ({ setMessages, messages, myUserId, admin, avatar }) => {
                 {element.attachment ? (
                   <div className="reference">
                     <div className="reference-thumb ">
-                      <img alt="img" height="100%" width="100%" src={element.attachment} />
+                      <img alt="" height="100%" width="100%" src={element.attachment} />
                     </div>
 
                     <div className="reference-content">
@@ -265,8 +266,8 @@ const LandingPage = ({ setMessages, messages, myUserId, admin, avatar }) => {
                         messageLikeByCurrentUser={messageLikeByCurrentUser}
                       />
                     </span>
-                    <span>
-                      <FontAwesomeIcon icon={["far", "comment"]} />
+                    <span className="post-color">
+                      <FontAwesomeIcon title="Commentaire" aria-hidden="true" icon={["far", "comment"]} />
                       {element.comments}
                     </span>
                   </div>
@@ -283,7 +284,7 @@ const LandingPage = ({ setMessages, messages, myUserId, admin, avatar }) => {
             </div>
           );
         })}
-    </div>
+    </main>
   );
 };
 export default LandingPage;

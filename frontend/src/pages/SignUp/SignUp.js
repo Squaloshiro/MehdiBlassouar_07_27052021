@@ -21,7 +21,10 @@ const SignUp = ({
   const [confirmePassword, setConfirmePassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [valueErrorFirstName, setValueErrorFirstName] = useState("");
+  const [valueErrorLastName, setValueErrorLastName] = useState("");
   const [valueError, setValueError] = useState("");
+  const [valueErrorConfirmPassword, setValueErrorConfirmPassword] = useState("");
   const [compteurNewPassword, setCompteurNewPassword] = useState(0);
   const [classNameNewPassWord, setClassNameNewPassWord] = useState("");
   const [compteurUppercase, setCompteurUppercase] = useState(0);
@@ -163,21 +166,24 @@ const SignUp = ({
   const onChangeConfirmPassword = (e) => {
     setConfirmePassword(e.target.value);
 
-    setValueError("");
+    setValueErrorConfirmPassword("");
   };
 
   const onChangeFirstName = (e) => {
-    setValueError("");
+    setValueErrorFirstName("");
     setCompteurFirstName(e.target.value.length);
     setFirstName(e.target.value);
   };
   const onChangeLastName = (e) => {
-    setValueError("");
+    setValueErrorLastName("");
     setCompteurLastName(e.target.value.length);
     setLastName(e.target.value);
   };
 
   const onSignUp = async () => {
+    const regexCharacter = /^([A-zàâäçéèêëîïôùûüÿæœÀÂÄÇÉÈÊËÎÏÔÙÛÜŸÆŒ]*[ ]?[A-zàâäçéèêëîïôùûüÿæœÀÂÄÇÉÈÊËÎÏÔÙÛÜŸÆŒ]+$)$/;
+    const regexCharacter1 = /^([A-zàâäçéèêëîïôùûüÿæœÀÂÄÇÉÈÊËÎÏÔÙÛÜŸÆŒ]*-?[A-zàâäçéèêëîïôùûüÿæœÀÂÄÇÉÈÊËÎÏÔÙÛÜŸÆŒ]+$)$/;
+
     //let token;
     if (compteurNewPassword < 8) {
       setActiveUppercase(false);
@@ -225,7 +231,20 @@ const SignUp = ({
 
     if (confirmePassword !== password) {
       toastTrigger("error", "une erreur est survenue");
-      setValueError("Vous n'avez pas saisie les même mots de passe");
+      setValueErrorConfirmPassword("Vous n'avez pas saisie les même mots de passe");
+    }
+    if (!regexCharacter.test(lastName) && !regexCharacter1.test(lastName)) {
+      setValueErrorLastName("Votre nom ne doit pas contenir des caractères spéciaux est des nombres");
+    }
+
+    if (!regexCharacter.test(firstName) && !regexCharacter1.test(firstName)) {
+      setValueErrorFirstName("Votre prénom ne doit pas contenir des caractères spéciaux est des nombres");
+    }
+    if (lastName.length >= 13 || lastName.length < 0) {
+      setValueErrorLastName("le nom doit être compris entre 1 et 12 lettres");
+    }
+    if (firstName.length >= 13 || firstName.length < 0) {
+      setValueErrorFirstName("le prénom doit être compris entre 1 et 12 lettres");
     }
 
     try {
@@ -275,7 +294,20 @@ const SignUp = ({
 
       history.push("/connexion");
     } catch (error) {
-      setValueError(error.response.data.error);
+      if (valueErrorConfirmPassword || valueErrorFirstName || valueErrorLastName) {
+        setValueError("");
+      } else {
+        setValueError(error.response.data.error);
+      }
+
+      /* if (
+        error.response.data.error !== "le nom doit être compris entre 1 et 12 lettres" ||
+        error.response.data.error !== "Votre nom ne doit pas contenir des caractères spéciaux est des nombres" ||
+        error.response.data.error !== "le prénom doit être compris entre 1 et 12 lettres" ||
+        error.response.data.error !== "Votre prénom ne doit pas contenir des caractères spéciaux est des nombres"
+      ) {
+        setValueError(error.response.data.error);
+      }*/
     }
   };
 
@@ -315,6 +347,8 @@ const SignUp = ({
               type="password"
             />
           </div>
+          {valueErrorConfirmPassword && <div className="color-red">{valueErrorConfirmPassword}</div>}
+
           <div className="element-marge  element-size">
             <Input style={{ width: "100%" }} onChange={onChangeFirstName} value={firstName} label="Firstname" />
             <div>
@@ -322,6 +356,7 @@ const SignUp = ({
                 <div className={classNameFirstName}>Minimum de caratère : {compteurFirstName}/1</div>
               )}
             </div>
+            {valueErrorFirstName && <div className="color-red">{valueErrorFirstName}</div>}
           </div>
           <div className="element-marge  element-size">
             <Input style={{ width: "100%" }} onChange={onChangeLastName} value={lastName} label="LastName" />
@@ -331,6 +366,8 @@ const SignUp = ({
               )}
             </div>
           </div>
+          {valueErrorLastName && <div className="color-red">{valueErrorLastName}</div>}
+
           {valueError && <div className="color-red">{valueError}</div>}
           <div className="element-marge">
             <Button onClick={onSignUp} title="Valider" />

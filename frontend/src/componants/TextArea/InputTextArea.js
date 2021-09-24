@@ -14,20 +14,22 @@ const TextArea = ({ rows, rowsMax, placeholder, onChange, value, label, variant,
   const classes = useStyles();
 
   return (
-    <form className={classes.root} noValidate autoComplete="off">
-      <TextField
-        multiline
-        onChange={onChange}
-        value={value}
-        rows={rows}
-        style={style}
-        multilinerows={multilinerows}
-        rowsMax={rowsMax}
-        placeholder={placeholder}
-        label={label}
-        variant={variant}
-      />
-    </form>
+    <label>
+      <form className={classes.root} noValidate autoComplete="off">
+        <TextField
+          multiline
+          onChange={onChange}
+          value={value}
+          rows={rows}
+          style={style}
+          multilinerows={multilinerows}
+          rowsMax={rowsMax}
+          placeholder={placeholder}
+          label={label}
+          variant={variant}
+        />
+      </form>
+    </label>
   );
 };
 export default TextArea;

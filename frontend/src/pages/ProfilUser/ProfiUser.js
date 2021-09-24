@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import api from "../../config/api";
-import { useHistory, useLocation } from "react-router";
+import { useHistory, useParams } from "react-router";
 import DropAccount from "../../componants/DropAccount/DropAccount";
 import MessageUser from "../MessageUser/MessageUser";
 import "./profiluser.scss";
@@ -19,35 +19,39 @@ const ProfilUser = ({
   setAvatar,
   avatar,
 }) => {
-  const location = useLocation();
+  const params = useParams();
   const history = useHistory();
   const [isAdmin, setIsAdmin] = useState(false);
   const [messagesUser, setMessagesUser] = useState([]);
   useEffect(() => {
-    setIsAdmin(profil?.isAdmin);
-  }, [profil?.isAdmin]);
-
+    if (parseInt(params?.id) === myUserId) {
+      history.push("/profil");
+      return;
+    }
+  }, [history, params.id, myUserId]);
   useEffect(() => {
-    if (location?.state?.id) {
+    if (params?.id) {
       const getProfilUser = async () => {
         const token = JSON.parse(JSON.stringify(sessionStorage.getItem("groupomaniaToken")));
         try {
           const response = await api({
             method: "get",
-            url: "/users/" + location.state.id,
+            url: "/users/" + params.id,
             headers: { Authorization: `Bearer ${token}` },
           });
 
           setProfil(response.data);
+          setIsAdmin(profil?.isAdmin);
         } catch (error) {
           toastTrigger("error", "une erreur est survenue");
+          history.push("/");
         }
       };
       getProfilUser();
     } else {
       history.push("/");
     }
-  }, [history, location.state.id, setProfil]);
+  }, [history, params.id, setProfil, profil?.isAdmin, myUserId]);
 
   return (
     <div className="flex-direction-2">
@@ -56,7 +60,6 @@ const ProfilUser = ({
           <div className="flex-name-pictur">
             <div className="flex-picturs-2">
               <div className="size-police-photo-2">Avatar</div>
-
               <img alt="img" className="size-picturs-2" src={profil.avatar} />
             </div>
             <div className="bor-username-2">
@@ -88,7 +91,7 @@ const ProfilUser = ({
                         isAdmin={isAdmin}
                         setIsAdmin={setIsAdmin}
                         profil={profil}
-                        idUser={location.state.id}
+                        idUser={params.id}
                         messagesUser={messagesUser}
                         setMessagesUser={setMessagesUser}
                         setDataUser={setDataUser}
@@ -101,7 +104,7 @@ const ProfilUser = ({
                         setDataUser={setDataUser}
                         admin={admin}
                         setCheckLogin={setCheckLogin}
-                        userId={location.state.id}
+                        userId={params.id}
                         title="Suprimer le compte"
                       />
                     </div>
@@ -122,7 +125,7 @@ const ProfilUser = ({
           isAdmin={isAdmin}
           admin={admin}
           myUserId={myUserId}
-          id={location.state.id}
+          id={params.id}
         />
       </div>
     </div>

@@ -150,7 +150,7 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
                 <div key={element.id} className="card-position-comment">
                   <div className="f-card-comment">
                     <div className="header-comment">
-                      <img className="co-logo-comment" alt="img" src={element.User.avatar} />
+                      <img className="co-logo-comment" alt="" src={element.User.avatar} />
                       <div className="co-name-comment">
                         <div onClick={() => redirectToUserProfil(element.UserId)}>{lastNameFirstName}</div>
 
@@ -163,7 +163,7 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
                       <div className="time-comment">
                         {element.createdAt === element.updatedAt ? (
                           <div>
-                            <div>
+                            <div className="post-color-2">
                               {" "}
                               Postée {moment(new Date(element.createdAt)).fromNow()}{" "}
                               <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
@@ -171,12 +171,12 @@ const Accordion = ({ title, comments, setcomments, messageId, modifyComment, new
                           </div>
                         ) : (
                           <div>
-                            <div>
+                            <div className="post-color-2">
                               {" "}
                               Postée {moment(new Date(element.createdAt)).fromNow()}{" "}
                               <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
                             </div>
-                            <div>
+                            <div className="post-color-2">
                               {" "}
                               Modifié {moment(new Date(element.updatedAt)).fromNow()}{" "}
                               <FontAwesomeIcon icon={["fas", "globe"]} />{" "}

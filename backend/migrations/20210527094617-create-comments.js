@@ -26,7 +26,7 @@ module.exports = {
         onDelete: "CASCADE",
       },
       content: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(1000),
       },
       likes: {
         type: Sequelize.INTEGER,

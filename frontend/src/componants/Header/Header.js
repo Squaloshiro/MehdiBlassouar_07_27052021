@@ -25,10 +25,10 @@ const Header = ({
 }) => {
   const history = useHistory();
 
-  const home = <FontAwesomeIcon icon={["fas", "home"]} />;
-  const user = <FontAwesomeIcon icon={["fas", "user"]} />;
-  const logOut = <FontAwesomeIcon icon={["fas", "sign-out-alt"]} />;
-  const logIn = <FontAwesomeIcon icon={["fas", "sign-in-alt"]} />;
+  const home = <FontAwesomeIcon title="Accueil" aria-hidden="true" icon={["fas", "home"]} />;
+  const user = <FontAwesomeIcon title="Profil" aria-hidden="true" icon={["fas", "user"]} />;
+  const logOut = <FontAwesomeIcon title="Déconexion" aria-hidden="true" icon={["fas", "sign-out-alt"]} />;
+  const logIn = <FontAwesomeIcon title="Connexion" aria-hidden="true" icon={["fas", "sign-in-alt"]} />;
   const [profilPageIsActif, setprofilPageIsActif] = useState(false);
   const [userProfilPageIsActif, setUserProfilPageIsActif] = useState(false);
   const [signUpPage, setSignUpPage] = useState(false);
@@ -74,7 +74,7 @@ const Header = ({
   };
 
   return (
-    <div className="lmj-banner flex">
+    <header className="lmj-banner flex">
       <div className="image-rognage">
         <img
           onClick={() => history.push("/")}
@@ -121,7 +121,7 @@ const Header = ({
           <Button onClick={() => history.push("/connexion")} title={logIn} />
         )}
       </div>
-    </div>
+    </header>
   );
 };
 export default Header;

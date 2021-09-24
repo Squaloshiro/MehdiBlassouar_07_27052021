@@ -10,10 +10,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Button = ({ size, type = "submit", title, onClick, style }) => {
+const Button = ({ size, type = "submit", alt, title, onClick, style, aria }) => {
   const classes = useStyles();
   return (
     <MaterialButton
+      alt={alt}
+      aria-label={aria}
       size={size}
       style={style}
       className={classes.margin}

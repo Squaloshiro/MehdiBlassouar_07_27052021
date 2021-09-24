@@ -103,12 +103,18 @@ const MessageLike = ({ modifyLike, messageId, like, dislike, messageLikeByCurren
 
   return (
     <div>
-      <span>
-        <FontAwesomeIcon color="blue" icon={isLike} onClick={onSubmitLikeMessage} />
+      <span className="like-color">
+        <FontAwesomeIcon title="Like" aria-hidden="true" color="blue" icon={isLike} onClick={onSubmitLikeMessage} />
         {like}
       </span>
-      <span>
-        <FontAwesomeIcon color="red" icon={isDislike} onClick={onSubmitDislikeMessage} />
+      <span className="dislike-color">
+        <FontAwesomeIcon
+          title="Dislike"
+          aria-hidden="true"
+          color="rgb(172, 23, 23)"
+          icon={isDislike}
+          onClick={onSubmitDislikeMessage}
+        />
         {dislike}
       </span>
     </div>

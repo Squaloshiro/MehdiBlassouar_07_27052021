@@ -53,6 +53,7 @@ const App = () => {
           }
           setAdmin(response.data.isAdmin);
           setMyUserId(response.data.id);
+
           setAvatar(response.data.avatar);
           setFirstNewName(response.data.firstName);
           setLastNewName(response.data.lastName);
@@ -123,7 +124,7 @@ const App = () => {
         {checkLogin && (
           <PrivateRoute
             exact
-            path="/users/profils"
+            path="/users/profils/:id"
             componant={ProfilUser}
             isLoggedin={isLoggedin}
             setIsLoggedin={setIsLoggedin}

@@ -11,6 +11,19 @@
   align-items: flex-end;
   width: 100%;
 }
+.post-color {
+  color: black;
+}
+.like-color {
+  color: blue;
+}
+.dislike-color {
+  color: rgb(172, 23, 23);
+}
+.post-color-2 {
+  font-size: 11px;
+  color: black;
+}
 
 .card-position {
   width: 50%;
@@ -316,7 +329,7 @@ body {
 }
 
 .reference-font {
-  color: #90949c;
+  color: black;
   font-family: Helvetica;
   font-size: 11px;
   line-height: 11px;

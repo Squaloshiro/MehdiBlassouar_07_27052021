@@ -3,7 +3,6 @@ import InputFile from "../../componants/InputFile/InputFile";
 import Button from "../../componants/Button/Button";
 import { useState, useEffect, useRef } from "react";
 import api from "../../config/api";
-
 import FormData from "form-data";
 import TextArea from "../../componants/TextArea/InputTextArea";
 import { toastTrigger } from "../../helper/toast";
@@ -23,7 +22,7 @@ const MessageImage = ({ postMessage }) => {
   const [maxContent, setmaxContent] = useState("");
   const [activeImage, setActiveImage] = useState(false);
   const [activeError, setActiveError] = useState(false);
-  const send = <FontAwesomeIcon icon={["fas", "paper-plane"]} />;
+  const send = <FontAwesomeIcon title="Envoyer" aria-hidden="true" icon={["fas", "paper-plane"]} />;
 
   useEffect(() => {
     if (compteurTitle > 255) {
@@ -161,7 +160,9 @@ const MessageImage = ({ postMessage }) => {
     <div ref={myRef} className="post-cadre">
       <div className="post">
         <div>Exprimez-vous !</div>
-        <Input onChange={onChangeTitle} label="Titre" value={title} />
+
+        <Input style={{ width: "100%" }} onChange={onChangeTitle} label="Titre" value={title} />
+
         {compteurTitle > 0 && (
           <div className={classNameTitle}>
             Limite de caractère {maxTitle} : {compteurTitle}/255
@@ -185,8 +186,14 @@ const MessageImage = ({ postMessage }) => {
         )}
 
         <div className="file-button">
-          <InputFile onChange={handleOnUploadFile} theInputKey={theInputKey} />
-          <Button size="small" onClick={onSubmitMessageImg} title={send} />
+          <InputFile label="Image" onChange={handleOnUploadFile} theInputKey={theInputKey} />
+          <Button
+            aria={{ "aria-label": "Text" }}
+            alt="Envoyer"
+            size="small"
+            onClick={onSubmitMessageImg}
+            title={send}
+          />
         </div>
         {activeImage && <div className="img-file">{file?.name}</div>}
         {activeError && (

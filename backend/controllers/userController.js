@@ -24,11 +24,13 @@ module.exports = {
     }
 
     if (!regexCharacter.test(lastName) && !regexCharacter1.test(lastName)) {
-      return res.status(400).json({ error: " 1doit pas contenir des caractères spéciaux est des nombres" });
+      return res.status(400).json({ error: "Votre nom ne doit pas contenir des caractères spéciaux est des nombres" });
     }
 
     if (!regexCharacter.test(firstName) && !regexCharacter1.test(firstName)) {
-      return res.status(400).json({ error: "ne doit pas contenir des caractères spéciaux est des nombres" });
+      return res
+        .status(400)
+        .json({ error: "Votre prénom ne doit pas contenir des caractères spéciaux est des nombres" });
     }
     if (lastName.length >= 13 || lastName.length < 0) {
       return res.status(400).json({ error: "le nom doit être compris entre 1 et 12 lettres" });
@@ -263,7 +265,9 @@ module.exports = {
       });
   },
   getUserData: function (req, res) {
-    models.User.findByPk(req.params.id, { attributes: ["lastName", "firstName", "email", "bio", "avatar", "isAdmin"] })
+    models.User.findByPk(req.params.id, {
+      attributes: ["id", "lastName", "firstName", "email", "bio", "avatar", "isAdmin"],
+    })
       .then(function (user) {
         if (user) {
           res.status(201).json(user);

@@ -38,7 +38,7 @@ const SearchBar = ({ myUserId, avatar, firstNewName, newEmail, lastNewName, data
       history.push("/profil");
       setActive(false);
     } else {
-      history.push({ pathname: "/users/profils", state: { id } });
+      history.push({ pathname: `/users/profils/${id}` });
       setActive(false);
     }
   };
@@ -108,6 +108,8 @@ const SearchBar = ({ myUserId, avatar, firstNewName, newEmail, lastNewName, data
           ref={inputRef}
           className="search-input"
           value={valueSearchBar}
+          label="Recherche"
+          aria-label="Recherche"
           onClick={onClickSearchBar}
           onChange={handleChange}
           type="search"

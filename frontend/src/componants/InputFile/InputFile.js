@@ -14,14 +14,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function UploadButtons({ onChange, theInputKey }) {
+export default function UploadButtons({ onChange, label, theInputKey }) {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      <input onChange={onChange} key={theInputKey || ""} className={classes.input} id="icon-button-file" type="file" />
-      <label htmlFor="icon-button-file">
-        <IconButton color="primary" aria-label="upload picture" component="span">
+      <input
+        label={label}
+        aria-label="upload picture"
+        onChange={onChange}
+        key={theInputKey || ""}
+        className={classes.input}
+        id="icon-button-file"
+        type="file"
+      />
+      <label aria-label="upload picture" htmlFor="icon-button-file">
+        <div style={{ display: "none" }}>Poster une image :</div>
+        <IconButton title="image" label={label} color="primary" aria-label="upload picture" component="span">
           <PhotoCamera />
         </IconButton>
       </label>

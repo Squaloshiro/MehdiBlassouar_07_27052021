@@ -101,12 +101,12 @@ const CommentLike = ({ modifyCommentLike, commentsId, like, dislike, messageComm
 
   return (
     <div>
-      <span>
-        <FontAwesomeIcon color="blue" icon={isLike} onClick={onSubmitLikeComment} />
+      <span className="like-color">
+        <FontAwesomeIcon color="blue" aria-hidden="true" icon={isLike} onClick={onSubmitLikeComment} />
         {like}
       </span>
-      <span>
-        <FontAwesomeIcon color="red" icon={isDislike} onClick={onSubmitDislikeComment} />
+      <span className="dislike-color">
+        <FontAwesomeIcon color="red" aria-hidden="true" icon={isDislike} onClick={onSubmitDislikeComment} />
         {dislike}
       </span>
     </div>

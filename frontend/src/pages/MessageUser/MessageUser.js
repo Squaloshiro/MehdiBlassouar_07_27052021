@@ -160,7 +160,7 @@ const MessageUser = ({ id, messagesUser, setMessagesUser, myUserId, admin, isAdm
                     )}
                   </div>
                   <div className="co-logo-size">
-                    <img height="100%" width="100%" className="co-logo" alt="img" src={element.User.avatar} />
+                    <img height="100%" width="100%" className="co-logo" alt="" src={element.User.avatar} />
                   </div>
                   <div className="co-name">
                     <div>{lastNameFirstName}</div>
@@ -170,7 +170,7 @@ const MessageUser = ({ id, messagesUser, setMessagesUser, myUserId, admin, isAdm
                   <div className="time">
                     {element.createdAt === element.updatedAt ? (
                       <div>
-                        <div>
+                        <div className="post-color">
                           {" "}
                           Postée {moment(new Date(element.createdAt)).fromNow()}{" "}
                           <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
@@ -178,12 +178,12 @@ const MessageUser = ({ id, messagesUser, setMessagesUser, myUserId, admin, isAdm
                       </div>
                     ) : (
                       <div>
-                        <div>
+                        <div className="post-color">
                           {" "}
                           Postée {moment(new Date(element.createdAt)).fromNow()}{" "}
                           <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
                         </div>
-                        <div>
+                        <div className="post-color">
                           {" "}
                           Modifié {moment(new Date(element.updatedAt)).fromNow()}{" "}
                           <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
@@ -198,7 +198,7 @@ const MessageUser = ({ id, messagesUser, setMessagesUser, myUserId, admin, isAdm
                 {element.attachment ? (
                   <div className="reference">
                     <div className="reference-thumb">
-                      <img alt="img" height="100%" width="100%" src={element.attachment} />
+                      <img alt="" height="100%" width="100%" src={element.attachment} />
                     </div>
                     <div className="reference-content">
                       <div className="reference-subtitle">{element.content}</div>
@@ -227,7 +227,7 @@ const MessageUser = ({ id, messagesUser, setMessagesUser, myUserId, admin, isAdm
                         messageLikeByCurrentUser={messageLikeByCurrentUser}
                       />
                     </span>
-                    <span>
+                    <span className="post-color">
                       <FontAwesomeIcon icon={["far", "comment"]} />
                       {element.comments}
                     </span>
