@@ -27,7 +27,7 @@ Installer les dépendences en quelques étapes :
 
 4eme étapes : 
 
-Entrer la commande : npx sequelize init
+Entrer la commande : npx sequelize init dans le dossier backend
 
 Modifier le fichier config.json
 
