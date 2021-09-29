@@ -125,33 +125,35 @@ const MessageUpdate = ({
   return (
     <div className="new-position" key={element.id}>
       <div onClose={handleClose}>
-        <div>
+        <div className="post-name-logo">
           <div className="co-logo-size-update">
-            <img height="100%" width="100%" className="co-logo-update" alt="img" src={element.User.avatar} />
+            <img height="100%" width="100%" className="co-logo-size-update-1" alt="img" src={element.User.avatar} />
           </div>
-          <div className="co-name">
-            <div>{lastNameFirstName}</div>
+          <div className="name-and-post">
+            <div className="co-name">
+              <div>{lastNameFirstName}</div>
 
-            {element.User.isAdmin === true ? <div>Administrateur</div> : <></>}
-          </div>
-          <div className="time">
-            {element.createdAt === element.updatedAt ? (
-              <div>
-                {" "}
-                Postée {moment(new Date(element.createdAt)).fromNow()} <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
-              </div>
-            ) : (
-              <div>
+              {element.User.isAdmin === true ? <div>Administrateur</div> : <></>}
+            </div>
+            <div className="time">
+              {element.createdAt === element.updatedAt ? (
                 <div>
                   {" "}
                   Postée {moment(new Date(element.createdAt)).fromNow()} <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
                 </div>
+              ) : (
                 <div>
-                  {" "}
-                  Modifié {moment(new Date(element.updatedAt)).fromNow()} <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
+                  <div>
+                    {" "}
+                    Postée {moment(new Date(element.createdAt)).fromNow()} <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
+                  </div>
+                  <div>
+                    {" "}
+                    Modifié {moment(new Date(element.updatedAt)).fromNow()} <FontAwesomeIcon icon={["fas", "globe"]} />{" "}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
         <div className="content">
@@ -165,7 +167,7 @@ const MessageUpdate = ({
         {element.attachment ? (
           <div className="reference">
             <div className="reference-thumb-2">
-              <img height="100%" width="100%" alt="img" src={element.attachment} />
+              <img className="reference-thumb-3" height="100%" width="100%" alt="img" src={element.attachment} />
             </div>
             <div className="reference-content">
               <div className="reference-subtitle">

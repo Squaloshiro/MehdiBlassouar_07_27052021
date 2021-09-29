@@ -1,7 +1,10 @@
 .reference-thumb-2 {
   display: block;
   width: 100%;
-  height: 18em;
+  height: 22em;
+  object-fit: cover;
+}
+.reference-thumb-3 {
   object-fit: cover;
 }
 .new-position {
@@ -15,7 +18,18 @@
   align-items: center;
   max-height: 130px;
   min-height: 15px;
-  width: 70%;
+  width: 15%;
+}
+.co-logo-size-update-1 {
+  border-radius: 50%;
+}
+.post-name-logo {
+  display: flex;
+  flex-direction: row;
+}
+.name-and-post {
+  display: flex;
+  flex-direction: column;
 }
 
 @media screen and (max-width: 540px) {
